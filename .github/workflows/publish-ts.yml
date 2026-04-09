@@ -34,8 +34,11 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: Ensure npm supports trusted publishing
+        # --force is required because npm self-upgrading via `npm install -g npm`
+        # can corrupt its own dependency tree mid-install (MODULE_NOT_FOUND for
+        # promise-retry). Node 22 ships npm 10.x, but OIDC needs >= 11.5.1.
         run: |
-          npm install -g npm@latest
+          npm install -g npm@latest --force
           npm --version
 
       - name: Extract version from tag
