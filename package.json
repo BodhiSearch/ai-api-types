@@ -1,5 +1,5 @@
 {
-  "name": "anthropic-types-workspace",
+  "name": "anthropic-api-types-workspace",
   "version": "0.1.0",
   "private": true,
   "description": "Generate TypeScript and Rust types from the Anthropic OpenAPI spec",

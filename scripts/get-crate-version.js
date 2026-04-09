@@ -8,7 +8,7 @@ function fetchCrateVersion(crateName) {
 
     const request = https.get(
       url,
-      { headers: { "User-Agent": "anthropic-types release script" } },
+      { headers: { "User-Agent": "anthropic-api-types release script" } },
       (response) => {
         let data = "";
         response.on("data", (chunk) => { data += chunk; });
