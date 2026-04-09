@@ -1,7 +1,6 @@
-//! Script to add utoipa::ToSchema annotations to anthropic-api-types.
+//! Add utoipa::ToSchema annotations to quicktype-generated Rust types.
 //!
-//! This script processes `rust/src/types.rs` (the merged quicktype output)
-//! and adds:
+//! Processes a `types.rs` file (the merged quicktype output) and adds:
 //! 1. Separate `#[derive(utoipa::ToSchema)]` lines for structs and enums.
 //! 2. `#[schema(value_type = ...)]` on fields/variants whose type is
 //!    `serde_json::Value`, `Option<serde_json::Value>`, `Vec<serde_json::Value>`,
@@ -16,7 +15,9 @@
 //! - Preserves all comments and original formatting (text insertion, not AST rewrite)
 //!
 //! Run from the repository root:
-//!   cargo run --manifest-path scripts/add-utoipa-annotations/Cargo.toml
+//!   cargo run --manifest-path scripts/add-utoipa-annotations/Cargo.toml -- <path>
+//!   cargo run --manifest-path scripts/add-utoipa-annotations/Cargo.toml -- crates/anthropic/src/types.rs
+//!   cargo run --manifest-path scripts/add-utoipa-annotations/Cargo.toml -- crates/openai/src/types.rs
 //!
 //! If a downstream `utoipa::OpenApi` consumer ever stack-overflows on a
 //! recursive type, add it to `get_special_case_insertions()`.
@@ -28,7 +29,7 @@ use syn::spanned::Spanned;
 use syn::visit::Visit;
 use syn::{Attribute, Field, Fields, Meta, Type};
 
-const TARGET_FILE: &str = "crates/anthropic/src/types.rs";
+const DEFAULT_TARGET: &str = "crates/anthropic/src/types.rs";
 
 /// Types to skip (contain types that don't implement ToSchema).
 /// Currently empty for anthropic-api-types — add entries here if utoipa
@@ -454,29 +455,36 @@ fn process_file(path: &Path) -> Result<bool> {
 }
 
 fn main() -> Result<()> {
-    println!("🚀 anthropic-api-types utoipa Annotation Script");
+    let args: Vec<String> = std::env::args().collect();
+    let target_path = if args.len() > 1 {
+        args[1].as_str()
+    } else {
+        DEFAULT_TARGET
+    };
+
+    println!("utoipa Annotation Script");
     println!("{}", "=".repeat(60));
 
-    let target = Path::new(TARGET_FILE);
+    let target = Path::new(target_path);
     if !target.exists() {
         anyhow::bail!(
-            "❌ Error: {} not found!\n\
-             Make sure you're running from the anthropic-api-types repository root.\n\
-             Example: cargo run --manifest-path scripts/add-utoipa-annotations/Cargo.toml",
-            TARGET_FILE
+            "Error: {} not found!\n\
+             Usage: cargo run --manifest-path scripts/add-utoipa-annotations/Cargo.toml -- <path>\n\
+             Example: cargo run --manifest-path scripts/add-utoipa-annotations/Cargo.toml -- crates/anthropic/src/types.rs",
+            target_path
         );
     }
 
-    print!("Processing {}...", TARGET_FILE);
+    print!("Processing {}...", target_path);
     match process_file(target) {
-        Ok(true) => println!(" ✅ Modified"),
-        Ok(false) => println!(" ⏭️  No changes needed"),
+        Ok(true) => println!(" Modified"),
+        Ok(false) => println!(" No changes needed"),
         Err(e) => {
-            println!(" ❌ Failed: {}", e);
+            println!(" Failed: {}", e);
             return Err(e);
         }
     }
 
-    println!("\n✅ Annotation script completed successfully!");
+    println!("\nAnnotation script completed successfully!");
     Ok(())
 }

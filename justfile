@@ -67,7 +67,7 @@ generate-anthropic-rust:
     quicktype -s schema -l rs -t "$schema" -o "${SCHEMAS_DIR}/${schema}.rs" "${SCHEMAS_DIR}/${schema}.json" 2>&1 || true
   done
   npx tsx scripts/anthropic/merge-rust.ts
-  cargo run --manifest-path scripts/add-utoipa-annotations/Cargo.toml --quiet
+  cargo run --manifest-path scripts/add-utoipa-annotations/Cargo.toml --quiet -- crates/anthropic/src/types.rs
   cargo fmt -p anthropic-api-types
 
 # ─── OpenAI ────────────────────────────────────────────────────────────
@@ -120,6 +120,7 @@ generate-openai-rust:
     quicktype -s schema -l rs -t "$schema" -o "${SCHEMAS_DIR}/${schema}.rs" "${SCHEMAS_DIR}/${schema}.json" 2>&1 || true
   done
   npx tsx scripts/openai/merge-rust.ts
+  cargo run --manifest-path scripts/add-utoipa-annotations/Cargo.toml --quiet -- crates/openai/src/types.rs
   cargo fmt -p openai-api-types
 
 # ─── Combined ──────────────────────────────────────────────────────────
