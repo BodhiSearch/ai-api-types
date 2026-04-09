@@ -1,0 +1,13 @@
+[package]
+name = "openai-api-types"
+version = "0.1.0"
+edition = "2021"
+description = "Rust type definitions for the OpenAI API (chat completions, models, responses endpoints)"
+license = "MIT"
+repository = "https://github.com/BodhiSearch/ai-api-types"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", features = ["serde"] }
+utoipa = "5.3.1"

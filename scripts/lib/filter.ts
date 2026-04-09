@@ -1,8 +1,6 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import { parse as parseYaml } from "yaml";
 
-const KEEP_PATHS = ["/v1/messages", "/v1/models", "/v1/models/{model_id}"];
-
 export interface OpenAPISpec {
   openapi: string;
   info: Record<string, unknown>;
@@ -66,9 +64,9 @@ export function parseSpec(text: string): OpenAPISpec {
   return parseYaml(text) as OpenAPISpec;
 }
 
-export function filterSpec(spec: OpenAPISpec): OpenAPISpec {
+export function filterSpec(spec: OpenAPISpec, keepPaths: string[]): OpenAPISpec {
   const filteredPaths: Record<string, unknown> = {};
-  for (const path of KEEP_PATHS) {
+  for (const path of keepPaths) {
     if (path in spec.paths) {
       filteredPaths[path] = spec.paths[path];
       console.log(`  Keeping path: ${path}`);
@@ -98,7 +96,11 @@ export function filterSpec(spec: OpenAPISpec): OpenAPISpec {
   };
 }
 
-export async function downloadAndFilter(specUrl: string): Promise<string> {
+export async function downloadAndFilter(
+  specUrl: string,
+  keepPaths: string[],
+  outDir: string
+): Promise<string> {
   console.log("Downloading OpenAPI spec...");
   const response = await fetch(specUrl);
   if (!response.ok) {
@@ -112,32 +114,14 @@ export async function downloadAndFilter(specUrl: string): Promise<string> {
   console.log(`Total paths: ${Object.keys(spec.paths).length}`);
   console.log(`Total schemas: ${Object.keys(spec.components.schemas).length}`);
 
-  const filtered = filterSpec(spec);
+  const filtered = filterSpec(spec, keepPaths);
   const schemaCount = Object.keys(filtered.components.schemas).length;
 
-  mkdirSync("generated/anthropic", { recursive: true });
+  mkdirSync(outDir, { recursive: true });
   const json = JSON.stringify(filtered, null, 2);
-  const outPath = "generated/anthropic/filtered-openapi.json";
+  const outPath = `${outDir}/filtered-openapi.json`;
   writeFileSync(outPath, json);
   console.log(`\nWrote ${outPath} with ${schemaCount} schemas`);
 
   return json;
-}
-
-const HARDCODED_URL =
-  "https://storage.googleapis.com/stainless-sdk-openapi-specs/anthropic%2Fanthropic-69486316563eb49043ec1ef0b8e1d4164b6fadb58c7ae27477f9971448ede066.yml";
-
-async function main() {
-  await downloadAndFilter(HARDCODED_URL);
-}
-
-const isDirectRun =
-  import.meta.url === `file://${process.argv[1]}` ||
-  process.argv[1]?.endsWith("filter-spec.ts");
-
-if (isDirectRun) {
-  main().catch((err) => {
-    console.error(err);
-    process.exit(1);
-  });
 }

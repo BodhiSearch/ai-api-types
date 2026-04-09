@@ -44,6 +44,8 @@ function stripOpenAPI31(obj: unknown): unknown {
       continue;
     } else if (key === "x-stainless-override-schema") {
       continue;
+    } else if (key.startsWith("x-oaiMeta")) {
+      continue;
     } else {
       result[key] = stripOpenAPI31(value);
     }
@@ -54,10 +56,6 @@ function stripOpenAPI31(obj: unknown): unknown {
     if (types.length === 2 && types.includes("null")) {
       const nonNull = types.find((t) => t !== "null");
       result["type"] = nonNull;
-      const existing = result["anyOf"] || result["oneOf"];
-      if (!existing) {
-        // nothing extra needed
-      }
     } else if (types.length === 1) {
       result["type"] = types[0];
     }
@@ -66,26 +64,19 @@ function stripOpenAPI31(obj: unknown): unknown {
   return result;
 }
 
-function main() {
-  const spec: OpenAPISpec = JSON.parse(
-    readFileSync("generated/anthropic/filtered-openapi.json", "utf-8")
-  );
+export function extractSchemas(
+  filteredSpecPath: string,
+  outDir: string,
+  topLevelSchemas: string[]
+): void {
+  const spec: OpenAPISpec = JSON.parse(readFileSync(filteredSpecPath, "utf-8"));
 
-  const outDir = "generated/anthropic/schemas";
   mkdirSync(outDir, { recursive: true });
 
   const allDefinitions: Record<string, unknown> = {};
   for (const [name, schema] of Object.entries(spec.components.schemas)) {
     allDefinitions[name] = stripOpenAPI31(rewriteRefs(schema));
   }
-
-  const topLevelSchemas = [
-    "CreateMessageParams",
-    "Message",
-    "ListResponse_ModelInfo_",
-    "ModelInfo",
-    "ErrorResponse",
-  ];
 
   for (const name of topLevelSchemas) {
     if (!(name in allDefinitions)) {
@@ -97,7 +88,7 @@ function main() {
       $schema: "http://json-schema.org/draft-07/schema#",
       title: name,
       definitions: allDefinitions,
-      ...allDefinitions[name] as Record<string, unknown>,
+      ...(allDefinitions[name] as Record<string, unknown>),
     };
 
     const outPath = `${outDir}/${name}.json`;
@@ -105,7 +96,7 @@ function main() {
     console.log(`Wrote ${outPath}`);
   }
 
-  console.log(`\nExtracted ${topLevelSchemas.length} top-level schemas with ${Object.keys(allDefinitions).length} shared definitions`);
+  console.log(
+    `\nExtracted ${topLevelSchemas.length} top-level schemas with ${Object.keys(allDefinitions).length} shared definitions`
+  );
 }
-
-main();

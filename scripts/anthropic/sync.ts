@@ -1,37 +1,16 @@
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
-import { createHash } from "node:crypto";
 import { parse as parseYaml } from "yaml";
-import { downloadAndFilter } from "./filter-spec.js";
-
-const STATS_URL =
-  "https://raw.githubusercontent.com/anthropics/anthropic-sdk-typescript/refs/heads/main/.stats.yml";
-
-const HASHES_PATH = "generated/anthropic/hashes.json";
-
-interface Hashes {
-  openapi_spec_hash: string;
-  anthropic_types_hash: string;
-}
+import { downloadAndFilter } from "../lib/filter.js";
+import { md5, readHashes, writeHashes } from "../lib/hash.js";
+import {
+  KEEP_PATHS,
+  GENERATED_DIR,
+  HASHES_PATH,
+  STATS_URL,
+} from "./config.js";
 
 interface StatsYml {
   openapi_spec_url: string;
   openapi_spec_hash: string;
-}
-
-function md5(content: string): string {
-  return createHash("md5").update(content).digest("hex");
-}
-
-function readHashes(): Hashes {
-  if (!existsSync(HASHES_PATH)) {
-    return { openapi_spec_hash: "", anthropic_types_hash: "" };
-  }
-  return JSON.parse(readFileSync(HASHES_PATH, "utf-8"));
-}
-
-function writeHashes(hashes: Hashes): void {
-  mkdirSync("generated/anthropic", { recursive: true });
-  writeFileSync(HASHES_PATH, JSON.stringify(hashes, null, 2) + "\n");
 }
 
 async function fetchStats(): Promise<StatsYml> {
@@ -56,7 +35,7 @@ async function fetchStats(): Promise<StatsYml> {
 async function main() {
   const force = !!process.env.FORCE;
   const stats = await fetchStats();
-  const current = readHashes();
+  const current = readHashes(HASHES_PATH);
 
   console.log(`Upstream spec hash: ${stats.openapi_spec_hash}`);
   console.log(`Stored spec hash:   ${current.openapi_spec_hash || "(none)"}`);
@@ -72,25 +51,25 @@ async function main() {
     console.log("\nUpstream spec hash changed, downloading and filtering...");
   }
 
-  const filteredJson = await downloadAndFilter(stats.openapi_spec_url);
+  const filteredJson = await downloadAndFilter(stats.openapi_spec_url, KEEP_PATHS, GENERATED_DIR);
   const newTypesHash = md5(filteredJson);
 
   console.log(`\nFiltered types hash: ${newTypesHash}`);
-  console.log(`Stored types hash:   ${current.anthropic_types_hash || "(none)"}`);
+  console.log(`Stored types hash:   ${current.types_hash || "(none)"}`);
 
-  if (!force && newTypesHash === current.anthropic_types_hash) {
+  if (!force && newTypesHash === current.types_hash) {
     console.log("\nFiltered types unchanged (only non-target endpoints changed upstream).");
-    writeHashes({
+    writeHashes(HASHES_PATH, {
       openapi_spec_hash: stats.openapi_spec_hash,
-      anthropic_types_hash: current.anthropic_types_hash,
+      types_hash: current.types_hash,
     });
     console.log("Updated openapi_spec_hash only.");
     process.exit(0);
   }
 
-  writeHashes({
+  writeHashes(HASHES_PATH, {
     openapi_spec_hash: stats.openapi_spec_hash,
-    anthropic_types_hash: newTypesHash,
+    types_hash: newTypesHash,
   });
   console.log("\nHashes updated. Types need regeneration.");
   process.exit(2);

@@ -1,0 +1,85 @@
+name: Publish OpenAI TypeScript Types
+
+on:
+  push:
+    tags:
+      - "openai-ts/v*"
+
+concurrency:
+  group: publish-openai-ts-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Confirm npm version
+        run: npm --version
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/openai-ts/v}
+          echo "version=$TAG_VERSION" >> $GITHUB_OUTPUT
+          echo "Releasing OpenAI TypeScript types v$TAG_VERSION"
+
+      - name: Set package version
+        working-directory: ./packages/openai
+        run: |
+          npm version ${{ steps.version.outputs.version }} --no-git-tag-version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        working-directory: ./packages/openai
+        run: npm run build
+
+      - name: Create package tarball
+        working-directory: ./packages/openai
+        run: npm pack
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: packages/openai/*.tgz
+          name: "OpenAI TypeScript types v${{ steps.version.outputs.version }}"
+          body: |
+            TypeScript type definitions for the OpenAI API v${{ steps.version.outputs.version }}
+
+            ```
+            npm install @bodhiapp/openai-api-types@${{ steps.version.outputs.version }}
+            ```
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npm (OIDC trusted publishing)
+        working-directory: ./packages/openai
+        run: npm publish --provenance
+
+      - name: Verify published package
+        run: |
+          sleep 10
+          PUBLISHED=$(npm view @bodhiapp/openai-api-types version 2>/dev/null || echo "not found")
+          echo "Published version: $PUBLISHED"
+          if [ "$PUBLISHED" = "not found" ]; then
+            echo "Warning: Package not yet visible on npm (may take a moment)"
+          fi
