@@ -19,12 +19,12 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
@@ -56,20 +56,19 @@ jobs:
         run: npm pack
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: packages/anthropic/*.tgz
-          name: "Anthropic TypeScript types v${{ steps.version.outputs.version }}"
-          body: |
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+          NOTES: |
             TypeScript type definitions for the Anthropic API v${{ steps.version.outputs.version }}
 
             ```
             npm install @bodhiapp/anthropic-api-types@${{ steps.version.outputs.version }}
             ```
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" packages/anthropic/*.tgz \
+            --title "Anthropic TypeScript types v${VERSION}" \
+            --notes "$NOTES"
 
       - name: Publish to npm (OIDC trusted publishing)
         working-directory: ./packages/anthropic

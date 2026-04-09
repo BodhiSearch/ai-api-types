@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -47,21 +47,20 @@ jobs:
         run: cargo package -p anthropic-api-types --allow-dirty
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: target/package/*.crate
-          name: "Anthropic Rust crate v${{ steps.version.outputs.version }}"
-          body: |
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+          NOTES: |
             Rust type definitions for the Anthropic API v${{ steps.version.outputs.version }}
 
             ```toml
             [dependencies]
             anthropic-api-types = "${{ steps.version.outputs.version }}"
             ```
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" target/package/*.crate \
+            --title "Anthropic Rust crate v${VERSION}" \
+            --notes "$NOTES"
 
       - name: Authenticate with crates.io (OIDC trusted publishing)
         id: crates-auth
