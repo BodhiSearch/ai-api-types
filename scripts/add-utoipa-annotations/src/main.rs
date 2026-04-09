@@ -28,7 +28,7 @@ use syn::spanned::Spanned;
 use syn::visit::Visit;
 use syn::{Attribute, Field, Fields, Meta, Type};
 
-const TARGET_FILE: &str = "rust/src/types.rs";
+const TARGET_FILE: &str = "crates/anthropic/src/types.rs";
 
 /// Types to skip (contain types that don't implement ToSchema).
 /// Currently empty for anthropic-api-types — add entries here if utoipa

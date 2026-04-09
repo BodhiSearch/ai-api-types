@@ -44,30 +44,27 @@ filter:
 generate: generate-ts generate-rust
 
 # Generate TypeScript types from filtered OpenAPI spec
-# Produces both:
-#   - typescript/src/openapi-typescript/openapi-schema.ts (paths/components, MSW-friendly)
-#   - typescript/src/types/                                (hey-api flat type exports)
 generate-ts:
-  cd typescript && npm run generate
+  cd packages/anthropic && npm run generate
 
 # Generate Rust types from filtered OpenAPI spec
 generate-rust:
   #!/usr/bin/env bash
   set -euo pipefail
   npx tsx scripts/extract-schemas.ts
-  SCHEMAS_DIR="generated/schemas"
+  SCHEMAS_DIR="generated/anthropic/schemas"
   for schema in CreateMessageParams Message ListResponse_ModelInfo_ ModelInfo ErrorResponse; do
     echo "  Generating $schema..."
     quicktype -s schema -l rs -t "$schema" -o "${SCHEMAS_DIR}/${schema}.rs" "${SCHEMAS_DIR}/${schema}.json" 2>&1 || true
   done
   npx tsx scripts/merge-rust.ts
   cargo run --manifest-path scripts/add-utoipa-annotations/Cargo.toml --quiet
-  cargo fmt --manifest-path rust/Cargo.toml
+  cargo fmt --manifest-path crates/anthropic/Cargo.toml
 
 # Type-check TypeScript and Rust
 check:
-  cd typescript && npx tsc --noEmit
-  cd rust && cargo check
+  cd packages/anthropic && npx tsc --noEmit
+  cd crates/anthropic && cargo check
 
 # Release both TypeScript (npm) and Rust (crates.io) via tags
 release *flags:
@@ -96,7 +93,7 @@ release-ts *flags:
   NEXT=$(node scripts/increment-version.js "$CURRENT")
   echo "Current npm version: $CURRENT"
   echo "Next version:        $NEXT"
-  TAG_NAME="release-ts/v$NEXT"
+  TAG_NAME="anthropic-ts/v$NEXT"
   if [ "$CONFIRM" != "y" ]; then
     read -rp "Release TypeScript v$NEXT? [y/N] " answer
     if [ "$answer" != "y" ] && [ "$answer" != "Y" ]; then
@@ -124,7 +121,7 @@ release-rust *flags:
   NEXT=$(node scripts/increment-version.js "$CURRENT")
   echo "Current crates.io version: $CURRENT"
   echo "Next version:              $NEXT"
-  TAG_NAME="release-rust/v$NEXT"
+  TAG_NAME="anthropic-rs/v$NEXT"
   if [ "$CONFIRM" != "y" ]; then
     read -rp "Release Rust v$NEXT? [y/N] " answer
     if [ "$answer" != "y" ] && [ "$answer" != "Y" ]; then

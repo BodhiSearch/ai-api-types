@@ -16,8 +16,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BodhiSearch/anthropic-api-types.git",
-    "directory": "typescript"
+    "url": "git+https://github.com/BodhiSearch/ai-api-types.git",
+    "directory": "packages/anthropic"
   },
   "publishConfig": {
     "access": "public",
@@ -26,7 +26,7 @@
   "scripts": {
     "clean": "rm -rf dist src/types src/openapi-typescript",
     "generate": "npm run generate:openapi-typescript && npm run generate:hey-api",
-    "generate:openapi-typescript": "openapi-typescript ../generated/filtered-openapi.json -o src/openapi-typescript/openapi-schema.ts",
+    "generate:openapi-typescript": "openapi-typescript ../../generated/anthropic/filtered-openapi.json -o src/openapi-typescript/openapi-schema.ts",
     "generate:hey-api": "openapi-ts",
     "build": "npm run generate && npm run bundle",
     "bundle": "tsc"

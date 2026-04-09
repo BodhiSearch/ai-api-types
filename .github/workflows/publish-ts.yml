@@ -1,17 +1,14 @@
-name: Publish TypeScript Types
+name: Publish Anthropic TypeScript Types
 
 on:
   push:
     tags:
-      - "release-ts/v*"
+      - "anthropic-ts/v*"
 
 concurrency:
-  group: publish-ts-${{ github.ref }}
+  group: publish-anthropic-ts-${{ github.ref }}
   cancel-in-progress: false
 
-# id-token: write enables npm OIDC trusted publishing (no NPM_TOKEN required).
-# The package on npmjs.com must be configured with this repo + workflow as a
-# trusted publisher (one-time, after the first manual publish).
 permissions:
   contents: write
   id-token: write
@@ -29,11 +26,6 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          # Node 24 ships npm >= 11.11.0, which is required for OIDC trusted
-          # publishing (needs >= 11.5.1). We can't use Node 22 here because the
-          # bundled npm 10.9.7 in the runner image has a broken module tree
-          # (missing promise-retry) and even `npm install -g npm@latest --force`
-          # fails to recover from it. See actions/runner-images#13883.
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
 
@@ -43,32 +35,31 @@ jobs:
       - name: Extract version from tag
         id: version
         run: |
-          TAG_VERSION=${GITHUB_REF#refs/tags/release-ts/v}
+          TAG_VERSION=${GITHUB_REF#refs/tags/anthropic-ts/v}
           echo "version=$TAG_VERSION" >> $GITHUB_OUTPUT
-          echo "Releasing TypeScript types v$TAG_VERSION"
+          echo "Releasing Anthropic TypeScript types v$TAG_VERSION"
 
       - name: Set package version
-        working-directory: ./typescript
+        working-directory: ./packages/anthropic
         run: |
           npm version ${{ steps.version.outputs.version }} --no-git-tag-version
 
       - name: Install dependencies
-        working-directory: ./typescript
-        run: npm install
+        run: npm ci
 
       - name: Build package
-        working-directory: ./typescript
+        working-directory: ./packages/anthropic
         run: npm run build
 
       - name: Create package tarball
-        working-directory: ./typescript
+        working-directory: ./packages/anthropic
         run: npm pack
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: typescript/*.tgz
-          name: "TypeScript types v${{ steps.version.outputs.version }}"
+          files: packages/anthropic/*.tgz
+          name: "Anthropic TypeScript types v${{ steps.version.outputs.version }}"
           body: |
             TypeScript type definitions for the Anthropic API v${{ steps.version.outputs.version }}
 
@@ -81,10 +72,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to npm (OIDC trusted publishing)
-        working-directory: ./typescript
-        # access + provenance come from publishConfig in package.json.
-        # --provenance kept explicit because automatic provenance has been
-        # observed to be flaky for scoped packages on first OIDC exchange.
+        working-directory: ./packages/anthropic
         run: npm publish --provenance
 
       - name: Verify published package

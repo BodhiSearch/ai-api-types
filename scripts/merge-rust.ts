@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, readdirSync } from "node:fs";
 
-const SCHEMAS_DIR = "generated/schemas";
-const OUT_PATH = "rust/src/types.rs";
+const SCHEMAS_DIR = "generated/anthropic/schemas";
+const OUT_PATH = "crates/anthropic/src/types.rs";
 
 const FILES = [
   "CreateMessageParams.rs",

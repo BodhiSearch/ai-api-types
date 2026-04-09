@@ -1,9 +1,12 @@
 {
-  "name": "anthropic-api-types-workspace",
+  "name": "ai-api-types-workspace",
   "version": "0.1.0",
   "private": true,
-  "description": "Generate TypeScript and Rust types from the Anthropic OpenAPI spec",
+  "description": "Generate TypeScript and Rust types from AI provider OpenAPI specs",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "openapi-typescript": "^7.6.1",
     "tsx": "^4.19.0",

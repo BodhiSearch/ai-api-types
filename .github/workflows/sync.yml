@@ -1,4 +1,4 @@
-name: Sync Anthropic Types
+name: Sync AI API Types
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: sync-anthropic-api-types
+  group: sync-ai-api-types
   cancel-in-progress: false
 
 permissions:
@@ -42,13 +42,13 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet generated/ typescript/ rust/; then
+          if git diff --quiet generated/ packages/ crates/; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "No changes detected."
           else
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "Changes detected:"
-            git diff --stat generated/ typescript/ rust/
+            git diff --stat generated/ packages/ crates/
           fi
 
       - name: Commit changes
@@ -56,8 +56,8 @@ jobs:
         run: |
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-          git add generated/ typescript/ rust/
-          git commit -m "chore: sync anthropic types from upstream spec"
+          git add generated/ packages/ crates/
+          git commit -m "chore: sync types from upstream specs"
           git push origin main
 
       - name: Create release tags

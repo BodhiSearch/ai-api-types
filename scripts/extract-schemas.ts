@@ -68,10 +68,10 @@ function stripOpenAPI31(obj: unknown): unknown {
 
 function main() {
   const spec: OpenAPISpec = JSON.parse(
-    readFileSync("generated/filtered-openapi.json", "utf-8")
+    readFileSync("generated/anthropic/filtered-openapi.json", "utf-8")
   );
 
-  const outDir = "generated/schemas";
+  const outDir = "generated/anthropic/schemas";
   mkdirSync(outDir, { recursive: true });
 
   const allDefinitions: Record<string, unknown> = {};

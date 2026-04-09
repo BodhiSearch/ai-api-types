@@ -6,7 +6,7 @@ import { downloadAndFilter } from "./filter-spec.js";
 const STATS_URL =
   "https://raw.githubusercontent.com/anthropics/anthropic-sdk-typescript/refs/heads/main/.stats.yml";
 
-const HASHES_PATH = "generated/hashes.json";
+const HASHES_PATH = "generated/anthropic/hashes.json";
 
 interface Hashes {
   openapi_spec_hash: string;
@@ -30,7 +30,7 @@ function readHashes(): Hashes {
 }
 
 function writeHashes(hashes: Hashes): void {
-  mkdirSync("generated", { recursive: true });
+  mkdirSync("generated/anthropic", { recursive: true });
   writeFileSync(HASHES_PATH, JSON.stringify(hashes, null, 2) + "\n");
 }
 

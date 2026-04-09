@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 description = "Rust type definitions for the Anthropic API (messages, models endpoints)"
 license = "MIT"
+repository = "https://github.com/BodhiSearch/ai-api-types"
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }

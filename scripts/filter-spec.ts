@@ -115,9 +115,9 @@ export async function downloadAndFilter(specUrl: string): Promise<string> {
   const filtered = filterSpec(spec);
   const schemaCount = Object.keys(filtered.components.schemas).length;
 
-  mkdirSync("generated", { recursive: true });
+  mkdirSync("generated/anthropic", { recursive: true });
   const json = JSON.stringify(filtered, null, 2);
-  const outPath = "generated/filtered-openapi.json";
+  const outPath = "generated/anthropic/filtered-openapi.json";
   writeFileSync(outPath, json);
   console.log(`\nWrote ${outPath} with ${schemaCount} schemas`);
 
