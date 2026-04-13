@@ -1697,6 +1697,7 @@ export interface components {
             stream_options?: components["schemas"]["ResponseStreamOptions"];
             conversation?: components["schemas"]["ConversationParam"] | null;
             context_management?: components["schemas"]["ContextManagementParam"][] | null;
+            max_output_tokens?: number | null;
         };
         /**
          * Grammar format
@@ -1967,6 +1968,10 @@ export interface components {
             /** @description The filename of the file cited. */
             filename: string;
         };
+        /** @enum {string} */
+        FileDetailEnum: "low" | "high";
+        /** @enum {string} */
+        FileInputDetail: "low" | "high";
         /**
          * File path
          * @description A path to a file.
@@ -2570,6 +2575,8 @@ export interface components {
             file_data?: string;
             /** @description The URL of the file to be sent to the model. */
             file_url?: string;
+            /** @description The detail level of the file to be sent to the model. Use `low` for the default rendering behavior, or `high` to render the file at higher quality. Defaults to `low`. */
+            detail?: components["schemas"]["FileInputDetail"];
         };
         /**
          * Input file
@@ -2585,6 +2592,8 @@ export interface components {
             filename?: string | null;
             file_data?: string | null;
             file_url?: string | null;
+            /** @description The detail level of the file to be sent to the model. Use `low` for the default rendering behavior, or `high` to render the file at higher quality. Defaults to `low`. */
+            detail?: components["schemas"]["FileDetailEnum"];
         };
         /**
          * Input image
@@ -3386,6 +3395,7 @@ export interface components {
              */
             parallel_tool_calls: boolean;
             conversation?: components["schemas"]["Conversation-2"] | null;
+            max_output_tokens?: number | null;
         };
         /** @description Emitted when there is a partial audio response. */
         ResponseAudioDeltaEvent: {
@@ -4111,7 +4121,6 @@ export interface components {
             model?: components["schemas"]["ModelIdsResponses"];
             reasoning?: components["schemas"]["Reasoning"] | null;
             background?: boolean | null;
-            max_output_tokens?: number | null;
             max_tool_calls?: number | null;
             text?: components["schemas"]["ResponseTextParam"];
             tools?: components["schemas"]["ToolsArray"];

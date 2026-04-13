@@ -1522,8 +1522,6 @@ pub struct CreateResponse {
 
     background: Option<bool>,
 
-    max_output_tokens: Option<i64>,
-
     max_tool_calls: Option<i64>,
 
     /// Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI
@@ -1555,6 +1553,8 @@ pub struct CreateResponse {
     input: Option<InputParam>,
 
     instructions: Option<String>,
+
+    max_output_tokens: Option<i64>,
 
     parallel_tool_calls: Option<bool>,
 
@@ -2517,6 +2517,9 @@ pub struct ContentOutputContentList {
 
     /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
     /// `original`. Defaults to `auto`.
+    ///
+    /// The detail level of the file to be sent to the model. Use `low` for the default rendering
+    /// behavior, or `high` to render the file at higher quality. Defaults to `low`.
     detail: Option<DetailEnum>,
 
     file_id: Option<String>,
@@ -2543,6 +2546,9 @@ pub struct ContentOutputContentList {
 
 /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
 /// `original`. Defaults to `auto`.
+///
+/// The detail level of the file to be sent to the model. Use `low` for the default rendering
+/// behavior, or `high` to render the file at higher quality. Defaults to `low`.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum DetailEnum {
@@ -2872,6 +2878,9 @@ pub struct OutputOutputContentList {
     #[serde(rename = "type")]
     input_content_type: Option<InputTextType>,
 
+    /// The detail level of the file to be sent to the model. Use `low` for the default rendering
+    /// behavior, or `high` to render the file at higher quality. Defaults to `low`.
+    ///
     /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
     /// `original`. Defaults to `auto`.
     detail: Option<DetailEnum>,
@@ -4155,6 +4164,9 @@ pub struct Input {
 
     /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
     /// `original`. Defaults to `auto`.
+    ///
+    /// The detail level of the file to be sent to the model. Use `low` for the default rendering
+    /// behavior, or `high` to render the file at higher quality. Defaults to `low`.
     detail: Option<DetailEnum>,
 
     file_id: Option<String>,
@@ -4360,8 +4372,6 @@ pub struct Response {
 
     background: Option<bool>,
 
-    max_output_tokens: Option<i64>,
-
     max_tool_calls: Option<i64>,
 
     /// Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI
@@ -4399,6 +4409,8 @@ pub struct Response {
     incomplete_details: Option<IncompleteDetails>,
 
     instructions: Option<Instructions>,
+
+    max_output_tokens: Option<i64>,
 
     /// The object type of this resource - always set to `response`.
     object: Object,
@@ -4773,6 +4785,9 @@ pub struct PurpleInputContent {
     #[serde(rename = "type")]
     input_content_type: Option<InputTextType>,
 
+    /// The detail level of the file to be sent to the model. Use `low` for the default rendering
+    /// behavior, or `high` to render the file at higher quality. Defaults to `low`.
+    ///
     /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
     /// `original`. Defaults to `auto`.
     detail: Option<DetailEnum>,
@@ -5779,6 +5794,9 @@ pub struct FluffyInputContent {
 
     /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
     /// `original`. Defaults to `auto`.
+    ///
+    /// The detail level of the file to be sent to the model. Use `low` for the default rendering
+    /// behavior, or `high` to render the file at higher quality. Defaults to `low`.
     detail: Option<DetailEnum>,
 
     file_id: Option<String>,
@@ -6977,8 +6995,6 @@ pub struct TheResponseObject {
 
     background: Option<bool>,
 
-    max_output_tokens: Option<i64>,
-
     max_tool_calls: Option<i64>,
 
     /// Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI
@@ -7016,6 +7032,8 @@ pub struct TheResponseObject {
     incomplete_details: Option<IncompleteDetails>,
 
     instructions: Option<Instructions>,
+
+    max_output_tokens: Option<i64>,
 
     /// The object type of this resource - always set to `response`.
     object: Object,

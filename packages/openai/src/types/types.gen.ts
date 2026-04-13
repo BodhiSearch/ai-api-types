@@ -1928,6 +1928,7 @@ export type CreateResponse = CreateModelResponseProperties & ResponseProperties 
     stream_options?: ResponseStreamOptions;
     conversation?: ConversationParam | null;
     context_management?: Array<ContextManagementParam> | null;
+    max_output_tokens?: number | null;
 };
 
 /**
@@ -2254,6 +2255,10 @@ export type FileCitationBody = {
      */
     filename: string;
 };
+
+export type FileDetailEnum = 'low' | 'high';
+
+export type FileInputDetail = 'low' | 'high';
 
 /**
  * A path to a file.
@@ -3021,6 +3026,10 @@ export type InputFileContent = {
      * The URL of the file to be sent to the model.
      */
     file_url?: string;
+    /**
+     * The detail level of the file to be sent to the model. Use `low` for the default rendering behavior, or `high` to render the file at higher quality. Defaults to `low`.
+     */
+    detail?: FileInputDetail;
 };
 
 /**
@@ -3035,6 +3044,10 @@ export type InputFileContentParam = {
     filename?: string | null;
     file_data?: string | null;
     file_url?: string | null;
+    /**
+     * The detail level of the file to be sent to the model. Use `low` for the default rendering behavior, or `high` to render the file at higher quality. Defaults to `low`.
+     */
+    detail?: FileDetailEnum;
 };
 
 /**
@@ -4110,6 +4123,7 @@ export type Response = ModelResponseProperties & ResponseProperties & {
      */
     parallel_tool_calls: boolean;
     conversation?: Conversation2 | null;
+    max_output_tokens?: number | null;
 };
 
 /**
@@ -5223,7 +5237,6 @@ export type ResponseProperties = {
     model?: ModelIdsResponses;
     reasoning?: Reasoning | null;
     background?: boolean | null;
-    max_output_tokens?: number | null;
     max_tool_calls?: number | null;
     text?: ResponseTextParam;
     tools?: ToolsArray;
