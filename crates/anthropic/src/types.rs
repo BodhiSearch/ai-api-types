@@ -992,6 +992,8 @@ pub enum EffortLevel {
     Max,
 
     Medium,
+
+    Xhigh,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -1984,6 +1986,9 @@ pub struct EffortCapability {
 
     /// Whether this capability is supported by the model.
     supported: bool,
+
+    /// Whether the model supports xhigh effort level.
+    xhigh: Option<CapabilitySupport>,
 }
 
 /// Thinking capability and supported type configurations.
