@@ -15,7 +15,7 @@ export type ApiError = {
  */
 export type AllowedCaller = 'direct' | 'code_execution_20250825' | 'code_execution_20260120';
 
-export type AnthropicBeta = string | ('message-batches-2024-09-24' | 'prompt-caching-2024-07-31' | 'computer-use-2024-10-22' | 'computer-use-2025-01-24' | 'pdfs-2024-09-25' | 'token-counting-2024-11-01' | 'token-efficient-tools-2025-02-19' | 'output-128k-2025-02-19' | 'files-api-2025-04-14' | 'mcp-client-2025-04-04' | 'mcp-client-2025-11-20' | 'dev-full-thinking-2025-05-14' | 'interleaved-thinking-2025-05-14' | 'code-execution-2025-05-22' | 'extended-cache-ttl-2025-04-11' | 'context-1m-2025-08-07' | 'context-management-2025-06-27' | 'model-context-window-exceeded-2025-08-26' | 'skills-2025-10-02' | 'fast-mode-2026-02-01' | 'output-300k-2026-03-24' | 'advisor-tool-2026-03-01' | 'user-profiles-2026-03-24');
+export type AnthropicBeta = string | ('message-batches-2024-09-24' | 'prompt-caching-2024-07-31' | 'computer-use-2024-10-22' | 'computer-use-2025-01-24' | 'pdfs-2024-09-25' | 'token-counting-2024-11-01' | 'token-efficient-tools-2025-02-19' | 'output-128k-2025-02-19' | 'files-api-2025-04-14' | 'mcp-client-2025-04-04' | 'mcp-client-2025-11-20' | 'dev-full-thinking-2025-05-14' | 'interleaved-thinking-2025-05-14' | 'code-execution-2025-05-22' | 'extended-cache-ttl-2025-04-11' | 'context-1m-2025-08-07' | 'context-management-2025-06-27' | 'model-context-window-exceeded-2025-08-26' | 'skills-2025-10-02' | 'fast-mode-2026-02-01' | 'output-300k-2026-03-24' | 'user-profiles-2026-03-24' | 'advisor-tool-2026-03-01');
 
 export type AuthenticationError = {
     message: string;
@@ -444,16 +444,16 @@ export type CreateMessageParams = {
      *
      * Used to remove "long tail" low probability responses. [Learn more technical details here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
      *
-     * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     * Recommended for advanced use cases only.
      * @deprecated
      */
     top_k?: number;
     /**
      * Use nucleus sampling.
      *
-     * In nucleus sampling, we compute the cumulative distribution over all the options for each subsequent token in decreasing probability order and cut it off once it reaches a particular probability specified by `top_p`. You should either alter `temperature` or `top_p`, but not both.
+     * In nucleus sampling, we compute the cumulative distribution over all the options for each subsequent token in decreasing probability order and cut it off once it reaches a particular probability specified by `top_p`.
      *
-     * Recommended for advanced use cases only. You usually only need to use `temperature`.
+     * Recommended for advanced use cases only.
      * @deprecated
      */
     top_p?: number;
@@ -833,7 +833,7 @@ export type OutputConfig = {
     /**
      * How much effort the model should put into its response. Higher effort levels may result in more thorough analysis but take longer.
      *
-     * Valid values are `low`, `medium`, `high`, or `max`.
+     * Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
      */
     effort?: EffortLevel | null;
     /**

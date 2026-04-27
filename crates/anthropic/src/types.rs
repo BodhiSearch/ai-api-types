@@ -222,17 +222,16 @@ pub struct CreateMessageParams {
     /// Used to remove "long tail" low probability responses. [Learn more technical details
     /// here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
     ///
-    /// Recommended for advanced use cases only. You usually only need to use `temperature`.
+    /// Recommended for advanced use cases only.
     top_k: Option<i64>,
 
     /// Use nucleus sampling.
     ///
     /// In nucleus sampling, we compute the cumulative distribution over all the options for each
     /// subsequent token in decreasing probability order and cut it off once it reaches a
-    /// particular probability specified by `top_p`. You should either alter `temperature` or
-    /// `top_p`, but not both.
+    /// particular probability specified by `top_p`.
     ///
-    /// Recommended for advanced use cases only. You usually only need to use `temperature`.
+    /// Recommended for advanced use cases only.
     top_p: Option<f64>,
 }
 
@@ -973,7 +972,7 @@ pub struct OutputConfig {
     /// How much effort the model should put into its response. Higher effort levels may result
     /// in more thorough analysis but take longer.
     ///
-    /// Valid values are `low`, `medium`, `high`, or `max`.
+    /// Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
     effort: Option<EffortLevel>,
 
     /// A schema to specify Claude's output format in responses. See [structured

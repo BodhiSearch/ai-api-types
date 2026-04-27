@@ -3773,7 +3773,7 @@ export type ModelResponseProperties = {
      */
     prompt_cache_key?: string;
     service_tier?: ServiceTier;
-    prompt_cache_retention?: ('in-memory' | '24h') | null;
+    prompt_cache_retention?: ('in_memory' | '24h') | null;
 };
 
 /**
