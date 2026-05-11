@@ -905,7 +905,7 @@ export type ChatCompletionTokenLogprob = {
     logprob: number;
     bytes: Array<number> | null;
     /**
-     * List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned.
+     * List of the most likely tokens and their log probability, at this token position. The number of entries may be fewer than the requested `top_logprobs`.
      */
     top_logprobs: Array<{
         /**
@@ -1619,8 +1619,10 @@ export type CreateChatCompletionRequest = CreateModelResponseProperties & {
         search_context_size?: WebSearchContextSize;
     };
     /**
-     * An integer between 0 and 20 specifying the number of most likely tokens to
-     * return at each token position, each with an associated log probability.
+     * An integer between 0 and 20 specifying the maximum number of most likely
+     * tokens to return at each token position, each with an associated log
+     * probability. In some cases, the number of returned tokens may be fewer than
+     * requested.
      * `logprobs` must be set to `true` if this parameter is used.
      *
      */
@@ -1911,8 +1913,10 @@ export type CreateChatCompletionStreamResponse = {
 
 export type CreateModelResponseProperties = ModelResponseProperties & {
     /**
-     * An integer between 0 and 20 specifying the number of most likely tokens to
-     * return at each token position, each with an associated log probability.
+     * An integer between 0 and 20 specifying the maximum number of most likely
+     * tokens to return at each token position, each with an associated log
+     * probability. In some cases, the number of returned tokens may be fewer than
+     * requested.
      *
      */
     top_logprobs?: number;
@@ -2465,7 +2469,7 @@ export type FunctionShellCall = {
     /**
      * The status of the shell call. One of `in_progress`, `completed`, or `incomplete`.
      */
-    status: LocalShellCallStatus;
+    status: FunctionShellCallStatus;
     environment: (({
         type?: 'LocalEnvironmentResource';
     } & LocalEnvironmentResource) | ({
@@ -2526,7 +2530,7 @@ export type FunctionShellCallOutput = {
     /**
      * The status of the shell call output. One of `in_progress`, `completed`, or `incomplete`.
      */
-    status: LocalShellCallOutputStatusEnum;
+    status: FunctionShellCallOutputStatusEnum;
     /**
      * An array of shell call output contents
      */
@@ -2640,6 +2644,8 @@ export type FunctionShellCallOutputOutcomeParam = ({
     type?: 'FunctionShellCallOutputExitOutcomeParam';
 } & FunctionShellCallOutputExitOutcomeParam);
 
+export type FunctionShellCallOutputStatusEnum = 'in_progress' | 'completed' | 'incomplete';
+
 /**
  * Indicates that the shell call exceeded its configured time limit.
  */
@@ -2659,6 +2665,8 @@ export type FunctionShellCallOutputTimeoutOutcomeParam = {
      */
     type: 'timeout';
 };
+
+export type FunctionShellCallStatus = 'in_progress' | 'completed' | 'incomplete';
 
 /**
  * A tool that allows the model to execute shell commands.
@@ -2862,11 +2870,9 @@ export type ImageGenTool = {
      */
     quality?: 'low' | 'medium' | 'high' | 'auto';
     /**
-     * The size of the generated image. One of `1024x1024`, `1024x1536`,
-     * `1536x1024`, or `auto`. Default: `auto`.
-     *
+     * The size of the generated images. For `gpt-image-2` and `gpt-image-2-2026-04-21`, arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`. Width and height must both be divisible by 16 and the requested aspect ratio must be between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum supported resolution is `3840x2160`. The requested size must also satisfy the model's current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and `1024x1536` are supported by the GPT image models; `auto` is supported for models that allow automatic sizing. For `dall-e-2`, use one of `256x256`, `512x512`, or `1024x1024`. For `dall-e-3`, use one of `1024x1024`, `1792x1024`, or `1024x1792`.
      */
-    size?: '1024x1024' | '1024x1536' | '1536x1024' | 'auto';
+    size?: string | ('1024x1024' | '1024x1536' | '1536x1024' | 'auto');
     /**
      * The output format of the generated image. One of `png`, `webp`, or
      * `jpeg`. Default: `png`.
@@ -2944,6 +2950,7 @@ export type ImageGenToolCall = {
 
 /**
  * Specify additional output data to include in the model response. Currently supported values are:
+ * - `web_search_call.results`: Include the search results of the web search tool call.
  * - `web_search_call.action.sources`: Include the sources of the web search tool call.
  * - `code_interpreter_call.outputs`: Includes the outputs of python code execution in code interpreter tool call items.
  * - `computer_call_output.output.image_url`: Include image urls from the computer call output.
@@ -3335,10 +3342,6 @@ export type LocalEnvironmentResource = {
      */
     type: 'local';
 };
-
-export type LocalShellCallOutputStatusEnum = 'in_progress' | 'completed' | 'incomplete';
-
-export type LocalShellCallStatus = 'in_progress' | 'completed' | 'incomplete';
 
 /**
  * Execute a shell command on the server.
@@ -4921,7 +4924,7 @@ export type ResponseLogProb = {
      */
     logprob: number;
     /**
-     * The log probability of the top 20 most likely tokens.
+     * The log probabilities of up to 20 of the most likely tokens.
      *
      */
     top_logprobs?: Array<{

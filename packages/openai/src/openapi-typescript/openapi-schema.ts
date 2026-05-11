@@ -775,7 +775,10 @@ export interface components {
                     end_index: number;
                     /** @description The index of the first character of the URL citation in the message. */
                     start_index: number;
-                    /** @description The URL of the web resource. */
+                    /**
+                     * Format: uri
+                     * @description The URL of the web resource.
+                     */
                     url: string;
                     /** @description The title of the web resource. */
                     title: string;
@@ -800,6 +803,7 @@ export interface components {
                 /** @description Unique identifier for this audio response. */
                 id: string;
                 /**
+                 * Format: unixtime
                  * @description The Unix timestamp (in seconds) for when this audio response will
                  *     no longer be accessible on the server for use in multi-turn
                  *     conversations.
@@ -864,7 +868,7 @@ export interface components {
             /** @description The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. */
             logprob: number;
             bytes: number[] | null;
-            /** @description List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned. */
+            /** @description List of the most likely tokens and their log probability, at this token position. The number of entries may be fewer than the requested `top_logprobs`. */
             top_logprobs: {
                 /** @description The token. */
                 token: string;
@@ -925,7 +929,10 @@ export interface components {
              * @enum {string}
              */
             type: "CodeInterpreterOutputImage";
-            /** @description The URL of the image output from the code interpreter. */
+            /**
+             * Format: uri
+             * @description The URL of the image output from the code interpreter.
+             */
             url: string;
         };
         /**
@@ -1153,7 +1160,10 @@ export interface components {
              * @enum {string}
              */
             type: "computer_screenshot";
-            /** @description The URL of the screenshot image. */
+            /**
+             * Format: uri
+             * @description The URL of the screenshot image.
+             */
             image_url?: string;
             /** @description The identifier of an uploaded file that contains the screenshot. */
             file_id?: string;
@@ -1436,8 +1446,10 @@ export interface components {
                 search_context_size?: components["schemas"]["WebSearchContextSize"];
             };
             /**
-             * @description An integer between 0 and 20 specifying the number of most likely tokens to
-             *     return at each token position, each with an associated log probability.
+             * @description An integer between 0 and 20 specifying the maximum number of most likely
+             *     tokens to return at each token position, each with an associated log
+             *     probability. In some cases, the number of returned tokens may be fewer than
+             *     requested.
              *     `logprobs` must be set to `true` if this parameter is used.
              */
             top_logprobs?: number | null;
@@ -1601,7 +1613,10 @@ export interface components {
                     refusal: components["schemas"]["ChatCompletionTokenLogprob"][] | null;
                 } | null;
             }[];
-            /** @description The Unix timestamp (in seconds) of when the chat completion was created. */
+            /**
+             * Format: unixtime
+             * @description The Unix timestamp (in seconds) of when the chat completion was created.
+             */
             created: number;
             /** @description The model used for the chat completion. */
             model: string;
@@ -1652,7 +1667,10 @@ export interface components {
                 /** @description The index of the choice in the list of choices. */
                 index: number;
             }[];
-            /** @description The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. */
+            /**
+             * Format: unixtime
+             * @description The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp.
+             */
             created: number;
             /** @description The model to generate the completion. */
             model: string;
@@ -1682,8 +1700,10 @@ export interface components {
         };
         CreateModelResponseProperties: components["schemas"]["ModelResponseProperties"] & {
             /**
-             * @description An integer between 0 and 20 specifying the number of most likely tokens to
-             *     return at each token position, each with an associated log probability.
+             * @description An integer between 0 and 20 specifying the maximum number of most likely
+             *     tokens to return at each token position, each with an associated log
+             *     probability. In some cases, the number of returned tokens may be fewer than
+             *     requested.
              */
             top_logprobs?: number;
         };
@@ -2120,7 +2140,7 @@ export interface components {
             /** @description The shell commands and limits that describe how to run the tool call. */
             action: components["schemas"]["FunctionShellAction"];
             /** @description The status of the shell call. One of `in_progress`, `completed`, or `incomplete`. */
-            status: components["schemas"]["LocalShellCallStatus"];
+            status: components["schemas"]["FunctionShellCallStatus"];
             environment: (components["schemas"]["LocalEnvironmentResource"] | components["schemas"]["ContainerReferenceResource"]) | null;
             /** @description The ID of the entity that created this tool call. */
             created_by?: string;
@@ -2164,7 +2184,7 @@ export interface components {
             /** @description The unique ID of the shell tool call generated by the model. */
             call_id: string;
             /** @description The status of the shell call output. One of `in_progress`, `completed`, or `incomplete`. */
-            status: components["schemas"]["LocalShellCallOutputStatusEnum"];
+            status: components["schemas"]["FunctionShellCallOutputStatusEnum"];
             /** @description An array of shell call output contents */
             output: components["schemas"]["FunctionShellCallOutputContent"][];
             max_output_length: number | null;
@@ -2249,6 +2269,8 @@ export interface components {
          * @description The exit or timeout outcome associated with this shell call.
          */
         FunctionShellCallOutputOutcomeParam: components["schemas"]["FunctionShellCallOutputTimeoutOutcomeParam"] | components["schemas"]["FunctionShellCallOutputExitOutcomeParam"];
+        /** @enum {string} */
+        FunctionShellCallOutputStatusEnum: "in_progress" | "completed" | "incomplete";
         /**
          * Shell call timeout outcome
          * @description Indicates that the shell call exceeded its configured time limit.
@@ -2271,6 +2293,8 @@ export interface components {
              */
             type: "FunctionShellCallOutputTimeoutOutcomeParam";
         };
+        /** @enum {string} */
+        FunctionShellCallStatus: "in_progress" | "completed" | "incomplete";
         /**
          * Shell tool
          * @description A tool that allows the model to execute shell commands.
@@ -2440,12 +2464,10 @@ export interface components {
              */
             quality: "low" | "medium" | "high" | "auto";
             /**
-             * @description The size of the generated image. One of `1024x1024`, `1024x1536`,
-             *     `1536x1024`, or `auto`. Default: `auto`.
+             * @description The size of the generated images. For `gpt-image-2` and `gpt-image-2-2026-04-21`, arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`. Width and height must both be divisible by 16 and the requested aspect ratio must be between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum supported resolution is `3840x2160`. The requested size must also satisfy the model's current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and `1024x1536` are supported by the GPT image models; `auto` is supported for models that allow automatic sizing. For `dall-e-2`, use one of `256x256`, `512x512`, or `1024x1024`. For `dall-e-3`, use one of `1024x1024`, `1792x1024`, or `1024x1792`.
              * @default auto
-             * @enum {string}
              */
-            size: "1024x1024" | "1024x1536" | "1536x1024" | "auto";
+            size: string | ("1024x1024" | "1024x1536" | "1536x1024" | "auto");
             /**
              * @description The output format of the generated image. One of `png`, `webp`, or
              *     `jpeg`. Default: `png`.
@@ -2512,6 +2534,7 @@ export interface components {
         };
         /**
          * @description Specify additional output data to include in the model response. Currently supported values are:
+         *     - `web_search_call.results`: Include the search results of the web search tool call.
          *     - `web_search_call.action.sources`: Include the sources of the web search tool call.
          *     - `code_interpreter_call.outputs`: Includes the outputs of python code execution in code interpreter tool call items.
          *     - `computer_call_output.output.image_url`: Include image urls from the computer call output.
@@ -2573,7 +2596,10 @@ export interface components {
             filename?: string;
             /** @description The content of the file to be sent to the model. */
             file_data?: string;
-            /** @description The URL of the file to be sent to the model. */
+            /**
+             * Format: uri
+             * @description The URL of the file to be sent to the model.
+             */
             file_url?: string;
             /** @description The detail level of the file to be sent to the model. Use `low` for the default rendering behavior, or `high` to render the file at higher quality. Defaults to `low`. */
             detail?: components["schemas"]["FileInputDetail"];
@@ -2765,10 +2791,6 @@ export interface components {
              */
             type: "LocalEnvironmentResource";
         };
-        /** @enum {string} */
-        LocalShellCallOutputStatusEnum: "in_progress" | "completed" | "incomplete";
-        /** @enum {string} */
-        LocalShellCallStatus: "in_progress" | "completed" | "incomplete";
         /**
          * Local shell exec action
          * @description Execute a shell command on the server.
@@ -2960,6 +2982,7 @@ export interface components {
             /** @description A label for this MCP server, used to identify it in tool calls. */
             server_label: string;
             /**
+             * Format: uri
              * @description The URL for the MCP server. One of `server_url` or `connector_id` must be
              *     provided.
              */
@@ -3062,7 +3085,10 @@ export interface components {
         Model: {
             /** @description The model identifier, which can be referenced in the API endpoints. */
             id: string;
-            /** @description The Unix timestamp (in seconds) when the model was created. */
+            /**
+             * Format: unixtime
+             * @description The Unix timestamp (in seconds) when the model was created.
+             */
             created: number;
             /**
              * @description The object type, which is always "model".
@@ -3364,7 +3390,10 @@ export interface components {
              * @enum {string}
              */
             status?: "completed" | "failed" | "in_progress" | "cancelled" | "queued" | "incomplete";
-            /** @description Unix timestamp (in seconds) of when this Response was created. */
+            /**
+             * Format: unixtime
+             * @description Unix timestamp (in seconds) of when this Response was created.
+             */
             created_at: number;
             completed_at?: number | null;
             error: components["schemas"]["ResponseError"];
@@ -3907,7 +3936,7 @@ export interface components {
             token: string;
             /** @description The log probability of this token. */
             logprob: number;
-            /** @description The log probability of the top 20 most likely tokens. */
+            /** @description The log probabilities of up to 20 of the most likely tokens. */
             top_logprobs?: {
                 /** @description A possible text token. */
                 token?: string;
@@ -4817,7 +4846,10 @@ export interface components {
              * @enum {string}
              */
             type: "UrlCitationBody";
-            /** @description The URL of the web resource. */
+            /**
+             * Format: uri
+             * @description The URL of the web resource.
+             */
             url: string;
             /** @description The index of the first character of the URL citation in the message. */
             start_index: number;
@@ -4915,7 +4947,10 @@ export interface components {
                  * @enum {string}
                  */
                 type: "url";
-                /** @description The URL of the source. */
+                /**
+                 * Format: uri
+                 * @description The URL of the source.
+                 */
                 url: string;
             }[];
         };

@@ -29,12 +29,16 @@ pub struct CreateChatCompletionRequest {
 
     temperature: Option<f64>,
 
-    /// An integer between 0 and 20 specifying the number of most likely tokens to
-    /// return at each token position, each with an associated log probability.
+    /// An integer between 0 and 20 specifying the maximum number of most likely
+    /// tokens to return at each token position, each with an associated log
+    /// probability. In some cases, the number of returned tokens may be fewer than
+    /// requested.
     ///
     ///
-    /// An integer between 0 and 20 specifying the number of most likely tokens to
-    /// return at each token position, each with an associated log probability.
+    /// An integer between 0 and 20 specifying the maximum number of most likely
+    /// tokens to return at each token position, each with an associated log
+    /// probability. In some cases, the number of returned tokens may be fewer than
+    /// requested.
     /// `logprobs` must be set to `true` if this parameter is used.
     top_logprobs: Option<i64>,
 
@@ -1243,8 +1247,8 @@ pub struct ChatCompletionTokenLogprob {
     /// The token.
     token: String,
 
-    /// List of the most likely tokens and their log probability, at this token position. In rare
-    /// cases, there may be fewer than the number of requested `top_logprobs` returned.
+    /// List of the most likely tokens and their log probability, at this token position. The
+    /// number of entries may be fewer than the requested `top_logprobs`.
     top_logprobs: Vec<TopLogprob>,
 }
 
@@ -1506,8 +1510,10 @@ pub struct CreateResponse {
 
     temperature: Option<f64>,
 
-    /// An integer between 0 and 20 specifying the number of most likely tokens to
-    /// return at each token position, each with an associated log probability.
+    /// An integer between 0 and 20 specifying the maximum number of most likely
+    /// tokens to return at each token position, each with an associated log
+    /// probability. In some cases, the number of returned tokens may be fewer than
+    /// requested.
     top_logprobs: Option<i64>,
 
     top_p: Option<f64>,
@@ -1592,6 +1598,23 @@ pub struct ConversationObject {
 
 /// Specify additional output data to include in the model response. Currently supported
 /// values are:
+/// - `web_search_call.action.sources`: Include the sources of the web search tool call.
+/// - `code_interpreter_call.outputs`: Includes the outputs of python code execution in code
+/// interpreter tool call items.
+/// - `computer_call_output.output.image_url`: Include image urls from the computer call
+/// output.
+/// - `file_search_call.results`: Include the search results of the file search tool call.
+/// - `message.input_image.image_url`: Include image urls from the input message.
+/// - `message.output_text.logprobs`: Include logprobs with assistant messages.
+/// - `reasoning.encrypted_content`: Includes an encrypted version of reasoning tokens in
+/// reasoning item outputs. This enables reasoning items to be used in multi-turn
+/// conversations when using the Responses API statelessly (like when the `store` parameter
+/// is set to `false`, or when an organization is enrolled in the zero data retention
+/// program).
+///
+/// Specify additional output data to include in the model response. Currently supported
+/// values are:
+/// - `web_search_call.results`: Include the search results of the web search tool call.
 /// - `web_search_call.action.sources`: Include the sources of the web search tool call.
 /// - `code_interpreter_call.outputs`: Includes the outputs of python code execution in code
 /// interpreter tool call items.
@@ -3377,9 +3400,16 @@ pub struct ToolElement {
     /// or `auto`. Default: `auto`.
     quality: Option<Quality>,
 
-    /// The size of the generated image. One of `1024x1024`, `1024x1536`,
-    /// `1536x1024`, or `auto`. Default: `auto`.
-    size: Option<Size>,
+    /// The size of the generated images. For `gpt-image-2` and `gpt-image-2-2026-04-21`,
+    /// arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`.
+    /// Width and height must both be divisible by 16 and the requested aspect ratio must be
+    /// between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum
+    /// supported resolution is `3840x2160`. The requested size must also satisfy the model's
+    /// current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and
+    /// `1024x1536` are supported by the GPT image models; `auto` is supported for models that
+    /// allow automatic sizing. For `dall-e-2`, use one of `256x256`, `512x512`, or `1024x1024`.
+    /// For `dall-e-3`, use one of `1024x1024`, `1792x1024`, or `1024x1792`.
+    size: Option<String>,
 
     /// The input format for the custom tool. Default is unconstrained text.
     format: Option<Format>,
@@ -3959,23 +3989,6 @@ pub enum SearchContextSize {
     Low,
 
     Medium,
-}
-
-/// The size of the generated image. One of `1024x1024`, `1024x1536`,
-/// `1536x1024`, or `auto`. Default: `auto`.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
-#[serde(rename_all = "snake_case")]
-pub enum Size {
-    Auto,
-
-    #[serde(rename = "1024x1024")]
-    The1024X1024,
-
-    #[serde(rename = "1024x1536")]
-    The1024X1536,
-
-    #[serde(rename = "1536x1024")]
-    The1536X1024,
 }
 
 /// The type of the function tool. Always `function`.
@@ -5077,9 +5090,16 @@ pub struct InputItemTool {
     /// or `auto`. Default: `auto`.
     quality: Option<Quality>,
 
-    /// The size of the generated image. One of `1024x1024`, `1024x1536`,
-    /// `1536x1024`, or `auto`. Default: `auto`.
-    size: Option<Size>,
+    /// The size of the generated images. For `gpt-image-2` and `gpt-image-2-2026-04-21`,
+    /// arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`.
+    /// Width and height must both be divisible by 16 and the requested aspect ratio must be
+    /// between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum
+    /// supported resolution is `3840x2160`. The requested size must also satisfy the model's
+    /// current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and
+    /// `1024x1536` are supported by the GPT image models; `auto` is supported for models that
+    /// allow automatic sizing. For `dall-e-2`, use one of `256x256`, `512x512`, or `1024x1024`.
+    /// For `dall-e-3`, use one of `1024x1024`, `1792x1024`, or `1024x1792`.
+    size: Option<String>,
 
     /// The input format for the custom tool. Default is unconstrained text.
     format: Option<Format>,
@@ -6217,9 +6237,16 @@ pub struct OutputItemTool {
     /// or `auto`. Default: `auto`.
     quality: Option<Quality>,
 
-    /// The size of the generated image. One of `1024x1024`, `1024x1536`,
-    /// `1536x1024`, or `auto`. Default: `auto`.
-    size: Option<Size>,
+    /// The size of the generated images. For `gpt-image-2` and `gpt-image-2-2026-04-21`,
+    /// arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`.
+    /// Width and height must both be divisible by 16 and the requested aspect ratio must be
+    /// between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum
+    /// supported resolution is `3840x2160`. The requested size must also satisfy the model's
+    /// current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and
+    /// `1024x1536` are supported by the GPT image models; `auto` is supported for models that
+    /// allow automatic sizing. For `dall-e-2`, use one of `256x256`, `512x512`, or `1024x1024`.
+    /// For `dall-e-3`, use one of `1024x1024`, `1792x1024`, or `1024x1792`.
+    size: Option<String>,
 
     /// The input format for the custom tool. Default is unconstrained text.
     format: Option<Format>,
@@ -6873,7 +6900,7 @@ pub struct ResponseLogProb {
     /// A possible text token.
     token: String,
 
-    /// The log probability of the top 20 most likely tokens.
+    /// The log probabilities of up to 20 of the most likely tokens.
     top_logprobs: Option<Vec<TopLogprob>>,
 }
 
