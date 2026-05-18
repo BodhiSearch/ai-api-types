@@ -1087,6 +1087,16 @@ export type CompactionSummaryItemParam = {
 };
 
 /**
+ * Compacts the current context. Must be the final input item.
+ */
+export type CompactionTriggerItemParam = {
+    /**
+     * The type of the item. Always `compaction_trigger`.
+     */
+    type: 'compaction_trigger';
+};
+
+/**
  * A filter used to compare a specified attribute key to a given value using a defined comparison operation.
  *
  */
@@ -3091,6 +3101,8 @@ export type InputItem = ({
 } & EasyInputMessage) | ({
     type?: 'Item';
 } & Item) | ({
+    type?: 'CompactionTriggerItemParam';
+} & CompactionTriggerItemParam) | ({
     type?: 'ItemReferenceParam';
 } & ItemReferenceParam);
 

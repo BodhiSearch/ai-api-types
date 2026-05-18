@@ -1021,6 +1021,17 @@ export interface components {
             encrypted_content: string;
         };
         /**
+         * Compaction trigger
+         * @description Compacts the current context. Must be the final input item.
+         */
+        CompactionTriggerItemParam: {
+            /**
+             * @description The type of the item. Always `compaction_trigger`. (enum property replaced by openapi-typescript)
+             * @enum {string}
+             */
+            type: "CompactionTriggerItemParam";
+        };
+        /**
          * Comparison Filter
          * @description A filter used to compare a specified attribute key to a given value using a defined comparison operation.
          */
@@ -2650,7 +2661,7 @@ export interface components {
             file_id?: string | null;
             detail?: components["schemas"]["DetailEnum"] | null;
         };
-        InputItem: components["schemas"]["EasyInputMessage"] | components["schemas"]["Item"] | components["schemas"]["ItemReferenceParam"];
+        InputItem: components["schemas"]["EasyInputMessage"] | components["schemas"]["Item"] | components["schemas"]["CompactionTriggerItemParam"] | components["schemas"]["ItemReferenceParam"];
         /**
          * Input message
          * @description A message input to the model with a role indicating instruction following

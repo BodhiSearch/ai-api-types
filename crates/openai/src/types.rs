@@ -1766,6 +1766,8 @@ pub enum InputParam {
 /// A call to a custom tool created by the model.
 ///
 ///
+/// Compacts the current context. Must be the final input item.
+///
 /// An internal identifier for an item to reference.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct InputItem {
@@ -1860,6 +1862,9 @@ pub struct InputItem {
     ///
     ///
     /// The type of the custom tool call. Always `custom_tool_call`.
+    ///
+    ///
+    /// The type of the item. Always `compaction_trigger`.
     #[serde(rename = "type")]
     input_item_type: Option<InputItemType>,
 
@@ -2727,6 +2732,8 @@ pub enum ToolSearchExecutionType {
 /// The type of the custom tool call. Always `custom_tool_call`.
 ///
 ///
+/// The type of the item. Always `compaction_trigger`.
+///
 /// The type of item to reference. Always `item_reference`.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
@@ -2741,6 +2748,9 @@ pub enum InputItemType {
     CodeInterpreterCall,
 
     Compaction,
+
+    #[serde(rename = "compaction_trigger")]
+    CompactionTrigger,
 
     #[serde(rename = "computer_call")]
     ComputerCall,
