@@ -310,6 +310,11 @@ pub enum MessageContent {
 ///
 /// A content block that represents a file to be uploaded to the container
 /// Files uploaded via this block will be available in the container's input directory.
+///
+/// System instructions that appear mid-conversation.
+///
+/// Use this block to provide or update system-level instructions at a specific
+/// point in the conversation, rather than only via the top-level `system` parameter.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct InputContentBlock {
     /// Create a cache control breakpoint at this content block.
@@ -328,6 +333,7 @@ pub struct InputContentBlock {
 
     title: Option<String>,
 
+    /// System instruction text blocks.
     content: Option<Content>,
 
     signature: Option<String>,
@@ -840,6 +846,9 @@ pub enum ToolResultErrorCode {
     #[serde(rename = "url_not_allowed")]
     UrlNotAllowed,
 
+    #[serde(rename = "url_not_in_prior_context")]
+    UrlNotInPriorContext,
+
     #[serde(rename = "url_too_long")]
     UrlTooLong,
 }
@@ -935,6 +944,9 @@ pub enum InputContentBlockType {
 
     Image,
 
+    #[serde(rename = "mid_conv_system")]
+    MidConvSystem,
+
     #[serde(rename = "redacted_thinking")]
     RedactedThinking,
 
@@ -971,6 +983,8 @@ pub enum InputContentBlockType {
 #[serde(rename_all = "snake_case")]
 pub enum Role {
     Assistant,
+
+    System,
 
     User,
 }
@@ -1852,6 +1866,14 @@ pub struct Usage {
     /// The number of output tokens which were used.
     output_tokens: i64,
 
+    /// Breakdown of output tokens by category.
+    ///
+    /// `output_tokens` remains the inclusive, authoritative total used for billing.
+    /// This object provides a read-only decomposition for observability — for example,
+    /// how many of the billed output tokens were spent on internal reasoning that may
+    /// have been summarized before being returned to you.
+    output_tokens_details: Option<OutputTokensDetails>,
+
     /// The number of server tool requests.
     server_tool_use: Option<ServerToolUsage>,
 
@@ -1868,6 +1890,19 @@ pub struct CacheCreation {
     /// The number of input tokens used to create the 5 minute cache entry.
     #[serde(rename = "ephemeral_5m_input_tokens")]
     ephemeral_5_m_input_tokens: i64,
+}
+
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct OutputTokensDetails {
+    /// Number of output tokens the model generated as internal reasoning, including
+    /// the thinking-block delimiter tokens.
+    ///
+    /// Reflects the raw reasoning the model produced, not the (possibly shorter)
+    /// summarized thinking text returned in the response body. Computed by
+    /// re-tokenizing the raw reasoning text, so it may differ from the model's exact
+    /// generation count by a small number of tokens. Always ≤ `output_tokens`;
+    /// `output_tokens - thinking_tokens` approximates the non-reasoning output.
+    thinking_tokens: i64,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]

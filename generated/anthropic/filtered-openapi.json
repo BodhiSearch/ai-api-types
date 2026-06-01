@@ -1398,6 +1398,7 @@
             "container_upload": "#/components/schemas/RequestContainerUploadBlock",
             "document": "#/components/schemas/RequestDocumentBlock",
             "image": "#/components/schemas/RequestImageBlock",
+            "mid_conv_system": "#/components/schemas/RequestMidConvSystemBlock",
             "redacted_thinking": "#/components/schemas/RequestRedactedThinkingBlock",
             "search_result": "#/components/schemas/RequestSearchResultBlock",
             "server_tool_use": "#/components/schemas/RequestServerToolUseBlock",
@@ -1468,6 +1469,9 @@
           },
           {
             "$ref": "#/components/schemas/RequestContainerUploadBlock"
+          },
+          {
+            "$ref": "#/components/schemas/RequestMidConvSystemBlock"
           }
         ],
         "x-stainless-python-extend-union": [
@@ -1510,7 +1514,8 @@
           "role": {
             "enum": [
               "user",
-              "assistant"
+              "assistant",
+              "system"
             ],
             "title": "Role",
             "type": "string"
@@ -1899,10 +1904,15 @@
       },
       "Model": {
         "title": "Model",
-        "description": "The model that will complete your prompt.\\n\\nSee [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.",
+        "description": "The model that will complete your prompt.\n\nSee [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.",
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "const": "claude-opus-4-8",
+            "description": "Frontier intelligence for long-running agents and coding",
+            "x-stainless-nominal": false
           },
           {
             "const": "claude-opus-4-7",
@@ -2185,6 +2195,22 @@
           }
         },
         "title": "OutputConfig",
+        "type": "object"
+      },
+      "OutputTokensDetails": {
+        "properties": {
+          "thinking_tokens": {
+            "default": 0,
+            "description": "Number of output tokens the model generated as internal reasoning, including\nthe thinking-block delimiter tokens.\n\nReflects the raw reasoning the model produced, not the (possibly shorter)\nsummarized thinking text returned in the response body. Computed by\nre-tokenizing the raw reasoning text, so it may differ from the model's exact\ngeneration count by a small number of tokens. Always ≤ `output_tokens`;\n`output_tokens - thinking_tokens` approximates the non-reasoning output.",
+            "minimum": 0,
+            "title": "Thinking Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "thinking_tokens"
+        ],
+        "title": "OutputTokensDetails",
         "type": "object"
       },
       "OverloadedError": {
@@ -2942,6 +2968,63 @@
           "type"
         ],
         "title": "RequestImageBlock",
+        "type": "object"
+      },
+      "RequestMidConvSystemBlock": {
+        "additionalProperties": false,
+        "description": "System instructions that appear mid-conversation.\n\nUse this block to provide or update system-level instructions at a specific\npoint in the conversation, rather than only via the top-level `system` parameter.",
+        "properties": {
+          "cache_control": {
+            "anyOf": [
+              {
+                "discriminator": {
+                  "mapping": {
+                    "ephemeral": "#/components/schemas/CacheControlEphemeral"
+                  },
+                  "propertyName": "type"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CacheControlEphemeral"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Create a cache control breakpoint at this content block.",
+            "title": "Cache Control"
+          },
+          "content": {
+            "description": "System instruction text blocks.",
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "text": "#/components/schemas/RequestTextBlock"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/RequestTextBlock"
+                }
+              ]
+            },
+            "title": "Content",
+            "type": "array"
+          },
+          "type": {
+            "const": "mid_conv_system",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content",
+          "type"
+        ],
+        "title": "RequestMidConvSystemBlock",
         "type": "object"
       },
       "RequestPageLocationCitation": {
@@ -6661,6 +6744,18 @@
             "title": "Output Tokens",
             "type": "integer"
           },
+          "output_tokens_details": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OutputTokensDetails"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Breakdown of output tokens by category.\n\n`output_tokens` remains the inclusive, authoritative total used for billing.\nThis object provides a read-only decomposition for observability — for example,\nhow many of the billed output tokens were spent on internal reasoning that may\nhave been summarized before being returned to you."
+          },
           "server_tool_use": {
             "anyOf": [
               {
@@ -6699,6 +6794,7 @@
           "inference_geo",
           "input_tokens",
           "output_tokens",
+          "output_tokens_details",
           "server_tool_use",
           "service_tier"
         ],
@@ -6801,6 +6897,7 @@
           "invalid_tool_input",
           "url_too_long",
           "url_not_allowed",
+          "url_not_in_prior_context",
           "url_not_accessible",
           "unsupported_content_type",
           "too_many_requests",

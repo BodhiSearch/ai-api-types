@@ -727,7 +727,7 @@ export interface components {
              */
             type: "timeout_error";
         };
-        InputContentBlock: components["schemas"]["RequestTextBlock"] | components["schemas"]["RequestImageBlock"] | components["schemas"]["RequestDocumentBlock"] | components["schemas"]["RequestSearchResultBlock"] | components["schemas"]["RequestThinkingBlock"] | components["schemas"]["RequestRedactedThinkingBlock"] | components["schemas"]["RequestToolUseBlock"] | components["schemas"]["RequestToolResultBlock"] | components["schemas"]["RequestServerToolUseBlock"] | components["schemas"]["RequestWebSearchToolResultBlock"] | components["schemas"]["RequestWebFetchToolResultBlock"] | components["schemas"]["RequestCodeExecutionToolResultBlock"] | components["schemas"]["RequestBashCodeExecutionToolResultBlock"] | components["schemas"]["RequestTextEditorCodeExecutionToolResultBlock"] | components["schemas"]["RequestToolSearchToolResultBlock"] | components["schemas"]["RequestContainerUploadBlock"];
+        InputContentBlock: components["schemas"]["RequestTextBlock"] | components["schemas"]["RequestImageBlock"] | components["schemas"]["RequestDocumentBlock"] | components["schemas"]["RequestSearchResultBlock"] | components["schemas"]["RequestThinkingBlock"] | components["schemas"]["RequestRedactedThinkingBlock"] | components["schemas"]["RequestToolUseBlock"] | components["schemas"]["RequestToolResultBlock"] | components["schemas"]["RequestServerToolUseBlock"] | components["schemas"]["RequestWebSearchToolResultBlock"] | components["schemas"]["RequestWebFetchToolResultBlock"] | components["schemas"]["RequestCodeExecutionToolResultBlock"] | components["schemas"]["RequestBashCodeExecutionToolResultBlock"] | components["schemas"]["RequestTextEditorCodeExecutionToolResultBlock"] | components["schemas"]["RequestToolSearchToolResultBlock"] | components["schemas"]["RequestContainerUploadBlock"] | components["schemas"]["RequestMidConvSystemBlock"];
         /** InputMessage */
         InputMessage: {
             /** Content */
@@ -736,7 +736,7 @@ export interface components {
              * Role
              * @enum {string}
              */
-            role: "user" | "assistant";
+            role: "user" | "assistant" | "system";
         };
         /** InputSchema */
         InputSchema: {
@@ -994,9 +994,11 @@ export interface components {
         };
         /**
          * Model
-         * @description The model that will complete your prompt.\n\nSee [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
+         * @description The model that will complete your prompt.
+         *
+         *     See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
          */
-        Model: string | "claude-opus-4-7" | "claude-mythos-preview" | "claude-opus-4-6" | "claude-sonnet-4-6" | "claude-haiku-4-5" | "claude-haiku-4-5-20251001" | "claude-opus-4-5" | "claude-opus-4-5-20251101" | "claude-sonnet-4-5" | "claude-sonnet-4-5-20250929" | "claude-opus-4-1" | "claude-opus-4-1-20250805" | "claude-opus-4-0" | "claude-opus-4-20250514" | "claude-sonnet-4-0" | "claude-sonnet-4-20250514" | "claude-3-haiku-20240307";
+        Model: string | "claude-opus-4-8" | "claude-opus-4-7" | "claude-mythos-preview" | "claude-opus-4-6" | "claude-sonnet-4-6" | "claude-haiku-4-5" | "claude-haiku-4-5-20251001" | "claude-opus-4-5" | "claude-opus-4-5-20251101" | "claude-sonnet-4-5" | "claude-sonnet-4-5-20250929" | "claude-opus-4-1" | "claude-opus-4-1-20250805" | "claude-opus-4-0" | "claude-opus-4-20250514" | "claude-sonnet-4-0" | "claude-sonnet-4-20250514" | "claude-3-haiku-20240307";
         /**
          * ModelCapabilities
          * @description Model capability information.
@@ -1087,6 +1089,22 @@ export interface components {
             effort?: components["schemas"]["EffortLevel"] | null;
             /** @description A schema to specify Claude's output format in responses. See [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) */
             format?: components["schemas"]["JsonOutputFormat"] | null;
+        };
+        /** OutputTokensDetails */
+        OutputTokensDetails: {
+            /**
+             * Thinking Tokens
+             * @description Number of output tokens the model generated as internal reasoning, including
+             *     the thinking-block delimiter tokens.
+             *
+             *     Reflects the raw reasoning the model produced, not the (possibly shorter)
+             *     summarized thinking text returned in the response body. Computed by
+             *     re-tokenizing the raw reasoning text, so it may differ from the model's exact
+             *     generation count by a small number of tokens. Always ≤ `output_tokens`;
+             *     `output_tokens - thinking_tokens` approximates the non-reasoning output.
+             * @default 0
+             */
+            thinking_tokens: number;
         };
         /** OverloadedError */
         OverloadedError: {
@@ -1400,6 +1418,30 @@ export interface components {
              * @enum {string}
              */
             type: "image";
+        };
+        /**
+         * RequestMidConvSystemBlock
+         * @description System instructions that appear mid-conversation.
+         *
+         *     Use this block to provide or update system-level instructions at a specific
+         *     point in the conversation, rather than only via the top-level `system` parameter.
+         */
+        RequestMidConvSystemBlock: {
+            /**
+             * Cache Control
+             * @description Create a cache control breakpoint at this content block.
+             */
+            cache_control?: components["schemas"]["CacheControlEphemeral"] | null;
+            /**
+             * Content
+             * @description System instruction text blocks.
+             */
+            content: components["schemas"]["RequestTextBlock"][];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "mid_conv_system";
         };
         /** RequestPageLocationCitation */
         RequestPageLocationCitation: {
@@ -2974,6 +3016,16 @@ export interface components {
              */
             output_tokens: number;
             /**
+             * @description Breakdown of output tokens by category.
+             *
+             *     `output_tokens` remains the inclusive, authoritative total used for billing.
+             *     This object provides a read-only decomposition for observability — for example,
+             *     how many of the billed output tokens were spent on internal reasoning that may
+             *     have been summarized before being returned to you.
+             * @default null
+             */
+            output_tokens_details: components["schemas"]["OutputTokensDetails"] | null;
+            /**
              * @description The number of server tool requests.
              * @default null
              */
@@ -3029,7 +3081,7 @@ export interface components {
          * WebFetchToolResultErrorCode
          * @enum {string}
          */
-        WebFetchToolResultErrorCode: "invalid_tool_input" | "url_too_long" | "url_not_allowed" | "url_not_accessible" | "unsupported_content_type" | "too_many_requests" | "max_uses_exceeded" | "unavailable";
+        WebFetchToolResultErrorCode: "invalid_tool_input" | "url_too_long" | "url_not_allowed" | "url_not_in_prior_context" | "url_not_accessible" | "unsupported_content_type" | "too_many_requests" | "max_uses_exceeded" | "unavailable";
         /** WebFetchTool_20250910 */
         WebFetchTool_20250910: {
             /** Allowed Callers */
