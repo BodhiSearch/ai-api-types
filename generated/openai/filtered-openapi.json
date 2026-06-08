@@ -791,6 +791,88 @@
   },
   "components": {
     "schemas": {
+      "AdditionalTools": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "additional_tools"
+            ],
+            "description": "The type of the item. Always `additional_tools`.",
+            "default": "additional_tools",
+            "x-stainless-const": true
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique ID of the additional tools item."
+          },
+          "role": {
+            "$ref": "#/components/schemas/MessageRole",
+            "description": "The role that provided the additional tools."
+          },
+          "tools": {
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            },
+            "type": "array",
+            "description": "The additional tool definitions made available at this item."
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "role",
+          "tools"
+        ]
+      },
+      "AdditionalToolsItemParam": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "The unique ID of this additional tools item.",
+                "example": "at_123"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "additional_tools"
+            ],
+            "description": "The item type. Always `additional_tools`.",
+            "default": "additional_tools",
+            "x-stainless-const": true
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "developer"
+            ],
+            "description": "The role that provided the additional tools. Only `developer` is supported.",
+            "default": "developer",
+            "x-stainless-const": true
+          },
+          "tools": {
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            },
+            "type": "array",
+            "description": "A list of additional tools made available at this item."
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "role",
+          "tools"
+        ]
+      },
       "Annotation": {
         "oneOf": [
           {
@@ -1639,6 +1721,101 @@
             "propertyName": "type"
           }
         }
+      },
+      "ChatCompletionModeration": {
+        "type": "object",
+        "description": "Moderation results or errors for the request input and generated output.",
+        "properties": {
+          "input": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ChatCompletionModerationResults"
+              },
+              {
+                "$ref": "#/components/schemas/ChatCompletionModerationError"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "type"
+            },
+            "description": "Moderation for the request input."
+          },
+          "output": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ChatCompletionModerationResults"
+              },
+              {
+                "$ref": "#/components/schemas/ChatCompletionModerationError"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "type"
+            },
+            "description": "Moderation for the generated output."
+          }
+        },
+        "required": [
+          "input",
+          "output"
+        ]
+      },
+      "ChatCompletionModerationError": {
+        "type": "object",
+        "description": "An error produced while attempting moderation.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "error"
+            ],
+            "description": "The object type, which is always `error`.",
+            "x-stainless-const": true
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "The error message."
+          }
+        },
+        "required": [
+          "type",
+          "code",
+          "message"
+        ]
+      },
+      "ChatCompletionModerationResults": {
+        "type": "object",
+        "description": "Successful moderation results for the request input or generated output.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "moderation_results"
+            ],
+            "description": "The object type, which is always `moderation_results`.",
+            "x-stainless-const": true
+          },
+          "model": {
+            "type": "string",
+            "description": "The moderation model used to generate the results."
+          },
+          "results": {
+            "type": "array",
+            "description": "A list of moderation results.",
+            "items": {
+              "$ref": "#/components/schemas/ModerationResultBody"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "model",
+          "results"
+        ]
       },
       "ChatCompletionNamedToolChoice": {
         "type": "object",
@@ -3910,6 +4087,17 @@
                 "nullable": true,
                 "description": "Whether or not to store the output of this chat completion request for\nuse in our [model distillation](/docs/guides/distillation) or\n[evals](/docs/guides/evals) products.\n\nSupports text and image inputs. Note: image inputs over 8MB will be dropped.\n"
               },
+              "moderation": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ModerationParam",
+                    "description": "Configuration for running moderation on the request input and generated output.\n"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "stream": {
                 "description": "If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section below](/docs/api-reference/chat/streaming)\nfor more information, along with the [streaming responses](/docs/guides/streaming-responses)\nguide for more information on how to handle the streaming events.\n",
                 "type": "boolean",
@@ -4050,7 +4238,7 @@
               "properties": {
                 "finish_reason": {
                   "type": "string",
-                  "description": "The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,\n`length` if the maximum number of tokens specified in the request was reached,\n`content_filter` if content was omitted due to a flag from our content filters,\n`tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.\n",
+                  "description": "The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,\n`length` if the maximum number of tokens specified in the request was reached,\n`content_filter` if content was omitted due to a flag from our content filters,\n`tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.\nRead the [Model Spec](https://model-spec.openai.com/2025-12-18.html) for more.\n",
                   "enum": [
                     "stop",
                     "length",
@@ -4141,6 +4329,17 @@
           },
           "usage": {
             "$ref": "#/components/schemas/CompletionUsage"
+          },
+          "moderation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChatCompletionModeration",
+                "description": "Moderation results for the request input and generated output, if moderated\ncompletions were requested.\n"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -4253,6 +4452,17 @@
             "$ref": "#/components/schemas/CompletionUsage",
             "nullable": true,
             "description": "An optional field that will only be present when you set\n`stream_options: {\"include_usage\": true}` in your request. When present, it\ncontains a null value **except for the last chunk** which contains the\ntoken usage statistics for the entire request.\n\n**NOTE:** If the stream is interrupted or cancelled, you may not\nreceive the final usage chunk which contains the total token usage for\nthe request.\n"
+          },
+          "moderation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChatCompletionModeration",
+                "description": "Moderation results for the request input and generated output. Present\non the moderation chunk when moderated completions are requested.\n"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -4343,6 +4553,17 @@
                   {
                     "type": "string",
                     "description": "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "moderation": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ModerationParam",
+                    "description": "Configuration for running moderation on the input and output of this response.\n"
                   },
                   {
                     "type": "null"
@@ -6925,6 +7146,9 @@
             "$ref": "#/components/schemas/ToolSearchOutputItemParam"
           },
           {
+            "$ref": "#/components/schemas/AdditionalToolsItemParam"
+          },
+          {
             "$ref": "#/components/schemas/ReasoningItem"
           },
           {
@@ -7039,6 +7263,9 @@
           },
           {
             "$ref": "#/components/schemas/ToolSearchOutput"
+          },
+          {
+            "$ref": "#/components/schemas/AdditionalTools"
           },
           {
             "$ref": "#/components/schemas/ReasoningItem"
@@ -7878,6 +8105,19 @@
           "final_answer"
         ]
       },
+      "MessageRole": {
+        "type": "string",
+        "enum": [
+          "unknown",
+          "user",
+          "assistant",
+          "system",
+          "critic",
+          "discriminator",
+          "developer",
+          "tool"
+        ]
+      },
       "Metadata": {
         "anyOf": [
           {
@@ -8126,7 +8366,7 @@
                   "in_memory",
                   "24h"
                 ],
-                "description": "The retention policy for the prompt cache. Set to `24h` to enable extended prompt caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours. [Learn more](/docs/guides/prompt-caching#prompt-cache-retention).\n"
+                "description": "The retention policy for the prompt cache. Set to `24h` to enable extended prompt caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours. [Learn more](/docs/guides/prompt-caching#prompt-cache-retention).\nFor `gpt-5.5`, `gpt-5.5-pro`, and future models, only `24h` is supported.\n\nFor older models that support both `in_memory` and `24h`, the default depends on your organization's data retention policy:\n  - Organizations without ZDR enabled default to `24h`.\n  - Organizations with ZDR enabled default to `in_memory` when `prompt_cache_retention` is not specified.\n"
               },
               {
                 "type": "null"
@@ -8134,6 +8374,153 @@
             ]
           }
         }
+      },
+      "Moderation": {
+        "properties": {
+          "input": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModerationResultBody"
+              },
+              {
+                "$ref": "#/components/schemas/ModerationErrorBody"
+              }
+            ],
+            "description": "Moderation for the response input.",
+            "discriminator": {
+              "propertyName": "type"
+            }
+          },
+          "output": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModerationResultBody"
+              },
+              {
+                "$ref": "#/components/schemas/ModerationErrorBody"
+              }
+            ],
+            "description": "Moderation for the response output.",
+            "discriminator": {
+              "propertyName": "type"
+            }
+          }
+        },
+        "type": "object",
+        "required": [
+          "input",
+          "output"
+        ],
+        "title": "Moderation",
+        "description": "Moderation results or errors for the response input and output."
+      },
+      "ModerationErrorBody": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "error"
+            ],
+            "description": "The object type, which was always `error` for moderation failures.",
+            "default": "error",
+            "x-stainless-const": true
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "The error message."
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "code",
+          "message"
+        ],
+        "title": "Moderation error",
+        "description": "An error produced while attempting moderation for the response input or output."
+      },
+      "ModerationInputType": {
+        "type": "string",
+        "enum": [
+          "text",
+          "image"
+        ]
+      },
+      "ModerationParam": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The moderation model to use for moderated completions, e.g. 'omni-moderation-latest'."
+          }
+        },
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "description": "Configuration for running moderation on the input and output of this response."
+      },
+      "ModerationResultBody": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "moderation_result"
+            ],
+            "description": "The object type, which was always `moderation_result` for successful moderation results.",
+            "default": "moderation_result",
+            "x-stainless-const": true
+          },
+          "model": {
+            "type": "string",
+            "description": "The moderation model that produced this result."
+          },
+          "flagged": {
+            "type": "boolean",
+            "description": "A boolean indicating whether the content was flagged by any category."
+          },
+          "categories": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "type": "object",
+            "description": "A dictionary of moderation categories to booleans, True if the input is flagged under this category.",
+            "x-oaiTypeLabel": "map"
+          },
+          "category_scores": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "description": "A dictionary of moderation categories to scores.",
+            "x-oaiTypeLabel": "map"
+          },
+          "category_applied_input_types": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/ModerationInputType"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "description": "Which modalities of input are reflected by the score for each category.",
+            "x-oaiTypeLabel": "map"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "model",
+          "flagged",
+          "categories",
+          "category_scores",
+          "category_applied_input_types"
+        ],
+        "title": "Moderation result",
+        "description": "A moderation result produced for the response input or output."
       },
       "MoveParam": {
         "properties": {
@@ -8276,6 +8663,9 @@
           },
           {
             "$ref": "#/components/schemas/ToolSearchOutput"
+          },
+          {
+            "$ref": "#/components/schemas/AdditionalTools"
           },
           {
             "$ref": "#/components/schemas/CompactionBody"
@@ -8835,6 +9225,17 @@
               },
               "usage": {
                 "$ref": "#/components/schemas/ResponseUsage"
+              },
+              "moderation": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/Moderation",
+                    "description": "Moderation results for the response input and output, if moderated completions were requested.\n"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "parallel_tool_calls": {
                 "type": "boolean",
@@ -12799,7 +13200,8 @@
           },
           "query": {
             "type": "string",
-            "description": "[DEPRECATED] The search query.\n"
+            "deprecated": true,
+            "description": "The search query.\n"
           },
           "queries": {
             "type": "array",
@@ -12841,8 +13243,7 @@
           }
         },
         "required": [
-          "type",
-          "query"
+          "type"
         ]
       },
       "WebSearchApproximateLocation": {

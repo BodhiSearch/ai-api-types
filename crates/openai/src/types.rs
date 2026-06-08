@@ -124,6 +124,8 @@ pub struct CreateChatCompletionRequest {
     /// to browse and compare available models.
     model: String,
 
+    moderation: Option<ModerationParam>,
+
     /// How many chat completion choices to generate for each input message. Note that you will
     /// be charged based on the number of generated tokens across all of the choices. Keep `n` as
     /// `1` to minimize costs.
@@ -628,6 +630,16 @@ pub enum ResponseModality {
     Text,
 }
 
+/// Configuration for running moderation on the request input and generated output.
+///
+///
+/// Configuration for running moderation on the input and output of this response.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ModerationParam {
+    /// The moderation model to use for moderated completions, e.g. 'omni-moderation-latest'.
+    model: String,
+}
+
 /// Configuration for a [Predicted Output](/docs/guides/predicted-outputs),
 /// which can greatly improve response times when large parts of the model
 /// response are known ahead of time. This is most common when you are
@@ -702,6 +714,13 @@ pub enum PredictionType {
 /// The retention policy for the prompt cache. Set to `24h` to enable extended prompt
 /// caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours.
 /// [Learn more](/docs/guides/prompt-caching#prompt-cache-retention).
+/// For `gpt-5.5`, `gpt-5.5-pro`, and future models, only `24h` is supported.
+///
+/// For older models that support both `in_memory` and `24h`, the default depends on your
+/// organization's data retention policy:
+/// - Organizations without ZDR enabled default to `24h`.
+/// - Organizations with ZDR enabled default to `in_memory` when `prompt_cache_retention` is
+/// not specified.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum PromptCacheRetention {
@@ -1170,6 +1189,8 @@ pub struct CreateChatCompletionResponse {
     /// The model used for the chat completion.
     model: String,
 
+    moderation: Option<ChatCompletionModeration>,
+
     /// The object type, which is always `chat.completion`.
     object: Object,
 
@@ -1192,6 +1213,7 @@ pub struct Choice {
     /// `content_filter` if content was omitted due to a flag from our content filters,
     /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model
     /// called a function.
+    /// Read the [Model Spec](https://model-spec.openai.com/2025-12-18.html) for more.
     finish_reason: FinishReason,
 
     /// The index of the choice in the list of choices.
@@ -1208,6 +1230,7 @@ pub struct Choice {
 /// `content_filter` if content was omitted due to a flag from our content filters,
 /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model
 /// called a function.
+/// Read the [Model Spec](https://model-spec.openai.com/2025-12-18.html) for more.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum FinishReason {
@@ -1377,6 +1400,100 @@ pub struct Function {
 
     /// The name of the function to call.
     name: String,
+}
+
+/// Moderation results for the request input and generated output, if moderated
+/// completions were requested.
+///
+///
+/// Moderation results or errors for the request input and generated output.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ChatCompletionModeration {
+    /// Moderation for the request input.
+    input: InputClass,
+
+    /// Moderation for the generated output.
+    output: InputClass,
+}
+
+/// Moderation for the request input.
+///
+/// Moderation for the generated output.
+///
+/// Successful moderation results for the request input or generated output.
+///
+/// An error produced while attempting moderation.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct InputClass {
+    /// The moderation model used to generate the results.
+    model: Option<String>,
+
+    /// A list of moderation results.
+    results: Option<Vec<ModerationResult>>,
+
+    /// The object type, which is always `moderation_results`.
+    ///
+    /// The object type, which is always `error`.
+    #[serde(rename = "type")]
+    chat_completion_moderation_type: InputType,
+
+    /// The error code.
+    code: Option<String>,
+
+    /// The error message.
+    message: Option<String>,
+}
+
+/// The object type, which is always `moderation_results`.
+///
+/// The object type, which is always `error`.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum InputType {
+    Error,
+
+    #[serde(rename = "moderation_results")]
+    ModerationResults,
+}
+
+/// A moderation result produced for the response input or output.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ModerationResult {
+    /// A dictionary of moderation categories to booleans, True if the input is flagged under
+    /// this category.
+    categories: HashMap<String, bool>,
+
+    /// Which modalities of input are reflected by the score for each category.
+    category_applied_input_types: HashMap<String, Vec<ModerationInputType>>,
+
+    /// A dictionary of moderation categories to scores.
+    category_scores: HashMap<String, f64>,
+
+    /// A boolean indicating whether the content was flagged by any category.
+    flagged: bool,
+
+    /// The moderation model that produced this result.
+    model: String,
+
+    /// The object type, which was always `moderation_result` for successful moderation results.
+    #[serde(rename = "type")]
+    moderation_result_type: ResultType,
+}
+
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ModerationInputType {
+    Image,
+
+    Text,
+}
+
+/// The object type, which was always `moderation_result` for successful moderation results.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ResultType {
+    #[serde(rename = "moderation_result")]
+    ModerationResult,
 }
 
 /// The object type, which is always `chat.completion`.
@@ -1561,6 +1678,8 @@ pub struct CreateResponse {
     instructions: Option<String>,
 
     max_output_tokens: Option<i64>,
+
+    moderation: Option<ModerationParam>,
 
     parallel_tool_calls: Option<bool>,
 
@@ -1791,6 +1910,9 @@ pub struct InputItem {
     ///
     ///
     /// The role of the output message. Always `assistant`.
+    ///
+    ///
+    /// The role that provided the additional tools. Only `developer` is supported.
     role: Option<Role>,
 
     /// The type of the message input. Always `message`.
@@ -1820,6 +1942,8 @@ pub struct InputItem {
     /// The item type. Always `tool_search_call`.
     ///
     /// The item type. Always `tool_search_output`.
+    ///
+    /// The item type. Always `additional_tools`.
     ///
     /// The type of the object. Always `reasoning`.
     ///
@@ -2040,6 +2164,8 @@ pub struct InputItem {
 
     /// The loaded tool definitions returned by the tool search output.
     ///
+    /// A list of additional tools made available at this item.
+    ///
     /// The tools available on the server.
     tools: Option<Vec<ToolElement>>,
 
@@ -2222,7 +2348,7 @@ pub struct ActionClass {
     /// The search queries.
     queries: Option<Vec<String>>,
 
-    /// [DEPRECATED] The search query.
+    /// The search query.
     query: Option<String>,
 
     /// The sources used in the search.
@@ -2689,6 +2815,8 @@ pub enum ToolSearchExecutionType {
 ///
 /// The item type. Always `tool_search_output`.
 ///
+/// The item type. Always `additional_tools`.
+///
 /// The type of the object. Always `reasoning`.
 ///
 ///
@@ -2738,6 +2866,9 @@ pub enum ToolSearchExecutionType {
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum InputItemType {
+    #[serde(rename = "additional_tools")]
+    AdditionalTools,
+
     #[serde(rename = "apply_patch_call")]
     ApplyPatchCall,
 
@@ -4435,6 +4566,8 @@ pub struct Response {
 
     max_output_tokens: Option<i64>,
 
+    moderation: Option<Moderation>,
+
     /// The object type of this resource - always set to `response`.
     object: Object,
 
@@ -4680,7 +4813,7 @@ pub struct InputItemAction {
     /// The search queries.
     queries: Option<Vec<String>>,
 
-    /// [DEPRECATED] The search query.
+    /// The search query.
     query: Option<String>,
 
     /// The sources used in the search.
@@ -4853,26 +4986,6 @@ pub struct PurpleShellCallOutcome {
 
     /// The exit code returned by the shell process.
     exit_code: Option<i64>,
-}
-
-/// The role of the message input. One of `user`, `assistant`, `system`, or
-/// `developer`.
-///
-///
-/// The role of the message input. One of `user`, `system`, or `developer`.
-///
-///
-/// The role of the output message. Always `assistant`.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
-#[serde(rename_all = "snake_case")]
-pub enum InputItemRole {
-    Assistant,
-
-    Developer,
-
-    System,
-
-    User,
 }
 
 /// An array of tools the model may call while generating a response. You
@@ -5084,7 +5197,7 @@ pub struct InputItemTool {
     model: Option<String>,
 
     /// Moderation level for the generated image. Default: `auto`.
-    moderation: Option<Moderation>,
+    moderation: Option<ModerationEnum>,
 
     /// Compression level for the output image. Default: 100.
     output_compression: Option<i64>,
@@ -5120,7 +5233,7 @@ pub struct InputItemTool {
     /// Whether tool search is executed by the server or by the client.
     execution: Option<ToolSearchExecutionType>,
 
-    search_content_types: Option<Vec<SearchContentType>>,
+    search_content_types: Option<Vec<TType>>,
 
     #[schema(value_type = Option<Object>)]
     annotations: Option<HashMap<String, Option<serde_json::Value>>>,
@@ -5128,6 +5241,23 @@ pub struct InputItemTool {
     /// The JSON schema describing the tool's input.
     #[schema(value_type = Option<Object>)]
     input_schema: Option<HashMap<String, Option<serde_json::Value>>>,
+}
+
+/// Moderation level for the generated image. Default: `auto`.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ModerationEnum {
+    Auto,
+
+    Low,
+}
+
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum TType {
+    Image,
+
+    Text,
 }
 
 /// An output message from the model.
@@ -5242,6 +5372,8 @@ pub struct OutputItem {
     ///
     /// The unique ID of the tool search output item.
     ///
+    /// The unique ID of the additional tools item.
+    ///
     /// The unique ID of the compaction item.
     ///
     /// The unique ID of the image generation call.
@@ -5290,7 +5422,10 @@ pub struct OutputItem {
     phase: Option<MessagePhase>,
 
     /// The role of the output message. Always `assistant`.
-    role: Option<OutputItemRole>,
+    ///
+    ///
+    /// The role that provided the additional tools.
+    role: Option<MessageRole>,
 
     /// The status of the message input. One of `in_progress`, `completed`, or
     /// `incomplete`. Populated when input items are returned via API.
@@ -5359,6 +5494,8 @@ pub struct OutputItem {
     /// The type of the item. Always `tool_search_call`.
     ///
     /// The type of the item. Always `tool_search_output`.
+    ///
+    /// The type of the item. Always `additional_tools`.
     ///
     /// The type of the item. Always `compaction`.
     ///
@@ -5509,6 +5646,8 @@ pub struct OutputItem {
 
     /// The loaded tool definitions returned by tool search.
     ///
+    /// The additional tool definitions made available at this item.
+    ///
     /// The tools available on the server.
     tools: Option<Vec<OutputItemTool>>,
 
@@ -5599,7 +5738,7 @@ pub struct OutputItemAction {
     /// The search queries.
     queries: Option<Vec<String>>,
 
-    /// [DEPRECATED] The search query.
+    /// The search query.
     query: Option<String>,
 
     /// The sources used in the search.
@@ -5901,6 +6040,8 @@ pub struct FluffyShellCallOutcome {
 ///
 /// The type of the item. Always `tool_search_output`.
 ///
+/// The type of the item. Always `additional_tools`.
+///
 /// The type of the item. Always `compaction`.
 ///
 /// The type of the image generation call. Always `image_generation_call`.
@@ -5942,6 +6083,9 @@ pub struct FluffyShellCallOutcome {
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum OutputItemType {
+    #[serde(rename = "additional_tools")]
+    AdditionalTools,
+
     #[serde(rename = "apply_patch_call")]
     ApplyPatchCall,
 
@@ -6016,10 +6160,27 @@ pub enum OutputItemType {
 }
 
 /// The role of the output message. Always `assistant`.
+///
+///
+/// The role that provided the additional tools.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum OutputItemRole {
+pub enum MessageRole {
     Assistant,
+
+    Critic,
+
+    Developer,
+
+    Discriminator,
+
+    System,
+
+    Tool,
+
+    Unknown,
+
+    User,
 }
 
 /// An array of tools the model may call while generating a response. You
@@ -6231,7 +6392,7 @@ pub struct OutputItemTool {
     model: Option<String>,
 
     /// Moderation level for the generated image. Default: `auto`.
-    moderation: Option<Moderation>,
+    moderation: Option<ModerationEnum>,
 
     /// Compression level for the output image. Default: 100.
     output_compression: Option<i64>,
@@ -6267,7 +6428,7 @@ pub struct OutputItemTool {
     /// Whether tool search is executed by the server or by the client.
     execution: Option<ToolSearchExecutionType>,
 
-    search_content_types: Option<Vec<SearchContentType>>,
+    search_content_types: Option<Vec<TType>>,
 
     #[schema(value_type = Option<Object>)]
     annotations: Option<HashMap<String, Option<serde_json::Value>>>,
@@ -7071,6 +7232,8 @@ pub struct TheResponseObject {
     instructions: Option<Instructions>,
 
     max_output_tokens: Option<i64>,
+
+    moderation: Option<Moderation>,
 
     /// The object type of this resource - always set to `response`.
     object: Object,
