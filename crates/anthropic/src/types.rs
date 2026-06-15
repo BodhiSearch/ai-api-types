@@ -1802,6 +1802,12 @@ pub enum Category {
     Bio,
 
     Cyber,
+
+    #[serde(rename = "frontier_llm")]
+    FrontierLlm,
+
+    #[serde(rename = "reasoning_extraction")]
+    ReasoningExtraction,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]

@@ -15,7 +15,7 @@ export type ApiError = {
  */
 export type AllowedCaller = 'direct' | 'code_execution_20250825' | 'code_execution_20260120';
 
-export type AnthropicBeta = string | ('message-batches-2024-09-24' | 'prompt-caching-2024-07-31' | 'computer-use-2024-10-22' | 'computer-use-2025-01-24' | 'pdfs-2024-09-25' | 'token-counting-2024-11-01' | 'token-efficient-tools-2025-02-19' | 'output-128k-2025-02-19' | 'files-api-2025-04-14' | 'mcp-client-2025-04-04' | 'mcp-client-2025-11-20' | 'dev-full-thinking-2025-05-14' | 'interleaved-thinking-2025-05-14' | 'code-execution-2025-05-22' | 'extended-cache-ttl-2025-04-11' | 'context-1m-2025-08-07' | 'context-management-2025-06-27' | 'model-context-window-exceeded-2025-08-26' | 'skills-2025-10-02' | 'fast-mode-2026-02-01' | 'output-300k-2026-03-24' | 'user-profiles-2026-03-24' | 'advisor-tool-2026-03-01' | 'managed-agents-2026-04-01' | 'cache-diagnosis-2026-04-07' | 'thinking-token-count-2026-05-13');
+export type AnthropicBeta = string | ('message-batches-2024-09-24' | 'prompt-caching-2024-07-31' | 'computer-use-2024-10-22' | 'computer-use-2025-01-24' | 'pdfs-2024-09-25' | 'token-counting-2024-11-01' | 'token-efficient-tools-2025-02-19' | 'output-128k-2025-02-19' | 'files-api-2025-04-14' | 'mcp-client-2025-04-04' | 'mcp-client-2025-11-20' | 'dev-full-thinking-2025-05-14' | 'interleaved-thinking-2025-05-14' | 'code-execution-2025-05-22' | 'extended-cache-ttl-2025-04-11' | 'context-1m-2025-08-07' | 'context-management-2025-06-27' | 'model-context-window-exceeded-2025-08-26' | 'skills-2025-10-02' | 'fast-mode-2026-02-01' | 'output-300k-2026-03-24' | 'user-profiles-2026-03-24' | 'advisor-tool-2026-03-01' | 'managed-agents-2026-04-01' | 'cache-diagnosis-2026-04-07' | 'thinking-token-count-2026-05-13' | 'server-side-fallback-2026-06-01' | 'fallback-credit-2026-06-01');
 
 export type AuthenticationError = {
     message: string;
@@ -753,7 +753,7 @@ export type Metadata = {
  *
  * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
  */
-export type Model = string | 'claude-opus-4-8' | 'claude-opus-4-7' | 'claude-mythos-preview' | 'claude-opus-4-6' | 'claude-sonnet-4-6' | 'claude-haiku-4-5' | 'claude-haiku-4-5-20251001' | 'claude-opus-4-5' | 'claude-opus-4-5-20251101' | 'claude-sonnet-4-5' | 'claude-sonnet-4-5-20250929' | 'claude-opus-4-1' | 'claude-opus-4-1-20250805' | 'claude-opus-4-0' | 'claude-opus-4-20250514' | 'claude-sonnet-4-0' | 'claude-sonnet-4-20250514' | 'claude-3-haiku-20240307';
+export type Model = string | 'claude-fable-5' | 'claude-mythos-5' | 'claude-opus-4-8' | 'claude-opus-4-7' | 'claude-mythos-preview' | 'claude-opus-4-6' | 'claude-sonnet-4-6' | 'claude-haiku-4-5' | 'claude-haiku-4-5-20251001' | 'claude-opus-4-5' | 'claude-opus-4-5-20251101' | 'claude-sonnet-4-5' | 'claude-sonnet-4-5-20250929' | 'claude-opus-4-1' | 'claude-opus-4-1-20250805' | 'claude-opus-4-0' | 'claude-opus-4-20250514' | 'claude-sonnet-4-0' | 'claude-sonnet-4-20250514' | 'claude-3-haiku-20240307';
 
 /**
  * Model capability information.
@@ -892,7 +892,7 @@ export type RefusalStopDetails = {
      *
      * `null` when the refusal doesn't map to a named category.
      */
-    category: ('cyber' | 'bio') | null;
+    category: ('cyber' | 'bio' | 'frontier_llm' | 'reasoning_extraction') | null;
     /**
      * Human-readable explanation of the refusal.
      *

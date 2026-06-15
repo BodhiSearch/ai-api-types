@@ -322,7 +322,9 @@
               "advisor-tool-2026-03-01",
               "managed-agents-2026-04-01",
               "cache-diagnosis-2026-04-07",
-              "thinking-token-count-2026-05-13"
+              "thinking-token-count-2026-05-13",
+              "server-side-fallback-2026-06-01",
+              "fallback-credit-2026-06-01"
             ],
             "x-stainless-nominal": false
           }
@@ -1910,6 +1912,16 @@
             "type": "string"
           },
           {
+            "const": "claude-fable-5",
+            "description": "Next generation of intelligence for the hardest knowledge work and coding problems",
+            "x-stainless-nominal": false
+          },
+          {
+            "const": "claude-mythos-5",
+            "description": "Most capable model for cybersecurity and biology research",
+            "x-stainless-nominal": false
+          },
+          {
             "const": "claude-opus-4-8",
             "description": "Frontier intelligence for long-running agents and coding",
             "x-stainless-nominal": false
@@ -1922,7 +1934,9 @@
           {
             "const": "claude-mythos-preview",
             "description": "New class of intelligence, strongest in coding and cybersecurity",
-            "x-stainless-nominal": false
+            "x-stainless-nominal": false,
+            "deprecated": true,
+            "x-stainless-deprecation-message": "Will reach end-of-life on June 30, 2026. Please migrate to claude-mythos-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
           },
           {
             "const": "claude-opus-4-6",
@@ -2314,7 +2328,9 @@
               {
                 "enum": [
                   "cyber",
-                  "bio"
+                  "bio",
+                  "frontier_llm",
+                  "reasoning_extraction"
                 ],
                 "type": "string"
               },
