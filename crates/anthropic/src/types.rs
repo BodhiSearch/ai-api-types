@@ -364,22 +364,14 @@ pub struct InputContentBlock {
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Caller {
     #[serde(rename = "type")]
-    caller_type: AllowedCaller,
+    caller_type: CallerType,
 
     tool_id: Option<String>,
 }
 
-/// Specifies who can invoke a tool.
-///
-/// Values:
-/// direct: The model can call this tool directly.
-/// code_execution_20250825: The tool can be called from the code execution environment
-/// (v1).
-/// code_execution_20260120: The tool can be called from the code execution environment (v2
-/// with persistence).
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum AllowedCaller {
+pub enum CallerType {
     #[serde(rename = "code_execution_20250825")]
     CodeExecution20250825,
 
@@ -1164,6 +1156,8 @@ pub enum ToolChoiceType {
 
 /// Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint).
 ///
+/// Code execution tool with REPL state persistence.
+///
 /// Web fetch tool with use_cache parameter for bypassing cached content.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Tool {
@@ -1246,6 +1240,31 @@ pub struct Tool {
     use_cache: Option<bool>,
 }
 
+/// Specifies who can invoke a tool.
+///
+/// Values:
+/// direct: The model can call this tool directly.
+/// code_execution_20250825: The tool can be called from the code execution environment
+/// (v1).
+/// code_execution_20260120: The tool can be called from the code execution environment (v2
+/// with persistence).
+/// code_execution_20260521: The tool can be called from the code execution environment (v2
+/// with persistence).
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum AllowedCaller {
+    #[serde(rename = "code_execution_20250825")]
+    CodeExecution20250825,
+
+    #[serde(rename = "code_execution_20260120")]
+    CodeExecution20260120,
+
+    #[serde(rename = "code_execution_20260521")]
+    CodeExecution20260521,
+
+    Direct,
+}
+
 /// [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
 ///
 /// This defines the shape of the `input` that your tool accepts and that the model will
@@ -1281,6 +1300,9 @@ pub enum ToolType {
 
     #[serde(rename = "code_execution_20260120")]
     CodeExecution20260120,
+
+    #[serde(rename = "code_execution_20260521")]
+    CodeExecution20260521,
 
     Custom,
 
@@ -1494,18 +1516,6 @@ pub struct ContentBlock {
     tool_use_id: Option<String>,
 
     file_id: Option<String>,
-}
-
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
-#[serde(rename_all = "snake_case")]
-pub enum CallerType {
-    #[serde(rename = "code_execution_20250825")]
-    CodeExecution20250825,
-
-    #[serde(rename = "code_execution_20260120")]
-    CodeExecution20260120,
-
-    Direct,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -1784,7 +1794,7 @@ pub struct RefusalStopDetails {
     /// The policy category that triggered the refusal.
     ///
     /// `null` when the refusal doesn't map to a named category.
-    category: Option<Category>,
+    category: Option<RefusalCategory>,
 
     /// Human-readable explanation of the refusal.
     ///
@@ -1796,9 +1806,10 @@ pub struct RefusalStopDetails {
     refusal_stop_details_type: RefusalStopDetailsType,
 }
 
+/// The policy category that triggered a refusal.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum Category {
+pub enum RefusalCategory {
     Bio,
 
     Cyber,

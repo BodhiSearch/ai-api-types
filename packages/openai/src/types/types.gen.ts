@@ -2030,6 +2030,11 @@ export type CreateModelResponseProperties = ModelResponseProperties & {
 };
 
 export type CreateResponse = CreateModelResponseProperties & ResponseProperties & {
+    /**
+     * @deprecated
+     */
+    truncation?: ('auto' | 'disabled') | null;
+    reasoning?: Reasoning | null;
     input?: InputParam;
     include?: Array<IncludeEnum> | null;
     parallel_tool_calls?: boolean | null;
@@ -3717,15 +3722,15 @@ export type McpTool = {
      */
     server_label: string;
     /**
-     * The URL for the MCP server. One of `server_url` or `connector_id` must be
-     * provided.
+     * The URL for the MCP server. One of `server_url`, `connector_id`, or
+     * `tunnel_id` must be provided.
      *
      */
     server_url?: string;
     /**
      * Identifier for service connectors, like those available in ChatGPT. One of
-     * `server_url` or `connector_id` must be provided. Learn more about service
-     * connectors [here](/docs/guides/tools-remote-mcp#connectors).
+     * `server_url`, `connector_id`, or `tunnel_id` must be provided. Learn more
+     * about service connectors [here](/docs/guides/tools-remote-mcp#connectors).
      *
      * Currently supported `connector_id` values are:
      *
@@ -3740,6 +3745,12 @@ export type McpTool = {
      *
      */
     connector_id?: 'connector_dropbox' | 'connector_gmail' | 'connector_googlecalendar' | 'connector_googledrive' | 'connector_microsoftteams' | 'connector_outlookcalendar' | 'connector_outlookemail' | 'connector_sharepoint';
+    /**
+     * The Secure MCP Tunnel ID to use instead of a direct server URL. One of
+     * `server_url`, `connector_id`, or `tunnel_id` must be provided.
+     *
+     */
+    tunnel_id?: string;
     /**
      * An OAuth access token that can be used with a remote MCP server, either
      * with a custom MCP server URL or a service connector. Your application
@@ -4211,6 +4222,7 @@ export type RankingOptions = {
 export type Reasoning = {
     effort?: ReasoningEffort;
     summary?: ('auto' | 'concise' | 'detailed') | null;
+    context?: ('auto' | 'current_turn' | 'all_turns') | null;
     generate_summary?: ('auto' | 'concise' | 'detailed') | null;
 };
 
@@ -4282,6 +4294,7 @@ export type RefusalContent = {
 };
 
 export type Response = ModelResponseProperties & ResponseProperties & {
+    truncation?: ('auto' | 'disabled') | null;
     /**
      * Unique identifier for this Response.
      *
@@ -4323,6 +4336,7 @@ export type Response = ModelResponseProperties & ResponseProperties & {
      *
      */
     output: Array<OutputItem>;
+    reasoning?: Reasoning | null;
     instructions: (string | Array<InputItem>) | null;
     output_text?: string | null;
     usage?: ResponseUsage;
@@ -5445,14 +5459,12 @@ export type ResponseProperties = {
      *
      */
     model?: ModelIdsResponses;
-    reasoning?: Reasoning | null;
     background?: boolean | null;
     max_tool_calls?: number | null;
     text?: ResponseTextParam;
     tools?: ToolsArray;
     tool_choice?: ToolChoiceParam;
     prompt?: Prompt;
-    truncation?: ('auto' | 'disabled') | null;
 };
 
 /**

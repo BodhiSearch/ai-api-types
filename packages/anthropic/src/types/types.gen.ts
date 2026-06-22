@@ -12,8 +12,9 @@ export type ApiError = {
  * direct: The model can call this tool directly.
  * code_execution_20250825: The tool can be called from the code execution environment (v1).
  * code_execution_20260120: The tool can be called from the code execution environment (v2 with persistence).
+ * code_execution_20260521: The tool can be called from the code execution environment (v2 with persistence).
  */
-export type AllowedCaller = 'direct' | 'code_execution_20250825' | 'code_execution_20260120';
+export type AllowedCaller = 'direct' | 'code_execution_20250825' | 'code_execution_20260120' | 'code_execution_20260521';
 
 export type AnthropicBeta = string | ('message-batches-2024-09-24' | 'prompt-caching-2024-07-31' | 'computer-use-2024-10-22' | 'computer-use-2025-01-24' | 'pdfs-2024-09-25' | 'token-counting-2024-11-01' | 'token-efficient-tools-2025-02-19' | 'output-128k-2025-02-19' | 'files-api-2025-04-14' | 'mcp-client-2025-04-04' | 'mcp-client-2025-11-20' | 'dev-full-thinking-2025-05-14' | 'interleaved-thinking-2025-05-14' | 'code-execution-2025-05-22' | 'extended-cache-ttl-2025-04-11' | 'context-1m-2025-08-07' | 'context-management-2025-06-27' | 'model-context-window-exceeded-2025-08-26' | 'skills-2025-10-02' | 'fast-mode-2026-02-01' | 'output-300k-2026-03-24' | 'user-profiles-2026-03-24' | 'advisor-tool-2026-03-01' | 'managed-agents-2026-04-01' | 'cache-diagnosis-2026-04-07' | 'thinking-token-count-2026-05-13' | 'server-side-fallback-2026-06-01' | 'fallback-credit-2026-06-01');
 
@@ -182,6 +183,34 @@ export type CodeExecutionTool20260120 = {
      */
     strict?: boolean;
     type: 'code_execution_20260120';
+};
+
+/**
+ * Code execution tool with REPL state persistence.
+ */
+export type CodeExecutionTool20260521 = {
+    allowed_callers?: Array<AllowedCaller>;
+    /**
+     * Create a cache control breakpoint at this content block.
+     */
+    cache_control?: ({
+        type?: 'ephemeral';
+    } & CacheControlEphemeral) | null;
+    /**
+     * If true, tool will not be included in initial system prompt. Only loaded when returned via tool_reference from tool search.
+     */
+    defer_loading?: boolean;
+    /**
+     * Name of the tool.
+     *
+     * This is how the tool will be called by the model and in `tool_use` blocks.
+     */
+    name: 'code_execution';
+    /**
+     * When true, guarantees schema validation on tool names and inputs
+     */
+    strict?: boolean;
+    type: 'code_execution_20260521';
 };
 
 /**
@@ -440,7 +469,7 @@ export type CreateMessageParams = {
      *
      * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
      */
-    tools?: Array<Tool | BashTool20250124 | CodeExecutionTool20250522 | CodeExecutionTool20250825 | CodeExecutionTool20260120 | MemoryTool20250818 | TextEditor20250124 | TextEditor20250429 | TextEditor20250728 | WebSearchTool20250305 | WebFetchTool20250910 | WebSearchTool20260209 | WebFetchTool20260209 | WebFetchTool20260309 | ToolSearchToolBm2520251119 | ToolSearchToolRegex20251119>;
+    tools?: Array<Tool | BashTool20250124 | CodeExecutionTool20250522 | CodeExecutionTool20250825 | CodeExecutionTool20260120 | CodeExecutionTool20260521 | MemoryTool20250818 | TextEditor20250124 | TextEditor20250429 | TextEditor20250728 | WebSearchTool20250305 | WebFetchTool20250910 | WebSearchTool20260209 | WebFetchTool20260209 | WebFetchTool20260309 | ToolSearchToolBm2520251119 | ToolSearchToolRegex20251119>;
     /**
      * Only sample from the top K options for each subsequent token.
      *
@@ -753,7 +782,7 @@ export type Metadata = {
  *
  * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
  */
-export type Model = string | 'claude-fable-5' | 'claude-mythos-5' | 'claude-opus-4-8' | 'claude-opus-4-7' | 'claude-mythos-preview' | 'claude-opus-4-6' | 'claude-sonnet-4-6' | 'claude-haiku-4-5' | 'claude-haiku-4-5-20251001' | 'claude-opus-4-5' | 'claude-opus-4-5-20251101' | 'claude-sonnet-4-5' | 'claude-sonnet-4-5-20250929' | 'claude-opus-4-1' | 'claude-opus-4-1-20250805' | 'claude-opus-4-0' | 'claude-opus-4-20250514' | 'claude-sonnet-4-0' | 'claude-sonnet-4-20250514' | 'claude-3-haiku-20240307';
+export type Model = string | 'claude-fable-5' | 'claude-mythos-5' | 'claude-opus-4-8' | 'claude-opus-4-7' | 'claude-mythos-preview' | 'claude-opus-4-6' | 'claude-sonnet-4-6' | 'claude-haiku-4-5' | 'claude-haiku-4-5-20251001' | 'claude-opus-4-5' | 'claude-opus-4-5-20251101' | 'claude-sonnet-4-5' | 'claude-sonnet-4-5-20250929' | 'claude-opus-4-1' | 'claude-opus-4-1-20250805';
 
 /**
  * Model capability information.
@@ -884,6 +913,11 @@ export type RateLimitError = {
 };
 
 /**
+ * The policy category that triggered a refusal.
+ */
+export type RefusalCategory = 'cyber' | 'bio' | 'frontier_llm' | 'reasoning_extraction';
+
+/**
  * Structured information about a refusal.
  */
 export type RefusalStopDetails = {
@@ -892,7 +926,7 @@ export type RefusalStopDetails = {
      *
      * `null` when the refusal doesn't map to a named category.
      */
-    category: ('cyber' | 'bio' | 'frontier_llm' | 'reasoning_extraction') | null;
+    category: RefusalCategory | null;
     /**
      * Human-readable explanation of the refusal.
      *

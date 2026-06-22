@@ -1657,15 +1657,11 @@ pub struct CreateResponse {
 
     prompt: Option<Prompt>,
 
-    reasoning: Option<Reasoning>,
-
     text: Option<ResponseTextParam>,
 
     tool_choice: Option<ToolChoiceParam>,
 
     tools: Option<Vec<Tool>>,
-
-    truncation: Option<Truncation>,
 
     context_management: Option<Vec<ContextManagementParam>>,
 
@@ -1683,11 +1679,15 @@ pub struct CreateResponse {
 
     parallel_tool_calls: Option<bool>,
 
+    reasoning: Option<Reasoning>,
+
     store: Option<bool>,
 
     stream: Option<bool>,
 
     stream_options: Option<ResponseStreamOptions>,
+
+    truncation: Option<Truncation>,
 }
 
 /// Context management configuration for this request.
@@ -3475,8 +3475,8 @@ pub struct ToolElement {
     authorization: Option<String>,
 
     /// Identifier for service connectors, like those available in ChatGPT. One of
-    /// `server_url` or `connector_id` must be provided. Learn more about service
-    /// connectors [here](/docs/guides/tools-remote-mcp#connectors).
+    /// `server_url`, `connector_id`, or `tunnel_id` must be provided. Learn more
+    /// about service connectors [here](/docs/guides/tools-remote-mcp#connectors).
     ///
     /// Currently supported `connector_id` values are:
     ///
@@ -3500,9 +3500,13 @@ pub struct ToolElement {
     /// A label for this MCP server, used to identify it in tool calls.
     server_label: Option<String>,
 
-    /// The URL for the MCP server. One of `server_url` or `connector_id` must be
-    /// provided.
+    /// The URL for the MCP server. One of `server_url`, `connector_id`, or
+    /// `tunnel_id` must be provided.
     server_url: Option<String>,
+
+    /// The Secure MCP Tunnel ID to use instead of a direct server URL. One of
+    /// `server_url`, `connector_id`, or `tunnel_id` must be provided.
+    tunnel_id: Option<String>,
 
     /// The code interpreter container. Can be a container ID or an object that
     /// specifies uploaded file IDs to make available to your code, along with an
@@ -3616,8 +3620,8 @@ pub enum Background {
 }
 
 /// Identifier for service connectors, like those available in ChatGPT. One of
-/// `server_url` or `connector_id` must be provided. Learn more about service
-/// connectors [here](/docs/guides/tools-remote-mcp#connectors).
+/// `server_url`, `connector_id`, or `tunnel_id` must be provided. Learn more
+/// about service connectors [here](/docs/guides/tools-remote-mcp#connectors).
 ///
 /// Currently supported `connector_id` values are:
 ///
@@ -4343,11 +4347,28 @@ pub struct Input {
 /// [reasoning models](https://platform.openai.com/docs/guides/reasoning).
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Reasoning {
+    context: Option<Context>,
+
     effort: Option<ReasoningEffort>,
 
     generate_summary: Option<Summary>,
 
     summary: Option<Summary>,
+}
+
+/// Controls which reasoning items are rendered back to the model on later turns.
+/// When returned on a response, this is the effective reasoning context mode
+/// used for the response.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum Context {
+    #[serde(rename = "all_turns")]
+    AllTurns,
+
+    Auto,
+
+    #[serde(rename = "current_turn")]
+    CurrentTurn,
 }
 
 /// **Deprecated:** use `summary` instead.
@@ -4538,15 +4559,11 @@ pub struct Response {
 
     prompt: Option<Prompt>,
 
-    reasoning: Option<Reasoning>,
-
     text: Option<ResponseTextParam>,
 
     tool_choice: ToolChoiceParam,
 
     tools: Vec<Tool>,
-
-    truncation: Option<Truncation>,
 
     completed_at: Option<f64>,
 
@@ -4586,9 +4603,13 @@ pub struct Response {
     /// Whether to allow the model to run tool calls in parallel.
     parallel_tool_calls: bool,
 
+    reasoning: Option<Reasoning>,
+
     /// The status of the response generation. One of `completed`, `failed`,
     /// `in_progress`, `cancelled`, `queued`, or `incomplete`.
     status: Option<StatusEnum>,
+
+    truncation: Option<Truncation>,
 
     usage: Option<ResponseUsage>,
 }
@@ -5147,8 +5168,8 @@ pub struct InputItemTool {
     authorization: Option<String>,
 
     /// Identifier for service connectors, like those available in ChatGPT. One of
-    /// `server_url` or `connector_id` must be provided. Learn more about service
-    /// connectors [here](/docs/guides/tools-remote-mcp#connectors).
+    /// `server_url`, `connector_id`, or `tunnel_id` must be provided. Learn more
+    /// about service connectors [here](/docs/guides/tools-remote-mcp#connectors).
     ///
     /// Currently supported `connector_id` values are:
     ///
@@ -5172,9 +5193,13 @@ pub struct InputItemTool {
     /// A label for this MCP server, used to identify it in tool calls.
     server_label: Option<String>,
 
-    /// The URL for the MCP server. One of `server_url` or `connector_id` must be
-    /// provided.
+    /// The URL for the MCP server. One of `server_url`, `connector_id`, or
+    /// `tunnel_id` must be provided.
     server_url: Option<String>,
+
+    /// The Secure MCP Tunnel ID to use instead of a direct server URL. One of
+    /// `server_url`, `connector_id`, or `tunnel_id` must be provided.
+    tunnel_id: Option<String>,
 
     /// The code interpreter container. Can be a container ID or an object that
     /// specifies uploaded file IDs to make available to your code, along with an
@@ -6342,8 +6367,8 @@ pub struct OutputItemTool {
     authorization: Option<String>,
 
     /// Identifier for service connectors, like those available in ChatGPT. One of
-    /// `server_url` or `connector_id` must be provided. Learn more about service
-    /// connectors [here](/docs/guides/tools-remote-mcp#connectors).
+    /// `server_url`, `connector_id`, or `tunnel_id` must be provided. Learn more
+    /// about service connectors [here](/docs/guides/tools-remote-mcp#connectors).
     ///
     /// Currently supported `connector_id` values are:
     ///
@@ -6367,9 +6392,13 @@ pub struct OutputItemTool {
     /// A label for this MCP server, used to identify it in tool calls.
     server_label: Option<String>,
 
-    /// The URL for the MCP server. One of `server_url` or `connector_id` must be
-    /// provided.
+    /// The URL for the MCP server. One of `server_url`, `connector_id`, or
+    /// `tunnel_id` must be provided.
     server_url: Option<String>,
+
+    /// The Secure MCP Tunnel ID to use instead of a direct server URL. One of
+    /// `server_url`, `connector_id`, or `tunnel_id` must be provided.
+    tunnel_id: Option<String>,
 
     /// The code interpreter container. Can be a container ID or an object that
     /// specifies uploaded file IDs to make available to your code, along with an
@@ -7205,15 +7234,11 @@ pub struct TheResponseObject {
 
     prompt: Option<Prompt>,
 
-    reasoning: Option<Reasoning>,
-
     text: Option<ResponseTextParam>,
 
     tool_choice: ToolChoiceParam,
 
     tools: Vec<Tool>,
-
-    truncation: Option<Truncation>,
 
     completed_at: Option<f64>,
 
@@ -7253,9 +7278,13 @@ pub struct TheResponseObject {
     /// Whether to allow the model to run tool calls in parallel.
     parallel_tool_calls: bool,
 
+    reasoning: Option<Reasoning>,
+
     /// The status of the response generation. One of `completed`, `failed`,
     /// `in_progress`, `cancelled`, `queued`, or `incomplete`.
     status: Option<StatusEnum>,
+
+    truncation: Option<Truncation>,
 
     usage: Option<ResponseUsage>,
 }

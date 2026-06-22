@@ -1783,6 +1783,9 @@ export interface components {
             top_logprobs?: number;
         };
         CreateResponse: components["schemas"]["CreateModelResponseProperties"] & components["schemas"]["ResponseProperties"] & {
+            /** @deprecated */
+            truncation?: ("auto" | "disabled") | null;
+            reasoning?: components["schemas"]["Reasoning"] | null;
             input?: components["schemas"]["InputParam"];
             include?: components["schemas"]["IncludeEnum"][] | null;
             parallel_tool_calls?: boolean | null;
@@ -3059,14 +3062,14 @@ export interface components {
             server_label: string;
             /**
              * Format: uri
-             * @description The URL for the MCP server. One of `server_url` or `connector_id` must be
-             *     provided.
+             * @description The URL for the MCP server. One of `server_url`, `connector_id`, or
+             *     `tunnel_id` must be provided.
              */
             server_url?: string;
             /**
              * @description Identifier for service connectors, like those available in ChatGPT. One of
-             *     `server_url` or `connector_id` must be provided. Learn more about service
-             *     connectors [here](/docs/guides/tools-remote-mcp#connectors).
+             *     `server_url`, `connector_id`, or `tunnel_id` must be provided. Learn more
+             *     about service connectors [here](/docs/guides/tools-remote-mcp#connectors).
              *
              *     Currently supported `connector_id` values are:
              *
@@ -3081,6 +3084,11 @@ export interface components {
              * @enum {string}
              */
             connector_id?: "connector_dropbox" | "connector_gmail" | "connector_googlecalendar" | "connector_googledrive" | "connector_microsoftteams" | "connector_outlookcalendar" | "connector_outlookemail" | "connector_sharepoint";
+            /**
+             * @description The Secure MCP Tunnel ID to use instead of a direct server URL. One of
+             *     `server_url`, `connector_id`, or `tunnel_id` must be provided.
+             */
+            tunnel_id?: string;
             /**
              * @description An OAuth access token that can be used with a remote MCP server, either
              *     with a custom MCP server URL or a service connector. Your application
@@ -3396,6 +3404,7 @@ export interface components {
         Reasoning: {
             effort?: components["schemas"]["ReasoningEffort"];
             summary?: ("auto" | "concise" | "detailed") | null;
+            context?: ("auto" | "current_turn" | "all_turns") | null;
             generate_summary?: ("auto" | "concise" | "detailed") | null;
         };
         ReasoningEffort: ("none" | "minimal" | "low" | "medium" | "high" | "xhigh") | null;
@@ -3485,7 +3494,8 @@ export interface components {
          *       "previous_response_id": null,
          *       "reasoning": {
          *         "effort": null,
-         *         "summary": null
+         *         "summary": null,
+         *         "context": null
          *       },
          *       "store": true,
          *       "temperature": 1,
@@ -3514,6 +3524,7 @@ export interface components {
          *     }
          */
         Response: components["schemas"]["ModelResponseProperties"] & components["schemas"]["ResponseProperties"] & {
+            truncation?: ("auto" | "disabled") | null;
             /** @description Unique identifier for this Response. */
             id: string;
             /**
@@ -3552,6 +3563,7 @@ export interface components {
              *       supported in SDKs.
              */
             output: components["schemas"]["OutputItem"][];
+            reasoning?: components["schemas"]["Reasoning"] | null;
             instructions: (string | components["schemas"]["InputItem"][]) | null;
             output_text?: string | null;
             usage?: components["schemas"]["ResponseUsage"];
@@ -4286,14 +4298,12 @@ export interface components {
              *     to browse and compare available models.
              */
             model?: components["schemas"]["ModelIdsResponses"];
-            reasoning?: components["schemas"]["Reasoning"] | null;
             background?: boolean | null;
             max_tool_calls?: number | null;
             text?: components["schemas"]["ResponseTextParam"];
             tools?: components["schemas"]["ToolsArray"];
             tool_choice?: components["schemas"]["ToolChoiceParam"];
             prompt?: components["schemas"]["Prompt"];
-            truncation?: ("auto" | "disabled") | null;
         };
         /**
          * ResponseQueuedEvent

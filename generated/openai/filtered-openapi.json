@@ -4507,6 +4507,33 @@
           {
             "type": "object",
             "properties": {
+              "truncation": {
+                "deprecated": true,
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "description": "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
+                    "enum": [
+                      "auto",
+                      "disabled"
+                    ],
+                    "default": "disabled"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reasoning": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/Reasoning"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "input": {
                 "$ref": "#/components/schemas/InputParam"
               },
@@ -7884,7 +7911,7 @@
           "server_url": {
             "type": "string",
             "format": "uri",
-            "description": "The URL for the MCP server. One of `server_url` or `connector_id` must be\nprovided.\n"
+            "description": "The URL for the MCP server. One of `server_url`, `connector_id`, or\n`tunnel_id` must be provided.\n"
           },
           "connector_id": {
             "type": "string",
@@ -7898,7 +7925,12 @@
               "connector_outlookemail",
               "connector_sharepoint"
             ],
-            "description": "Identifier for service connectors, like those available in ChatGPT. One of\n`server_url` or `connector_id` must be provided. Learn more about service\nconnectors [here](/docs/guides/tools-remote-mcp#connectors).\n\nCurrently supported `connector_id` values are:\n\n- Dropbox: `connector_dropbox`\n- Gmail: `connector_gmail`\n- Google Calendar: `connector_googlecalendar`\n- Google Drive: `connector_googledrive`\n- Microsoft Teams: `connector_microsoftteams`\n- Outlook Calendar: `connector_outlookcalendar`\n- Outlook Email: `connector_outlookemail`\n- SharePoint: `connector_sharepoint`\n"
+            "description": "Identifier for service connectors, like those available in ChatGPT. One of\n`server_url`, `connector_id`, or `tunnel_id` must be provided. Learn more\nabout service connectors [here](/docs/guides/tools-remote-mcp#connectors).\n\nCurrently supported `connector_id` values are:\n\n- Dropbox: `connector_dropbox`\n- Gmail: `connector_gmail`\n- Google Calendar: `connector_googlecalendar`\n- Google Drive: `connector_googledrive`\n- Microsoft Teams: `connector_microsoftteams`\n- Outlook Calendar: `connector_outlookcalendar`\n- Outlook Email: `connector_outlookemail`\n- SharePoint: `connector_sharepoint`\n"
+          },
+          "tunnel_id": {
+            "type": "string",
+            "pattern": "^tunnel_[a-z0-9]{32}$",
+            "description": "The Secure MCP Tunnel ID to use instead of a direct server URL. One of\n`server_url`, `connector_id`, or `tunnel_id` must be provided.\n"
           },
           "authorization": {
             "type": "string",
@@ -8955,6 +8987,22 @@
               }
             ]
           },
+          "context": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "Controls which reasoning items are rendered back to the model on later turns.\nWhen returned on a response, this is the effective reasoning context mode\nused for the response.\n",
+                "enum": [
+                  "auto",
+                  "current_turn",
+                  "all_turns"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "generate_summary": {
             "anyOf": [
               {
@@ -9112,6 +9160,22 @@
           {
             "type": "object",
             "properties": {
+              "truncation": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "description": "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
+                    "enum": [
+                      "auto",
+                      "disabled"
+                    ],
+                    "default": "disabled"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "id": {
                 "type": "string",
                 "description": "Unique identifier for this Response.\n"
@@ -9183,6 +9247,16 @@
                 "items": {
                   "$ref": "#/components/schemas/OutputItem"
                 }
+              },
+              "reasoning": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/Reasoning"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "instructions": {
                 "anyOf": [
@@ -9313,7 +9387,8 @@
           "previous_response_id": null,
           "reasoning": {
             "effort": null,
-            "summary": null
+            "summary": null,
+            "context": null
           },
           "store": true,
           "temperature": 1,
@@ -11145,16 +11220,6 @@
             "description": "Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI\noffers a wide range of models with different capabilities, performance\ncharacteristics, and price points. Refer to the [model guide](/docs/models)\nto browse and compare available models.\n",
             "$ref": "#/components/schemas/ModelIdsResponses"
           },
-          "reasoning": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/Reasoning"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
           "background": {
             "anyOf": [
               {
@@ -11189,22 +11254,6 @@
           },
           "prompt": {
             "$ref": "#/components/schemas/Prompt"
-          },
-          "truncation": {
-            "anyOf": [
-              {
-                "type": "string",
-                "description": "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
-                "enum": [
-                  "auto",
-                  "disabled"
-                ],
-                "default": "disabled"
-              },
-              {
-                "type": "null"
-              }
-            ]
           }
         }
       },

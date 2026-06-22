@@ -97,9 +97,10 @@ export interface components {
          *         direct: The model can call this tool directly.
          *         code_execution_20250825: The tool can be called from the code execution environment (v1).
          *         code_execution_20260120: The tool can be called from the code execution environment (v2 with persistence).
+         *         code_execution_20260521: The tool can be called from the code execution environment (v2 with persistence).
          * @enum {string}
          */
-        AllowedCaller: "direct" | "code_execution_20250825" | "code_execution_20260120";
+        AllowedCaller: "direct" | "code_execution_20250825" | "code_execution_20260120" | "code_execution_20260521";
         AnthropicBeta: string | ("message-batches-2024-09-24" | "prompt-caching-2024-07-31" | "computer-use-2024-10-22" | "computer-use-2025-01-24" | "pdfs-2024-09-25" | "token-counting-2024-11-01" | "token-efficient-tools-2025-02-19" | "output-128k-2025-02-19" | "files-api-2025-04-14" | "mcp-client-2025-04-04" | "mcp-client-2025-11-20" | "dev-full-thinking-2025-05-14" | "interleaved-thinking-2025-05-14" | "code-execution-2025-05-22" | "extended-cache-ttl-2025-04-11" | "context-1m-2025-08-07" | "context-management-2025-06-27" | "model-context-window-exceeded-2025-08-26" | "skills-2025-10-02" | "fast-mode-2026-02-01" | "output-300k-2026-03-24" | "user-profiles-2026-03-24" | "advisor-tool-2026-03-01" | "managed-agents-2026-04-01" | "cache-diagnosis-2026-04-07" | "thinking-token-count-2026-05-13" | "server-side-fallback-2026-06-01" | "fallback-credit-2026-06-01");
         /** AuthenticationError */
         AuthenticationError: {
@@ -357,6 +358,42 @@ export interface components {
              * @constant
              */
             type: "code_execution_20260120";
+        };
+        /**
+         * CodeExecutionTool_20260521
+         * @description Code execution tool with REPL state persistence.
+         */
+        CodeExecutionTool_20260521: {
+            /** Allowed Callers */
+            allowed_callers?: components["schemas"]["AllowedCaller"][];
+            /**
+             * Cache Control
+             * @description Create a cache control breakpoint at this content block.
+             */
+            cache_control?: components["schemas"]["CacheControlEphemeral"] | null;
+            /**
+             * Defer Loading
+             * @description If true, tool will not be included in initial system prompt. Only loaded when returned via tool_reference from tool search.
+             */
+            defer_loading?: boolean;
+            /**
+             * Name
+             * @description Name of the tool.
+             *
+             *     This is how the tool will be called by the model and in `tool_use` blocks.
+             * @constant
+             */
+            name: "code_execution";
+            /**
+             * Strict
+             * @description When true, guarantees schema validation on tool names and inputs
+             */
+            strict?: boolean;
+            /**
+             * Type
+             * @constant
+             */
+            type: "code_execution_20260521";
         };
         /**
          * Container
@@ -636,7 +673,7 @@ export interface components {
              *       "name": "get_weather"
              *     }
              */
-            tools?: (components["schemas"]["Tool"] | components["schemas"]["BashTool_20250124"] | components["schemas"]["CodeExecutionTool_20250522"] | components["schemas"]["CodeExecutionTool_20250825"] | components["schemas"]["CodeExecutionTool_20260120"] | components["schemas"]["MemoryTool_20250818"] | components["schemas"]["TextEditor_20250124"] | components["schemas"]["TextEditor_20250429"] | components["schemas"]["TextEditor_20250728"] | components["schemas"]["WebSearchTool_20250305"] | components["schemas"]["WebFetchTool_20250910"] | components["schemas"]["WebSearchTool_20260209"] | components["schemas"]["WebFetchTool_20260209"] | components["schemas"]["WebFetchTool_20260309"] | components["schemas"]["ToolSearchToolBM25_20251119"] | components["schemas"]["ToolSearchToolRegex_20251119"])[];
+            tools?: (components["schemas"]["Tool"] | components["schemas"]["BashTool_20250124"] | components["schemas"]["CodeExecutionTool_20250522"] | components["schemas"]["CodeExecutionTool_20250825"] | components["schemas"]["CodeExecutionTool_20260120"] | components["schemas"]["CodeExecutionTool_20260521"] | components["schemas"]["MemoryTool_20250818"] | components["schemas"]["TextEditor_20250124"] | components["schemas"]["TextEditor_20250429"] | components["schemas"]["TextEditor_20250728"] | components["schemas"]["WebSearchTool_20250305"] | components["schemas"]["WebFetchTool_20250910"] | components["schemas"]["WebSearchTool_20260209"] | components["schemas"]["WebFetchTool_20260209"] | components["schemas"]["WebFetchTool_20260309"] | components["schemas"]["ToolSearchToolBM25_20251119"] | components["schemas"]["ToolSearchToolRegex_20251119"])[];
             /**
              * Top K
              * @deprecated
@@ -998,7 +1035,7 @@ export interface components {
          *
          *     See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
          */
-        Model: string | "claude-fable-5" | "claude-mythos-5" | "claude-opus-4-8" | "claude-opus-4-7" | "claude-mythos-preview" | "claude-opus-4-6" | "claude-sonnet-4-6" | "claude-haiku-4-5" | "claude-haiku-4-5-20251001" | "claude-opus-4-5" | "claude-opus-4-5-20251101" | "claude-sonnet-4-5" | "claude-sonnet-4-5-20250929" | "claude-opus-4-1" | "claude-opus-4-1-20250805" | "claude-opus-4-0" | "claude-opus-4-20250514" | "claude-sonnet-4-0" | "claude-sonnet-4-20250514" | "claude-3-haiku-20240307";
+        Model: string | "claude-fable-5" | "claude-mythos-5" | "claude-opus-4-8" | "claude-opus-4-7" | "claude-mythos-preview" | "claude-opus-4-6" | "claude-sonnet-4-6" | "claude-haiku-4-5" | "claude-haiku-4-5-20251001" | "claude-opus-4-5" | "claude-opus-4-5-20251101" | "claude-sonnet-4-5" | "claude-sonnet-4-5-20250929" | "claude-opus-4-1" | "claude-opus-4-1-20250805";
         /**
          * ModelCapabilities
          * @description Model capability information.
@@ -1161,18 +1198,23 @@ export interface components {
             type: "rate_limit_error";
         };
         /**
+         * RefusalCategory
+         * @description The policy category that triggered a refusal.
+         * @enum {string}
+         */
+        RefusalCategory: "cyber" | "bio" | "frontier_llm" | "reasoning_extraction";
+        /**
          * RefusalStopDetails
          * @description Structured information about a refusal.
          */
         RefusalStopDetails: {
             /**
-             * Category
              * @description The policy category that triggered the refusal.
              *
              *     `null` when the refusal doesn't map to a named category.
              * @default null
              */
-            category: ("cyber" | "bio" | "frontier_llm" | "reasoning_extraction") | null;
+            category: components["schemas"]["RefusalCategory"] | null;
             /**
              * Explanation
              * @description Human-readable explanation of the refusal.
