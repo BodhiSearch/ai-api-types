@@ -20,6 +20,18 @@
               "title": "Anthropic-Version"
             },
             "description": "The version of the Claude API you want to use.\n\nRead more about versioning and our version history [here](https://docs.claude.com/en/api/versioning)."
+          },
+          {
+            "name": "anthropic-user-profile-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "The user profile ID to attribute this request to. Use when acting on behalf of a party other than your organization. Requires the `user-profiles` beta header.",
+              "title": "Anthropic-User-Profile-Id",
+              "x-stainless-param": "user_profile_id"
+            },
+            "description": "The user profile ID to attribute this request to. Use when acting on behalf of a party other than your organization. Requires the `user-profiles` beta header."
           }
         ],
         "responses": {
@@ -518,7 +530,7 @@
         "additionalProperties": false,
         "properties": {
           "ttl": {
-            "description": "The time-to-live for the cache control breakpoint.\n\nThis may be one the following values:\n- `5m`: 5 minutes\n- `1h`: 1 hour\n\nDefaults to `5m`.",
+            "description": "The time-to-live for the cache control breakpoint.\n\nThis may be one the following values:\n- `5m`: 5 minutes\n- `1h`: 1 hour\n\nDefaults to `5m`. See [prompt caching pricing](https://docs.claude.com/en/docs/build-with-claude/prompt-caching) for details.",
             "enum": [
               "5m",
               "1h"
@@ -1126,7 +1138,8 @@
           "stream": {
             "description": "Whether to incrementally stream the response using server-sent events.\n\nSee [streaming](https://docs.claude.com/en/api/messages-streaming) for details.",
             "title": "Stream",
-            "type": "boolean"
+            "type": "boolean",
+            "example": false
           },
           "system": {
             "anyOf": [
@@ -2357,7 +2370,8 @@
           "cyber",
           "bio",
           "frontier_llm",
-          "reasoning_extraction"
+          "reasoning_extraction",
+          "military_weapons"
         ],
         "title": "RefusalCategory",
         "type": "string"

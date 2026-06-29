@@ -78,7 +78,7 @@ export type CacheControlEphemeral = {
      * - `5m`: 5 minutes
      * - `1h`: 1 hour
      *
-     * Defaults to `5m`.
+     * Defaults to `5m`. See [prompt caching pricing](https://docs.claude.com/en/docs/build-with-claude/prompt-caching) for details.
      */
     ttl?: '5m' | '1h';
     type: 'ephemeral';
@@ -915,7 +915,7 @@ export type RateLimitError = {
 /**
  * The policy category that triggered a refusal.
  */
-export type RefusalCategory = 'cyber' | 'bio' | 'frontier_llm' | 'reasoning_extraction';
+export type RefusalCategory = 'cyber' | 'bio' | 'frontier_llm' | 'reasoning_extraction' | 'military_weapons';
 
 /**
  * Structured information about a refusal.
@@ -2423,6 +2423,10 @@ export type MessagesPostData = {
          * Read more about versioning and our version history [here](https://docs.claude.com/en/api/versioning).
          */
         'anthropic-version'?: string;
+        /**
+         * The user profile ID to attribute this request to. Use when acting on behalf of a party other than your organization. Requires the `user-profiles` beta header.
+         */
+        'anthropic-user-profile-id'?: string;
     };
     path?: never;
     query?: never;

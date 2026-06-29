@@ -247,7 +247,8 @@ pub struct CacheControlEphemeral {
     /// - `5m`: 5 minutes
     /// - `1h`: 1 hour
     ///
-    /// Defaults to `5m`.
+    /// Defaults to `5m`. See [prompt caching
+    /// pricing](https://docs.claude.com/en/docs/build-with-claude/prompt-caching) for details.
     ttl: Option<Ttl>,
 
     #[serde(rename = "type")]
@@ -266,7 +267,8 @@ pub enum CacheControlEphemeralType {
 /// - `5m`: 5 minutes
 /// - `1h`: 1 hour
 ///
-/// Defaults to `5m`.
+/// Defaults to `5m`. See [prompt caching
+/// pricing](https://docs.claude.com/en/docs/build-with-claude/prompt-caching) for details.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub enum Ttl {
     #[serde(rename = "1h")]
@@ -1816,6 +1818,9 @@ pub enum RefusalCategory {
 
     #[serde(rename = "frontier_llm")]
     FrontierLlm,
+
+    #[serde(rename = "military_weapons")]
+    MilitaryWeapons,
 
     #[serde(rename = "reasoning_extraction")]
     ReasoningExtraction,
