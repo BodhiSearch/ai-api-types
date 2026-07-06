@@ -16,7 +16,7 @@ export type ApiError = {
  */
 export type AllowedCaller = 'direct' | 'code_execution_20250825' | 'code_execution_20260120' | 'code_execution_20260521';
 
-export type AnthropicBeta = string | ('message-batches-2024-09-24' | 'prompt-caching-2024-07-31' | 'computer-use-2024-10-22' | 'computer-use-2025-01-24' | 'pdfs-2024-09-25' | 'token-counting-2024-11-01' | 'token-efficient-tools-2025-02-19' | 'output-128k-2025-02-19' | 'files-api-2025-04-14' | 'mcp-client-2025-04-04' | 'mcp-client-2025-11-20' | 'dev-full-thinking-2025-05-14' | 'interleaved-thinking-2025-05-14' | 'code-execution-2025-05-22' | 'extended-cache-ttl-2025-04-11' | 'context-1m-2025-08-07' | 'context-management-2025-06-27' | 'model-context-window-exceeded-2025-08-26' | 'skills-2025-10-02' | 'fast-mode-2026-02-01' | 'output-300k-2026-03-24' | 'user-profiles-2026-03-24' | 'advisor-tool-2026-03-01' | 'managed-agents-2026-04-01' | 'cache-diagnosis-2026-04-07' | 'thinking-token-count-2026-05-13' | 'server-side-fallback-2026-06-01' | 'fallback-credit-2026-06-01');
+export type AnthropicBeta = string | ('message-batches-2024-09-24' | 'prompt-caching-2024-07-31' | 'computer-use-2024-10-22' | 'computer-use-2025-01-24' | 'pdfs-2024-09-25' | 'token-counting-2024-11-01' | 'token-efficient-tools-2025-02-19' | 'output-128k-2025-02-19' | 'files-api-2025-04-14' | 'mcp-client-2025-04-04' | 'mcp-client-2025-11-20' | 'dev-full-thinking-2025-05-14' | 'interleaved-thinking-2025-05-14' | 'code-execution-2025-05-22' | 'extended-cache-ttl-2025-04-11' | 'context-1m-2025-08-07' | 'context-management-2025-06-27' | 'model-context-window-exceeded-2025-08-26' | 'skills-2025-10-02' | 'fast-mode-2026-02-01' | 'output-300k-2026-03-24' | 'user-profiles-2026-03-24' | 'advisor-tool-2026-03-01' | 'managed-agents-2026-04-01' | 'cache-diagnosis-2026-04-07' | 'thinking-token-count-2026-05-13' | 'server-side-fallback-2026-06-01' | 'fallback-credit-2026-06-01' | 'agent-memory-2026-07-22');
 
 export type AuthenticationError = {
     message: string;
@@ -78,7 +78,7 @@ export type CacheControlEphemeral = {
      * - `5m`: 5 minutes
      * - `1h`: 1 hour
      *
-     * Defaults to `5m`. See [prompt caching pricing](https://docs.claude.com/en/docs/build-with-claude/prompt-caching) for details.
+     * Defaults to `5m`. See [prompt caching pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) for details.
      */
     ttl?: '5m' | '1h';
     type: 'ephemeral';
@@ -330,9 +330,9 @@ export type CreateMessageParams = {
      * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
      * ```
      *
-     * See [input examples](https://docs.claude.com/en/api/messages-examples).
+     * See [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
      *
-     * Note that if you want to include a [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the top-level `system` parameter — there is no `"system"` role for input messages in the Messages API.
+     * Note that if you want to include a [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role), you can use the top-level `system` parameter — there is no `"system"` role for input messages in the Messages API.
      *
      * There is a limit of 100,000 messages in a single request.
      */
@@ -356,9 +356,9 @@ export type CreateMessageParams = {
      *
      * Note that our models may stop _before_ reaching this maximum. This parameter only specifies the absolute maximum number of tokens to generate.
      *
-     * Set to `0` to populate the [prompt cache](https://docs.claude.com/en/docs/build-with-claude/prompt-caching#pre-warming-the-cache) without generating a response.
+     * Set to `0` to populate the [prompt cache](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pre-warming-the-cache) without generating a response.
      *
-     * Different models have different maximum values for this parameter.  See [models](https://docs.claude.com/en/docs/models-overview) for details.
+     * Different models have different maximum values for this parameter.  See [models](https://platform.claude.com/docs/en/about-claude/models/overview) for details.
      */
     max_tokens: number;
     /**
@@ -372,7 +372,7 @@ export type CreateMessageParams = {
     /**
      * Determines whether to use priority capacity (if available) or standard capacity for this request.
      *
-     * Anthropic offers different levels of service for your API requests. See [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
+     * Anthropic offers different levels of service for your API requests. See [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
      */
     service_tier?: 'auto' | 'standard_only';
     /**
@@ -386,13 +386,13 @@ export type CreateMessageParams = {
     /**
      * Whether to incrementally stream the response using server-sent events.
      *
-     * See [streaming](https://docs.claude.com/en/api/messages-streaming) for details.
+     * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming) for details.
      */
     stream?: boolean;
     /**
      * System prompt.
      *
-     * A system prompt is a way of providing context and instructions to Claude, such as specifying a particular goal or role. See our [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+     * A system prompt is a way of providing context and instructions to Claude, such as specifying a particular goal or role. See our [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
      */
     system?: string | Array<RequestTextBlock>;
     /**
@@ -411,7 +411,7 @@ export type CreateMessageParams = {
      *
      * If you include `tools` in your API request, the model may return `tool_use` content blocks that represent the model's use of those tools. You can then run those tools using the tool input generated by the model and then optionally return results back to the model using `tool_result` content blocks.
      *
-     * There are two types of tools: **client tools** and **server tools**. The behavior described below applies to client tools. For [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools), see their individual documentation as each has its own behavior (e.g., the [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+     * There are two types of tools: **client tools** and **server tools**. The behavior described below applies to client tools. For [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools), see their individual documentation as each has its own behavior (e.g., the [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
      *
      * Each tool definition includes:
      *
@@ -467,9 +467,9 @@ export type CreateMessageParams = {
      *
      * Tools can be used for workflows that include running client-side tools and functions, or more generally whenever you want the model to produce a particular JSON structure of output.
      *
-     * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
+     * See our [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview) for more details.
      */
-    tools?: Array<Tool | BashTool20250124 | CodeExecutionTool20250522 | CodeExecutionTool20250825 | CodeExecutionTool20260120 | CodeExecutionTool20260521 | MemoryTool20250818 | TextEditor20250124 | TextEditor20250429 | TextEditor20250728 | WebSearchTool20250305 | WebFetchTool20250910 | WebSearchTool20260209 | WebFetchTool20260209 | WebFetchTool20260309 | ToolSearchToolBm2520251119 | ToolSearchToolRegex20251119>;
+    tools?: Array<Tool | BashTool20250124 | CodeExecutionTool20250522 | CodeExecutionTool20250825 | CodeExecutionTool20260120 | CodeExecutionTool20260521 | MemoryTool20250818 | TextEditor20250124 | TextEditor20250429 | TextEditor20250728 | WebSearchTool20250305 | WebFetchTool20250910 | WebSearchTool20260209 | WebFetchTool20260209 | WebFetchTool20260309 | WebSearchTool20260318 | WebFetchTool20260318 | ToolSearchToolBm2520251119 | ToolSearchToolRegex20251119>;
     /**
      * Only sample from the top K options for each subsequent token.
      *
@@ -782,7 +782,7 @@ export type Metadata = {
  *
  * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
  */
-export type Model = string | 'claude-fable-5' | 'claude-mythos-5' | 'claude-opus-4-8' | 'claude-opus-4-7' | 'claude-mythos-preview' | 'claude-opus-4-6' | 'claude-sonnet-4-6' | 'claude-haiku-4-5' | 'claude-haiku-4-5-20251001' | 'claude-opus-4-5' | 'claude-opus-4-5-20251101' | 'claude-sonnet-4-5' | 'claude-sonnet-4-5-20250929' | 'claude-opus-4-1' | 'claude-opus-4-1-20250805';
+export type Model = string | 'claude-sonnet-5' | 'claude-fable-5' | 'claude-mythos-5' | 'claude-opus-4-8' | 'claude-opus-4-7' | 'claude-mythos-preview' | 'claude-opus-4-6' | 'claude-sonnet-4-6' | 'claude-haiku-4-5' | 'claude-haiku-4-5-20251001' | 'claude-opus-4-5' | 'claude-opus-4-5-20251101' | 'claude-sonnet-4-5' | 'claude-sonnet-4-5-20250929' | 'claude-opus-4-1' | 'claude-opus-4-1-20250805';
 
 /**
  * Model capability information.
@@ -915,7 +915,7 @@ export type RateLimitError = {
 /**
  * The policy category that triggered a refusal.
  */
-export type RefusalCategory = 'cyber' | 'bio' | 'frontier_llm' | 'reasoning_extraction' | 'military_weapons';
+export type RefusalCategory = 'cyber' | 'bio' | 'frontier_llm' | 'reasoning_extraction';
 
 /**
  * Structured information about a refusal.
@@ -1912,7 +1912,7 @@ export type ThinkingConfigEnabled = {
      *
      * Must be ≥1024 and less than `max_tokens`.
      *
-     * See [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking) for details.
+     * See [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) for details.
      */
     budget_tokens: number;
     /**
@@ -1927,7 +1927,7 @@ export type ThinkingConfigEnabled = {
  *
  * When enabled, responses include `thinking` content blocks showing Claude's thinking process before the final answer. Requires a minimum budget of 1,024 tokens and counts towards your `max_tokens` limit.
  *
- * See [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking) for details.
+ * See [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) for details.
  */
 export type ThinkingConfigParam = ({
     type?: 'enabled';
@@ -2330,6 +2330,59 @@ export type WebFetchTool20260309 = {
     use_cache?: boolean;
 };
 
+export type WebFetchTool20260318 = {
+    allowed_callers?: Array<AllowedCaller>;
+    /**
+     * List of domains to allow fetching from
+     */
+    allowed_domains?: Array<string> | null;
+    /**
+     * List of domains to block fetching from
+     */
+    blocked_domains?: Array<string> | null;
+    /**
+     * Create a cache control breakpoint at this content block.
+     */
+    cache_control?: ({
+        type?: 'ephemeral';
+    } & CacheControlEphemeral) | null;
+    /**
+     * Citations configuration for fetched documents. Citations are disabled by default.
+     */
+    citations?: RequestCitationsConfig | null;
+    /**
+     * If true, tool will not be included in initial system prompt. Only loaded when returned via tool_reference from tool search.
+     */
+    defer_loading?: boolean;
+    /**
+     * Maximum number of tokens used by including web page text content in the context. The limit is approximate and does not apply to binary content such as PDFs.
+     */
+    max_content_tokens?: number | null;
+    /**
+     * Maximum number of times the tool can be used in the API request.
+     */
+    max_uses?: number | null;
+    /**
+     * Name of the tool.
+     *
+     * This is how the tool will be called by the model and in `tool_use` blocks.
+     */
+    name: 'web_fetch';
+    /**
+     * How this tool's result blocks appear in the API response when the result was consumed by a completed code_execution call in the same turn. 'full' returns the complete content (default). 'excluded' drops the nested server_tool_use and result block pair entirely. Results from direct calls, or from code_execution calls that paused before completing, are always returned in full so they can be sent back on the next turn.
+     */
+    response_inclusion?: 'full' | 'excluded';
+    /**
+     * When true, guarantees schema validation on tool names and inputs
+     */
+    strict?: boolean;
+    type: 'web_fetch_20260318';
+    /**
+     * Whether to use cached content. Set to false to bypass the cache and fetch fresh content. Only set to false when the user explicitly requests fresh content or when fetching rapidly-changing sources.
+     */
+    use_cache?: boolean;
+};
+
 export type WebSearchToolResultErrorCode = 'invalid_tool_input' | 'unavailable' | 'max_uses_exceeded' | 'too_many_requests' | 'query_too_long' | 'request_too_large';
 
 export type WebSearchTool20250305 = {
@@ -2414,13 +2467,58 @@ export type WebSearchTool20260209 = {
     user_location?: UserLocation | null;
 };
 
+export type WebSearchTool20260318 = {
+    allowed_callers?: Array<AllowedCaller>;
+    /**
+     * If provided, only these domains will be included in results. Cannot be used alongside `blocked_domains`.
+     */
+    allowed_domains?: Array<string> | null;
+    /**
+     * If provided, these domains will never appear in results. Cannot be used alongside `allowed_domains`.
+     */
+    blocked_domains?: Array<string> | null;
+    /**
+     * Create a cache control breakpoint at this content block.
+     */
+    cache_control?: ({
+        type?: 'ephemeral';
+    } & CacheControlEphemeral) | null;
+    /**
+     * If true, tool will not be included in initial system prompt. Only loaded when returned via tool_reference from tool search.
+     */
+    defer_loading?: boolean;
+    /**
+     * Maximum number of times the tool can be used in the API request.
+     */
+    max_uses?: number | null;
+    /**
+     * Name of the tool.
+     *
+     * This is how the tool will be called by the model and in `tool_use` blocks.
+     */
+    name: 'web_search';
+    /**
+     * How this tool's result blocks appear in the API response when the result was consumed by a completed code_execution call in the same turn. 'full' returns the complete content (default). 'excluded' drops the nested server_tool_use and result block pair entirely. Results from direct calls, or from code_execution calls that paused before completing, are always returned in full so they can be sent back on the next turn.
+     */
+    response_inclusion?: 'full' | 'excluded';
+    /**
+     * When true, guarantees schema validation on tool names and inputs
+     */
+    strict?: boolean;
+    type: 'web_search_20260318';
+    /**
+     * Parameters for the user's location. Used to provide more relevant search results.
+     */
+    user_location?: UserLocation | null;
+};
+
 export type MessagesPostData = {
     body: CreateMessageParams;
     headers?: {
         /**
          * The version of the Claude API you want to use.
          *
-         * Read more about versioning and our version history [here](https://docs.claude.com/en/api/versioning).
+         * Read more about versioning and our version history [here](https://platform.claude.com/docs/en/api/versioning).
          */
         'anthropic-version'?: string;
         /**
@@ -2437,7 +2535,7 @@ export type MessagesPostErrors = {
     /**
      * Error response.
      *
-     * See our [errors documentation](https://docs.claude.com/en/api/errors) for more details.
+     * See our [errors documentation](https://platform.claude.com/docs/en/api/errors) for more details.
      */
     '4XX': ErrorResponse;
 };
@@ -2459,7 +2557,7 @@ export type ModelsListData = {
         /**
          * The version of the Claude API you want to use.
          *
-         * Read more about versioning and our version history [here](https://docs.claude.com/en/api/versioning).
+         * Read more about versioning and our version history [here](https://platform.claude.com/docs/en/api/versioning).
          */
         'anthropic-version'?: string;
         /**
@@ -2499,7 +2597,7 @@ export type ModelsListErrors = {
     /**
      * Error response.
      *
-     * See our [errors documentation](https://docs.claude.com/en/api/errors) for more details.
+     * See our [errors documentation](https://platform.claude.com/docs/en/api/errors) for more details.
      */
     '4XX': ErrorResponse;
 };
@@ -2521,7 +2619,7 @@ export type ModelsGetData = {
         /**
          * The version of the Claude API you want to use.
          *
-         * Read more about versioning and our version history [here](https://docs.claude.com/en/api/versioning).
+         * Read more about versioning and our version history [here](https://platform.claude.com/docs/en/api/versioning).
          */
         'anthropic-version'?: string;
         /**
@@ -2551,7 +2649,7 @@ export type ModelsGetErrors = {
     /**
      * Error response.
      *
-     * See our [errors documentation](https://docs.claude.com/en/api/errors) for more details.
+     * See our [errors documentation](https://platform.claude.com/docs/en/api/errors) for more details.
      */
     '4XX': ErrorResponse;
 };

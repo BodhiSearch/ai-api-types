@@ -26,11 +26,11 @@ pub struct CreateMessageParams {
     /// specifies the absolute maximum number of tokens to generate.
     ///
     /// Set to `0` to populate the [prompt
-    /// cache](https://docs.claude.com/en/docs/build-with-claude/prompt-caching#pre-warming-the-cache)
+    /// cache](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pre-warming-the-cache)
     /// without generating a response.
     ///
     /// Different models have different maximum values for this parameter.  See
-    /// [models](https://docs.claude.com/en/docs/models-overview) for details.
+    /// [models](https://platform.claude.com/docs/en/about-claude/models/overview) for details.
     max_tokens: i64,
 
     /// Input messages.
@@ -87,11 +87,13 @@ pub struct CreateMessageParams {
     /// {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
     /// ```
     ///
-    /// See [input examples](https://docs.claude.com/en/api/messages-examples).
+    /// See [input
+    /// examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
     ///
     /// Note that if you want to include a [system
-    /// prompt](https://docs.claude.com/en/docs/system-prompts), you can use the top-level
-    /// `system` parameter — there is no `"system"` role for input messages in the Messages API.
+    /// prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
+    /// you can use the top-level `system` parameter — there is no `"system"` role for input
+    /// messages in the Messages API.
     ///
     /// There is a limit of 100,000 messages in a single request.
     messages: Vec<InputMessage>,
@@ -108,7 +110,7 @@ pub struct CreateMessageParams {
     /// request.
     ///
     /// Anthropic offers different levels of service for your API requests. See
-    /// [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
+    /// [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
     service_tier: Option<ServiceTier>,
 
     /// Custom text sequences that will cause the model to stop generating.
@@ -124,14 +126,15 @@ pub struct CreateMessageParams {
 
     /// Whether to incrementally stream the response using server-sent events.
     ///
-    /// See [streaming](https://docs.claude.com/en/api/messages-streaming) for details.
+    /// See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming) for
+    /// details.
     stream: Option<bool>,
 
     /// System prompt.
     ///
     /// A system prompt is a way of providing context and instructions to Claude, such as
     /// specifying a particular goal or role. See our [guide to system
-    /// prompts](https://docs.claude.com/en/docs/system-prompts).
+    /// prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
     system: Option<System>,
 
     /// Amount of randomness injected into the response.
@@ -155,9 +158,9 @@ pub struct CreateMessageParams {
     ///
     /// There are two types of tools: **client tools** and **server tools**. The behavior
     /// described below applies to client tools. For [server
-    /// tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
-    /// see their individual documentation as each has its own behavior (e.g., the [web search
-    /// tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+    /// tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools), see
+    /// their individual documentation as each has its own behavior (e.g., the [web search
+    /// tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
     ///
     /// Each tool definition includes:
     ///
@@ -218,7 +221,8 @@ pub struct CreateMessageParams {
     /// more generally whenever you want the model to produce a particular JSON structure of
     /// output.
     ///
-    /// See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
+    /// See our [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview)
+    /// for more details.
     tools: Option<Vec<Tool>>,
 
     /// Only sample from the top K options for each subsequent token.
@@ -248,7 +252,8 @@ pub struct CacheControlEphemeral {
     /// - `1h`: 1 hour
     ///
     /// Defaults to `5m`. See [prompt caching
-    /// pricing](https://docs.claude.com/en/docs/build-with-claude/prompt-caching) for details.
+    /// pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) for
+    /// details.
     ttl: Option<Ttl>,
 
     #[serde(rename = "type")]
@@ -268,7 +273,8 @@ pub enum CacheControlEphemeralType {
 /// - `1h`: 1 hour
 ///
 /// Defaults to `5m`. See [prompt caching
-/// pricing](https://docs.claude.com/en/docs/build-with-claude/prompt-caching) for details.
+/// pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) for
+/// details.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub enum Ttl {
     #[serde(rename = "1h")]
@@ -1044,7 +1050,7 @@ pub enum JsonOutputFormatType {
 /// request.
 ///
 /// Anthropic offers different levels of service for your API requests. See
-/// [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
+/// [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ServiceTier {
@@ -1058,7 +1064,7 @@ pub enum ServiceTier {
 ///
 /// A system prompt is a way of providing context and instructions to Claude, such as
 /// specifying a particular goal or role. See our [guide to system
-/// prompts](https://docs.claude.com/en/docs/system-prompts).
+/// prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum System {
@@ -1074,7 +1080,7 @@ pub enum System {
 /// towards your `max_tokens` limit.
 ///
 /// See [extended
-/// thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking) for
+/// thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) for
 /// details.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Thinking {
@@ -1085,7 +1091,7 @@ pub struct Thinking {
     /// Must be ≥1024 and less than `max_tokens`.
     ///
     /// See [extended
-    /// thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking) for
+    /// thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) for
     /// details.
     budget_tokens: Option<i64>,
 
@@ -1240,6 +1246,13 @@ pub struct Tool {
     /// Only set to false when the user explicitly requests fresh content or when fetching
     /// rapidly-changing sources.
     use_cache: Option<bool>,
+
+    /// How this tool's result blocks appear in the API response when the result was consumed by
+    /// a completed code_execution call in the same turn. 'full' returns the complete content
+    /// (default). 'excluded' drops the nested server_tool_use and result block pair entirely.
+    /// Results from direct calls, or from code_execution calls that paused before completing,
+    /// are always returned in full so they can be sent back on the next turn.
+    response_inclusion: Option<ResponseInclusion>,
 }
 
 /// Specifies who can invoke a tool.
@@ -1286,6 +1299,19 @@ pub struct InputSchema {
 #[serde(rename_all = "snake_case")]
 pub enum InputSchemaType {
     Object,
+}
+
+/// How this tool's result blocks appear in the API response when the result was consumed by
+/// a completed code_execution call in the same turn. 'full' returns the complete content
+/// (default). 'excluded' drops the nested server_tool_use and result block pair entirely.
+/// Results from direct calls, or from code_execution calls that paused before completing,
+/// are always returned in full so they can be sent back on the next turn.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ResponseInclusion {
+    Excluded,
+
+    Full,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -1341,11 +1367,17 @@ pub enum ToolType {
     #[serde(rename = "web_fetch_20260309")]
     WebFetch20260309,
 
+    #[serde(rename = "web_fetch_20260318")]
+    WebFetch20260318,
+
     #[serde(rename = "web_search_20250305")]
     WebSearch20250305,
 
     #[serde(rename = "web_search_20260209")]
     WebSearch20260209,
+
+    #[serde(rename = "web_search_20260318")]
+    WebSearch20260318,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -1818,9 +1850,6 @@ pub enum RefusalCategory {
 
     #[serde(rename = "frontier_llm")]
     FrontierLlm,
-
-    #[serde(rename = "military_weapons")]
-    MilitaryWeapons,
 
     #[serde(rename = "reasoning_extraction")]
     ReasoningExtraction,

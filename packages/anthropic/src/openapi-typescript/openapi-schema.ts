@@ -19,7 +19,7 @@ export interface paths {
          *
          *     The Messages API can be used for either single queries or stateless multi-turn conversations.
          *
-         *     Learn more about the Messages API in our [user guide](https://docs.claude.com/en/docs/initial-setup)
+         *     Learn more about the Messages API in our [user guide](https://platform.claude.com/docs/en/get-started)
          */
         post: operations["messages_post"];
         delete?: never;
@@ -101,7 +101,7 @@ export interface components {
          * @enum {string}
          */
         AllowedCaller: "direct" | "code_execution_20250825" | "code_execution_20260120" | "code_execution_20260521";
-        AnthropicBeta: string | ("message-batches-2024-09-24" | "prompt-caching-2024-07-31" | "computer-use-2024-10-22" | "computer-use-2025-01-24" | "pdfs-2024-09-25" | "token-counting-2024-11-01" | "token-efficient-tools-2025-02-19" | "output-128k-2025-02-19" | "files-api-2025-04-14" | "mcp-client-2025-04-04" | "mcp-client-2025-11-20" | "dev-full-thinking-2025-05-14" | "interleaved-thinking-2025-05-14" | "code-execution-2025-05-22" | "extended-cache-ttl-2025-04-11" | "context-1m-2025-08-07" | "context-management-2025-06-27" | "model-context-window-exceeded-2025-08-26" | "skills-2025-10-02" | "fast-mode-2026-02-01" | "output-300k-2026-03-24" | "user-profiles-2026-03-24" | "advisor-tool-2026-03-01" | "managed-agents-2026-04-01" | "cache-diagnosis-2026-04-07" | "thinking-token-count-2026-05-13" | "server-side-fallback-2026-06-01" | "fallback-credit-2026-06-01");
+        AnthropicBeta: string | ("message-batches-2024-09-24" | "prompt-caching-2024-07-31" | "computer-use-2024-10-22" | "computer-use-2025-01-24" | "pdfs-2024-09-25" | "token-counting-2024-11-01" | "token-efficient-tools-2025-02-19" | "output-128k-2025-02-19" | "files-api-2025-04-14" | "mcp-client-2025-04-04" | "mcp-client-2025-11-20" | "dev-full-thinking-2025-05-14" | "interleaved-thinking-2025-05-14" | "code-execution-2025-05-22" | "extended-cache-ttl-2025-04-11" | "context-1m-2025-08-07" | "context-management-2025-06-27" | "model-context-window-exceeded-2025-08-26" | "skills-2025-10-02" | "fast-mode-2026-02-01" | "output-300k-2026-03-24" | "user-profiles-2026-03-24" | "advisor-tool-2026-03-01" | "managed-agents-2026-04-01" | "cache-diagnosis-2026-04-07" | "thinking-token-count-2026-05-13" | "server-side-fallback-2026-06-01" | "fallback-credit-2026-06-01" | "agent-memory-2026-07-22");
         /** AuthenticationError */
         AuthenticationError: {
             /**
@@ -216,7 +216,7 @@ export interface components {
              *     - `5m`: 5 minutes
              *     - `1h`: 1 hour
              *
-             *     Defaults to `5m`. See [prompt caching pricing](https://docs.claude.com/en/docs/build-with-claude/prompt-caching) for details.
+             *     Defaults to `5m`. See [prompt caching pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) for details.
              * @enum {string}
              */
             ttl?: "5m" | "1h";
@@ -500,9 +500,9 @@ export interface components {
              *     {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
              *     ```
              *
-             *     See [input examples](https://docs.claude.com/en/api/messages-examples).
+             *     See [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
              *
-             *     Note that if you want to include a [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the top-level `system` parameter — there is no `"system"` role for input messages in the Messages API.
+             *     Note that if you want to include a [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role), you can use the top-level `system` parameter — there is no `"system"` role for input messages in the Messages API.
              *
              *     There is a limit of 100,000 messages in a single request.
              */
@@ -528,9 +528,9 @@ export interface components {
              *
              *     Note that our models may stop _before_ reaching this maximum. This parameter only specifies the absolute maximum number of tokens to generate.
              *
-             *     Set to `0` to populate the [prompt cache](https://docs.claude.com/en/docs/build-with-claude/prompt-caching#pre-warming-the-cache) without generating a response.
+             *     Set to `0` to populate the [prompt cache](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pre-warming-the-cache) without generating a response.
              *
-             *     Different models have different maximum values for this parameter.  See [models](https://docs.claude.com/en/docs/models-overview) for details.
+             *     Different models have different maximum values for this parameter.  See [models](https://platform.claude.com/docs/en/about-claude/models/overview) for details.
              * @example 1024
              */
             max_tokens: number;
@@ -542,7 +542,7 @@ export interface components {
              * Service Tier
              * @description Determines whether to use priority capacity (if available) or standard capacity for this request.
              *
-             *     Anthropic offers different levels of service for your API requests. See [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
+             *     Anthropic offers different levels of service for your API requests. See [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
              * @enum {string}
              */
             service_tier?: "auto" | "standard_only";
@@ -559,7 +559,7 @@ export interface components {
              * Stream
              * @description Whether to incrementally stream the response using server-sent events.
              *
-             *     See [streaming](https://docs.claude.com/en/api/messages-streaming) for details.
+             *     See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming) for details.
              * @example false
              */
             stream?: boolean;
@@ -567,7 +567,7 @@ export interface components {
              * System
              * @description System prompt.
              *
-             *     A system prompt is a way of providing context and instructions to Claude, such as specifying a particular goal or role. See our [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+             *     A system prompt is a way of providing context and instructions to Claude, such as specifying a particular goal or role. See our [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
              * @example [
              *       {
              *         "text": "Today's date is 2024-06-01.",
@@ -596,7 +596,7 @@ export interface components {
              *
              *     If you include `tools` in your API request, the model may return `tool_use` content blocks that represent the model's use of those tools. You can then run those tools using the tool input generated by the model and then optionally return results back to the model using `tool_result` content blocks.
              *
-             *     There are two types of tools: **client tools** and **server tools**. The behavior described below applies to client tools. For [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools), see their individual documentation as each has its own behavior (e.g., the [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+             *     There are two types of tools: **client tools** and **server tools**. The behavior described below applies to client tools. For [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools), see their individual documentation as each has its own behavior (e.g., the [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
              *
              *     Each tool definition includes:
              *
@@ -652,7 +652,7 @@ export interface components {
              *
              *     Tools can be used for workflows that include running client-side tools and functions, or more generally whenever you want the model to produce a particular JSON structure of output.
              *
-             *     See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
+             *     See our [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview) for more details.
              * @example {
              *       "description": "Get the current weather in a given location",
              *       "input_schema": {
@@ -674,7 +674,7 @@ export interface components {
              *       "name": "get_weather"
              *     }
              */
-            tools?: (components["schemas"]["Tool"] | components["schemas"]["BashTool_20250124"] | components["schemas"]["CodeExecutionTool_20250522"] | components["schemas"]["CodeExecutionTool_20250825"] | components["schemas"]["CodeExecutionTool_20260120"] | components["schemas"]["CodeExecutionTool_20260521"] | components["schemas"]["MemoryTool_20250818"] | components["schemas"]["TextEditor_20250124"] | components["schemas"]["TextEditor_20250429"] | components["schemas"]["TextEditor_20250728"] | components["schemas"]["WebSearchTool_20250305"] | components["schemas"]["WebFetchTool_20250910"] | components["schemas"]["WebSearchTool_20260209"] | components["schemas"]["WebFetchTool_20260209"] | components["schemas"]["WebFetchTool_20260309"] | components["schemas"]["ToolSearchToolBM25_20251119"] | components["schemas"]["ToolSearchToolRegex_20251119"])[];
+            tools?: (components["schemas"]["Tool"] | components["schemas"]["BashTool_20250124"] | components["schemas"]["CodeExecutionTool_20250522"] | components["schemas"]["CodeExecutionTool_20250825"] | components["schemas"]["CodeExecutionTool_20260120"] | components["schemas"]["CodeExecutionTool_20260521"] | components["schemas"]["MemoryTool_20250818"] | components["schemas"]["TextEditor_20250124"] | components["schemas"]["TextEditor_20250429"] | components["schemas"]["TextEditor_20250728"] | components["schemas"]["WebSearchTool_20250305"] | components["schemas"]["WebFetchTool_20250910"] | components["schemas"]["WebSearchTool_20260209"] | components["schemas"]["WebFetchTool_20260209"] | components["schemas"]["WebFetchTool_20260309"] | components["schemas"]["WebSearchTool_20260318"] | components["schemas"]["WebFetchTool_20260318"] | components["schemas"]["ToolSearchToolBM25_20251119"] | components["schemas"]["ToolSearchToolRegex_20251119"])[];
             /**
              * Top K
              * @deprecated
@@ -1036,7 +1036,7 @@ export interface components {
          *
          *     See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
          */
-        Model: string | "claude-fable-5" | "claude-mythos-5" | "claude-opus-4-8" | "claude-opus-4-7" | "claude-mythos-preview" | "claude-opus-4-6" | "claude-sonnet-4-6" | "claude-haiku-4-5" | "claude-haiku-4-5-20251001" | "claude-opus-4-5" | "claude-opus-4-5-20251101" | "claude-sonnet-4-5" | "claude-sonnet-4-5-20250929" | "claude-opus-4-1" | "claude-opus-4-1-20250805";
+        Model: string | "claude-sonnet-5" | "claude-fable-5" | "claude-mythos-5" | "claude-opus-4-8" | "claude-opus-4-7" | "claude-mythos-preview" | "claude-opus-4-6" | "claude-sonnet-4-6" | "claude-haiku-4-5" | "claude-haiku-4-5-20251001" | "claude-opus-4-5" | "claude-opus-4-5-20251101" | "claude-sonnet-4-5" | "claude-sonnet-4-5-20250929" | "claude-opus-4-1" | "claude-opus-4-1-20250805";
         /**
          * ModelCapabilities
          * @description Model capability information.
@@ -1203,7 +1203,7 @@ export interface components {
          * @description The policy category that triggered a refusal.
          * @enum {string}
          */
-        RefusalCategory: "cyber" | "bio" | "frontier_llm" | "reasoning_extraction" | "military_weapons";
+        RefusalCategory: "cyber" | "bio" | "frontier_llm" | "reasoning_extraction";
         /**
          * RefusalStopDetails
          * @description Structured information about a refusal.
@@ -2749,7 +2749,7 @@ export interface components {
              *
              *     Must be ≥1024 and less than `max_tokens`.
              *
-             *     See [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking) for details.
+             *     See [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) for details.
              */
             budget_tokens: number;
             /** @description Controls how thinking content appears in the response. When set to `summarized`, thinking is returned normally. When set to `omitted`, thinking content is redacted but a signature is returned for multi-turn continuity. Defaults to `summarized`. */
@@ -2766,7 +2766,7 @@ export interface components {
          *
          *     When enabled, responses include `thinking` content blocks showing Claude's thinking process before the final answer. Requires a minimum budget of 1,024 tokens and counts towards your `max_tokens` limit.
          *
-         *     See [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking) for details.
+         *     See [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) for details.
          * @example {
          *       "type": "adaptive"
          *     }
@@ -3300,6 +3300,72 @@ export interface components {
              */
             use_cache?: boolean;
         };
+        /** WebFetchTool_20260318 */
+        WebFetchTool_20260318: {
+            /** Allowed Callers */
+            allowed_callers?: components["schemas"]["AllowedCaller"][];
+            /**
+             * Allowed Domains
+             * @description List of domains to allow fetching from
+             */
+            allowed_domains?: string[] | null;
+            /**
+             * Blocked Domains
+             * @description List of domains to block fetching from
+             */
+            blocked_domains?: string[] | null;
+            /**
+             * Cache Control
+             * @description Create a cache control breakpoint at this content block.
+             */
+            cache_control?: components["schemas"]["CacheControlEphemeral"] | null;
+            /** @description Citations configuration for fetched documents. Citations are disabled by default. */
+            citations?: components["schemas"]["RequestCitationsConfig"] | null;
+            /**
+             * Defer Loading
+             * @description If true, tool will not be included in initial system prompt. Only loaded when returned via tool_reference from tool search.
+             */
+            defer_loading?: boolean;
+            /**
+             * Max Content Tokens
+             * @description Maximum number of tokens used by including web page text content in the context. The limit is approximate and does not apply to binary content such as PDFs.
+             */
+            max_content_tokens?: number | null;
+            /**
+             * Max Uses
+             * @description Maximum number of times the tool can be used in the API request.
+             */
+            max_uses?: number | null;
+            /**
+             * Name
+             * @description Name of the tool.
+             *
+             *     This is how the tool will be called by the model and in `tool_use` blocks.
+             * @constant
+             */
+            name: "web_fetch";
+            /**
+             * Response Inclusion
+             * @description How this tool's result blocks appear in the API response when the result was consumed by a completed code_execution call in the same turn. 'full' returns the complete content (default). 'excluded' drops the nested server_tool_use and result block pair entirely. Results from direct calls, or from code_execution calls that paused before completing, are always returned in full so they can be sent back on the next turn.
+             * @enum {string}
+             */
+            response_inclusion?: "full" | "excluded";
+            /**
+             * Strict
+             * @description When true, guarantees schema validation on tool names and inputs
+             */
+            strict?: boolean;
+            /**
+             * Type
+             * @constant
+             */
+            type: "web_fetch_20260318";
+            /**
+             * Use Cache
+             * @description Whether to use cached content. Set to false to bypass the cache and fetch fresh content. Only set to false when the user explicitly requests fresh content or when fetching rapidly-changing sources.
+             */
+            use_cache?: boolean;
+        };
         /**
          * WebSearchToolResultErrorCode
          * @enum {string}
@@ -3405,6 +3471,62 @@ export interface components {
             /** @description Parameters for the user's location. Used to provide more relevant search results. */
             user_location?: components["schemas"]["UserLocation"] | null;
         };
+        /** WebSearchTool_20260318 */
+        WebSearchTool_20260318: {
+            /** Allowed Callers */
+            allowed_callers?: components["schemas"]["AllowedCaller"][];
+            /**
+             * Allowed Domains
+             * @description If provided, only these domains will be included in results. Cannot be used alongside `blocked_domains`.
+             */
+            allowed_domains?: string[] | null;
+            /**
+             * Blocked Domains
+             * @description If provided, these domains will never appear in results. Cannot be used alongside `allowed_domains`.
+             */
+            blocked_domains?: string[] | null;
+            /**
+             * Cache Control
+             * @description Create a cache control breakpoint at this content block.
+             */
+            cache_control?: components["schemas"]["CacheControlEphemeral"] | null;
+            /**
+             * Defer Loading
+             * @description If true, tool will not be included in initial system prompt. Only loaded when returned via tool_reference from tool search.
+             */
+            defer_loading?: boolean;
+            /**
+             * Max Uses
+             * @description Maximum number of times the tool can be used in the API request.
+             */
+            max_uses?: number | null;
+            /**
+             * Name
+             * @description Name of the tool.
+             *
+             *     This is how the tool will be called by the model and in `tool_use` blocks.
+             * @constant
+             */
+            name: "web_search";
+            /**
+             * Response Inclusion
+             * @description How this tool's result blocks appear in the API response when the result was consumed by a completed code_execution call in the same turn. 'full' returns the complete content (default). 'excluded' drops the nested server_tool_use and result block pair entirely. Results from direct calls, or from code_execution calls that paused before completing, are always returned in full so they can be sent back on the next turn.
+             * @enum {string}
+             */
+            response_inclusion?: "full" | "excluded";
+            /**
+             * Strict
+             * @description When true, guarantees schema validation on tool names and inputs
+             */
+            strict?: boolean;
+            /**
+             * Type
+             * @constant
+             */
+            type: "web_search_20260318";
+            /** @description Parameters for the user's location. Used to provide more relevant search results. */
+            user_location?: components["schemas"]["UserLocation"] | null;
+        };
     };
     responses: never;
     parameters: never;
@@ -3421,7 +3543,7 @@ export interface operations {
                 /**
                  * @description The version of the Claude API you want to use.
                  *
-                 *     Read more about versioning and our version history [here](https://docs.claude.com/en/api/versioning).
+                 *     Read more about versioning and our version history [here](https://platform.claude.com/docs/en/api/versioning).
                  */
                 "anthropic-version"?: string;
                 /** @description The user profile ID to attribute this request to. Use when acting on behalf of a party other than your organization. Requires the `user-profiles` beta header. */
@@ -3448,7 +3570,7 @@ export interface operations {
             /**
              * @description Error response.
              *
-             *     See our [errors documentation](https://docs.claude.com/en/api/errors) for more details.
+             *     See our [errors documentation](https://platform.claude.com/docs/en/api/errors) for more details.
              */
             "4XX": {
                 headers: {
@@ -3478,7 +3600,7 @@ export interface operations {
                 /**
                  * @description The version of the Claude API you want to use.
                  *
-                 *     Read more about versioning and our version history [here](https://docs.claude.com/en/api/versioning).
+                 *     Read more about versioning and our version history [here](https://platform.claude.com/docs/en/api/versioning).
                  */
                 "anthropic-version"?: string;
                 /**
@@ -3511,7 +3633,7 @@ export interface operations {
             /**
              * @description Error response.
              *
-             *     See our [errors documentation](https://docs.claude.com/en/api/errors) for more details.
+             *     See our [errors documentation](https://platform.claude.com/docs/en/api/errors) for more details.
              */
             "4XX": {
                 headers: {
@@ -3530,7 +3652,7 @@ export interface operations {
                 /**
                  * @description The version of the Claude API you want to use.
                  *
-                 *     Read more about versioning and our version history [here](https://docs.claude.com/en/api/versioning).
+                 *     Read more about versioning and our version history [here](https://platform.claude.com/docs/en/api/versioning).
                  */
                 "anthropic-version"?: string;
                 /**
@@ -3566,7 +3688,7 @@ export interface operations {
             /**
              * @description Error response.
              *
-             *     See our [errors documentation](https://docs.claude.com/en/api/errors) for more details.
+             *     See our [errors documentation](https://platform.claude.com/docs/en/api/errors) for more details.
              */
             "4XX": {
                 headers: {
