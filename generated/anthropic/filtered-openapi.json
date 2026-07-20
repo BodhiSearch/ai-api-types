@@ -335,6 +335,7 @@
               "advisor-tool-2026-03-01",
               "managed-agents-2026-04-01",
               "cache-diagnosis-2026-04-07",
+              "dreaming-2026-04-21",
               "thinking-token-count-2026-05-13",
               "server-side-fallback-2026-06-01",
               "fallback-credit-2026-06-01",
@@ -862,6 +863,9 @@
           },
           "id": {
             "description": "Identifier for the container used in this request",
+            "examples": [
+              "container_011CpZohnwH4vuy7gazohgSP"
+            ],
             "title": "Id",
             "type": "string"
           }
@@ -2385,7 +2389,13 @@
           "reasoning_extraction"
         ],
         "title": "RefusalCategory",
-        "type": "string"
+        "type": "string",
+        "x-enum-descriptions": [
+          "The request could enable cyber harm, such as malware or exploit development. Benign cybersecurity work can also trigger this category.",
+          "The request could enable biological harm, such as dangerous lab methods. Beneficial life sciences work can also trigger this category.",
+          "The request could assist the development of competing AI models, which is restricted under [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms). Benign machine learning work can also trigger this category.",
+          "The request asks the model to reproduce its internal reasoning in the response text. To get reasoning in a structured form instead, use [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking)."
+        ]
       },
       "RefusalStopDetails": {
         "description": "Structured information about a refusal.",
@@ -2413,6 +2423,9 @@
             ],
             "default": null,
             "description": "Human-readable explanation of the refusal.\n\nThis text is not guaranteed to be stable. `null` when no explanation is available for the category.",
+            "examples": [
+              "This request was declined because it conflicts with Anthropic's Usage Policy."
+            ],
             "title": "Explanation"
           },
           "type": {
@@ -2566,6 +2579,9 @@
         "additionalProperties": false,
         "properties": {
           "cited_text": {
+            "examples": [
+              "The grass is green. The sky is blue."
+            ],
             "title": "Cited Text",
             "type": "string"
           },
@@ -2807,6 +2823,9 @@
         "properties": {
           "cited_text": {
             "description": "The full text of the cited block range, concatenated.\n\nAlways equals the contents of `content[start_block_index:end_block_index]` joined together. The text block is the minimal citable unit; this field is never a substring of a single block. Not counted toward output tokens, and not counted toward input tokens when sent back in subsequent turns.",
+            "examples": [
+              "The grass is green. The sky is blue."
+            ],
             "title": "Cited Text",
             "type": "string"
           },
@@ -3111,6 +3130,9 @@
         "additionalProperties": false,
         "properties": {
           "cited_text": {
+            "examples": [
+              "The grass is green. The sky is blue."
+            ],
             "title": "Cited Text",
             "type": "string"
           },
@@ -3241,6 +3263,9 @@
         "properties": {
           "cited_text": {
             "description": "The full text of the cited block range, concatenated.\n\nAlways equals the contents of `content[start_block_index:end_block_index]` joined together. The text block is the minimal citable unit; this field is never a substring of a single block. Not counted toward output tokens, and not counted toward input tokens when sent back in subsequent turns.",
+            "examples": [
+              "The grass is green. The sky is blue."
+            ],
             "title": "Cited Text",
             "type": "string"
           },
@@ -4247,6 +4272,9 @@
         "additionalProperties": false,
         "properties": {
           "cited_text": {
+            "examples": [
+              "The grass is green. The sky is blue."
+            ],
             "title": "Cited Text",
             "type": "string"
           },
@@ -4507,6 +4535,9 @@
       "ResponseCharLocationCitation": {
         "properties": {
           "cited_text": {
+            "examples": [
+              "The grass is green. The sky is blue."
+            ],
             "title": "Cited Text",
             "type": "string"
           },
@@ -4524,6 +4555,9 @@
                 "type": "null"
               }
             ],
+            "examples": [
+              "My Document"
+            ],
             "title": "Document Title"
           },
           "end_char_index": {
@@ -4540,6 +4574,9 @@
               }
             ],
             "default": null,
+            "examples": [
+              "file_011CNha8iCJcU1wXNR6q4V8w"
+            ],
             "title": "File Id"
           },
           "start_char_index": {
@@ -4718,6 +4755,9 @@
         "properties": {
           "cited_text": {
             "description": "The full text of the cited block range, concatenated.\n\nAlways equals the contents of `content[start_block_index:end_block_index]` joined together. The text block is the minimal citable unit; this field is never a substring of a single block. Not counted toward output tokens, and not counted toward input tokens when sent back in subsequent turns.",
+            "examples": [
+              "The grass is green. The sky is blue."
+            ],
             "title": "Cited Text",
             "type": "string"
           },
@@ -4734,6 +4774,9 @@
               {
                 "type": "null"
               }
+            ],
+            "examples": [
+              "My Document"
             ],
             "title": "Document Title"
           },
@@ -4752,6 +4795,9 @@
               }
             ],
             "default": null,
+            "examples": [
+              "file_011CNha8iCJcU1wXNR6q4V8w"
+            ],
             "title": "File Id"
           },
           "start_block_index": {
@@ -4882,6 +4928,9 @@
       "ResponsePageLocationCitation": {
         "properties": {
           "cited_text": {
+            "examples": [
+              "The grass is green. The sky is blue."
+            ],
             "title": "Cited Text",
             "type": "string"
           },
@@ -4899,6 +4948,9 @@
                 "type": "null"
               }
             ],
+            "examples": [
+              "My Document"
+            ],
             "title": "Document Title"
           },
           "end_page_number": {
@@ -4915,6 +4967,9 @@
               }
             ],
             "default": null,
+            "examples": [
+              "file_011CNha8iCJcU1wXNR6q4V8w"
+            ],
             "title": "File Id"
           },
           "start_page_number": {
@@ -4965,6 +5020,9 @@
         "properties": {
           "cited_text": {
             "description": "The full text of the cited block range, concatenated.\n\nAlways equals the contents of `content[start_block_index:end_block_index]` joined together. The text block is the minimal citable unit; this field is never a substring of a single block. Not counted toward output tokens, and not counted toward input tokens when sent back in subsequent turns.",
+            "examples": [
+              "The grass is green. The sky is blue."
+            ],
             "title": "Cited Text",
             "type": "string"
           },
@@ -5752,6 +5810,9 @@
       "ResponseWebSearchResultLocationCitation": {
         "properties": {
           "cited_text": {
+            "examples": [
+              "The grass is green. The sky is blue."
+            ],
             "title": "Cited Text",
             "type": "string"
           },
@@ -6815,6 +6876,9 @@
             ],
             "default": null,
             "description": "The geographic region where inference was performed for this request.",
+            "examples": [
+              "global"
+            ],
             "title": "Inference Geo"
           },
           "input_tokens": {

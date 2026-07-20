@@ -52,6 +52,8 @@ pub struct CreateChatCompletionRequest {
     /// more](/docs/guides/safety-best-practices#safety-identifiers).
     user: Option<String>,
 
+    prompt_cache_options: Option<PromptCacheOptions>,
+
     /// Parameters for audio output. Required when audio output is requested with
     /// `modalities: ["audio"]`. [Learn more](/docs/guides/audio).
     audio: Option<CreateChatCompletionRequestAudio>,
@@ -242,7 +244,7 @@ pub enum AudioFormat {
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum Voice {
-    String(String),
+    PurpleString(String),
 
     VoiceClass(VoiceClass),
 }
@@ -292,7 +294,8 @@ pub struct ChatCompletionFunctionCallOption {
 pub enum FunctionCallEnum {
     Auto,
 
-    None,
+    #[serde(rename = "none")]
+    FunctionCallNone,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -378,9 +381,9 @@ pub struct ChatCompletionRequestMessageAudio {
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum ChatCompletionRequestMessageContent {
-    ChatCompletionRequestMessageContentPartArray(Vec<ChatCompletionRequestMessageContentPart>),
+    PurpleContentPartArray(Vec<PurpleContentPart>),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// An array of content parts with a defined type. For developer messages, only type `text`
@@ -398,10 +401,6 @@ pub enum ChatCompletionRequestMessageContent {
 /// An array of content parts with a defined type. For tool messages, only type `text` is
 /// supported.
 ///
-/// An array of content parts with a defined type. Supported options differ based on the
-/// [model](/docs/models) being used to generate the response. Can contain text, image, or
-/// audio inputs.
-///
 /// Learn about [image inputs](/docs/guides/vision).
 ///
 ///
@@ -409,12 +408,10 @@ pub enum ChatCompletionRequestMessageContent {
 ///
 ///
 /// Learn about [file inputs](/docs/guides/text) for text generation.
-///
-///
-/// An array of content parts with a defined type. Can be one or more of type `text`, or
-/// exactly one of type `refusal`.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub struct ChatCompletionRequestMessageContentPart {
+pub struct PurpleContentPart {
+    prompt_cache_breakpoint: Option<PromptCacheBreakpoint>,
+
     /// The text content.
     text: Option<String>,
 
@@ -424,7 +421,7 @@ pub struct ChatCompletionRequestMessageContentPart {
     ///
     /// The type of the content part. Always `file`.
     #[serde(rename = "type")]
-    chat_completion_request_message_content_part_type: PurpleType,
+    content_part_type: PurpleType,
 
     image_url: Option<ImageUrl>,
 
@@ -509,6 +506,21 @@ pub enum InputAudioFormat {
     Mp3,
 
     Wav,
+}
+
+/// Marks the exact end of a reusable prompt prefix. The breakpoint inherits its TTL from the
+/// request's `prompt_cache_options.ttl`; the boundary is not rounded to a token block.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct PromptCacheBreakpoint {
+    /// The breakpoint mode. Always `explicit`.
+    mode: PromptCacheBreakpointMode,
+}
+
+/// The breakpoint mode. Always `explicit`.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum PromptCacheBreakpointMode {
+    Explicit,
 }
 
 /// Deprecated and replaced by `tool_calls`. The name and arguments of a function that should
@@ -638,6 +650,32 @@ pub enum ResponseModality {
 pub struct ModerationParam {
     /// The moderation model to use for moderated completions, e.g. 'omni-moderation-latest'.
     model: String,
+
+    policy: Option<ModerationPolicyParam>,
+}
+
+/// The policy to apply to moderated response input and output.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ModerationPolicyParam {
+    input: Option<ModerationConfigParam>,
+
+    output: Option<ModerationConfigParam>,
+}
+
+/// The moderation policy for the response input.
+///
+/// The moderation policy for the response output.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ModerationConfigParam {
+    mode: ModerationMode,
+}
+
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ModerationMode {
+    Block,
+
+    Score,
 }
 
 /// Configuration for a [Predicted Output](/docs/guides/predicted-outputs),
@@ -661,15 +699,12 @@ pub struct StaticContent {
     static_content_type: PredictionType,
 }
 
-/// The contents of the system message.
-///
-/// The contents of the tool message.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum PredictionContent {
-    ContentPartArray(Vec<ContentPart>),
+    FluffyContentPartArray(Vec<FluffyContentPart>),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// An array of content parts with a defined type. For developer messages, only type `text`
@@ -687,7 +722,9 @@ pub enum PredictionContent {
 /// An array of content parts with a defined type. For tool messages, only type `text` is
 /// supported.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub struct ContentPart {
+pub struct FluffyContentPart {
+    prompt_cache_breakpoint: Option<PromptCacheBreakpoint>,
+
     /// The text content.
     text: String,
 
@@ -711,9 +748,59 @@ pub enum PredictionType {
     Content,
 }
 
+/// Options for prompt caching. Supported for `gpt-5.6` and later models. By default, OpenAI
+/// automatically chooses one implicit cache breakpoint. You can add explicit breakpoints to
+/// content blocks with `prompt_cache_breakpoint`. Each request can write up to four
+/// breakpoints. For cache matching, OpenAI considers up to the latest 80 breakpoints in the
+/// conversation, without a content-block lookback limit. Set `mode` to `explicit` to disable
+/// the implicit breakpoint. The `ttl` defaults to `30m`, which is currently the only
+/// supported value. See the [prompt caching guide](/docs/guides/prompt-caching) for current
+/// details.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct PromptCacheOptions {
+    /// Controls whether OpenAI automatically creates an implicit cache breakpoint. Defaults to
+    /// `implicit`. With `implicit`, OpenAI creates one implicit breakpoint and writes up to the
+    /// latest three explicit breakpoints in the request. With `explicit`, OpenAI does not create
+    /// an implicit breakpoint and writes up to the latest four explicit breakpoints. If there
+    /// are no explicit breakpoints, the request does not use prompt caching.
+    mode: Option<PromptCacheModeEnum>,
+
+    /// The minimum lifetime applied to every implicit and explicit cache breakpoint written by
+    /// the request. Defaults to `30m`, which is currently the only supported value. The backend
+    /// may retain cache entries for longer.
+    ttl: Option<PromptCacheTtlEnum>,
+}
+
+/// Controls whether OpenAI automatically creates an implicit cache breakpoint. Defaults to
+/// `implicit`. With `implicit`, OpenAI creates one implicit breakpoint and writes up to the
+/// latest three explicit breakpoints in the request. With `explicit`, OpenAI does not create
+/// an implicit breakpoint and writes up to the latest four explicit breakpoints. If there
+/// are no explicit breakpoints, the request does not use prompt caching.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum PromptCacheModeEnum {
+    Explicit,
+
+    Implicit,
+}
+
+/// The minimum lifetime applied to every implicit and explicit cache breakpoint written by
+/// the request. Defaults to `30m`, which is currently the only supported value. The backend
+/// may retain cache entries for longer.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub enum PromptCacheTtlEnum {
+    #[serde(rename = "30m")]
+    The30M,
+}
+
+/// Deprecated. Use `prompt_cache_options.ttl` instead.
+///
 /// The retention policy for the prompt cache. Set to `24h` to enable extended prompt
 /// caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours.
 /// [Learn more](/docs/guides/prompt-caching#prompt-cache-retention).
+/// This field expresses a maximum retention policy, while
+/// `prompt_cache_options.ttl` expresses a minimum cache lifetime. The two
+/// fields are independent and do not interact.
 /// For `gpt-5.5`, `gpt-5.5-pro`, and future models, only `24h` is supported.
 ///
 /// For older models that support both `in_memory` and `24h`, the default depends on your
@@ -731,20 +818,13 @@ pub enum PromptCacheRetention {
     The24H,
 }
 
-/// Constrains effort on reasoning for
-/// [reasoning models](https://platform.openai.com/docs/guides/reasoning).
-/// Currently supported values are `none`, `minimal`, `low`, `medium`, `high`, and `xhigh`.
-/// Reducing
-/// reasoning effort can result in faster responses and fewer tokens used
-/// on reasoning in a response.
-///
-/// - `gpt-5.1` defaults to `none`, which does not perform reasoning. The supported reasoning
-/// values for `gpt-5.1` are `none`, `low`, `medium`, and `high`. Tool calls are supported
-/// for all reasoning values in gpt-5.1.
-/// - All models before `gpt-5.1` default to `medium` reasoning effort, and do not support
-/// `none`.
-/// - The `gpt-5-pro` model defaults to (and only supports) `high` reasoning effort.
-/// - `xhigh` is supported for all models after `gpt-5.1-codex-max`.
+/// Constrains effort on reasoning for reasoning models. Currently supported
+/// values are `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`.
+/// Reducing reasoning effort can result in faster responses and fewer tokens
+/// used on reasoning in a response. Not all reasoning models support every
+/// value. See the
+/// [reasoning guide](https://platform.openai.com/docs/guides/reasoning)
+/// for model-specific support.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ReasoningEffort {
@@ -752,11 +832,14 @@ pub enum ReasoningEffort {
 
     Low,
 
+    Max,
+
     Medium,
 
     Minimal,
 
-    None,
+    #[serde(rename = "none")]
+    ReasoningEffortNone,
 
     Xhigh,
 }
@@ -866,7 +949,7 @@ pub enum ServiceTier {
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum StopConfiguration {
-    String(String),
+    PurpleString(String),
 
     StringArray(Vec<String>),
 }
@@ -946,7 +1029,7 @@ pub struct AllowedToolsClass {
     /// message.
     ///
     /// `required` requires the model to call one or more of the allowed tools.
-    mode: Mode,
+    mode: AllowedToolsMode,
 
     /// A list of tool definitions that the model should be allowed to call.
     ///
@@ -969,7 +1052,7 @@ pub struct AllowedToolsClass {
 /// `required` requires the model to call one or more of the allowed tools.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum Mode {
+pub enum AllowedToolsMode {
     Auto,
 
     Required,
@@ -1011,9 +1094,10 @@ pub struct AllowedToolsFunction {
 pub enum ToolChoiceMode {
     Auto,
 
-    None,
-
     Required,
+
+    #[serde(rename = "none")]
+    ToolChoiceModeNone,
 }
 
 /// A function tool that can be used to generate a response.
@@ -1549,6 +1633,9 @@ pub struct PromptTokensDetails {
     /// Audio input tokens present in the prompt.
     audio_tokens: Option<i64>,
 
+    /// The unadjusted number of prompt tokens written to cache.
+    cache_write_tokens: Option<i64>,
+
     /// Cached tokens present in the prompt.
     cached_tokens: Option<i64>,
 }
@@ -1570,11 +1657,9 @@ pub enum Model {
 
     Double(f64),
 
-    Integer(i64),
-
     ModelClass(ModelClass),
 
-    String(String),
+    PurpleString(String),
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -1643,6 +1728,8 @@ pub struct CreateResponse {
     /// more](/docs/guides/safety-best-practices#safety-identifiers).
     user: Option<String>,
 
+    prompt_cache_options: Option<PromptCacheOptions>,
+
     background: Option<bool>,
 
     max_tool_calls: Option<i64>,
@@ -1705,7 +1792,7 @@ pub struct ContextManagementParam {
 pub enum ConversationParam {
     ConversationObject(ConversationObject),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// The conversation that this response belongs to.
@@ -1787,7 +1874,7 @@ pub enum IncludeEnum {
 pub enum InputParam {
     InputItemArray(Vec<InputItem>),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// A list of one or many input items to the model, containing
@@ -1898,7 +1985,7 @@ pub struct InputItem {
     ///
     ///
     /// Reasoning text content.
-    content: Option<ContentUnion>,
+    content: Option<Content>,
 
     phase: Option<MessagePhase>,
 
@@ -1989,6 +2076,10 @@ pub struct InputItem {
     ///
     ///
     /// The type of the item. Always `compaction_trigger`.
+    ///
+    /// The item type. Always `program`.
+    ///
+    /// The item type. Always `program_output`.
     #[serde(rename = "type")]
     input_item_type: Option<InputItemType>,
 
@@ -2027,6 +2118,9 @@ pub struct InputItem {
     ///
     /// The status of the tool call. One of `in_progress`, `completed`, `incomplete`, `calling`,
     /// or `failed`.
+    ///
+    ///
+    /// The terminal status of the program output.
     status: Option<Status>,
 
     /// The unique ID of the output message.
@@ -2074,12 +2168,16 @@ pub struct InputItem {
     ///
     ///
     /// The ID of the item to reference.
+    ///
+    /// The unique ID of this program item.
+    ///
+    /// The unique ID of this program output item.
     id: Option<String>,
 
     /// The queries used to search for files.
     queries: Option<Vec<String>>,
 
-    results: Option<Vec<Result>>,
+    results: Option<Vec<ResultElement>>,
 
     /// An object describing the specific action taken in this web search call.
     /// Includes details on how the model used the web (search, open_page, find_in_page).
@@ -2111,6 +2209,11 @@ pub struct InputItem {
     ///
     ///
     /// An identifier used to map this custom tool call to a tool call output.
+    ///
+    ///
+    /// The stable call ID of the program item.
+    ///
+    /// The call ID of the program item.
     #[schema(value_type = Option<Object>)]
     call_id: Option<serde_json::Value>,
 
@@ -2128,7 +2231,7 @@ pub struct InputItem {
     ///
     /// The output from the custom tool call generated by your code.
     /// Can be a string or an list of output content.
-    output: Option<OutputUnion>,
+    output: Option<Output>,
 
     /// A JSON string of the arguments to pass to the function.
     ///
@@ -2140,6 +2243,8 @@ pub struct InputItem {
     ///
     /// A JSON string of the arguments passed to the tool.
     arguments: Option<Arguments>,
+
+    caller: Option<DirectToolCallCaller>,
 
     /// The name of the function to run.
     ///
@@ -2175,8 +2280,10 @@ pub struct InputItem {
     /// Reasoning summary content.
     summary: Option<Vec<SummaryText>>,
 
+    /// The result produced by the program item.
     result: Option<String>,
 
+    /// The JavaScript source executed by programmatic tool calling.
     code: Option<String>,
 
     /// The ID of the container used to run the code.
@@ -2215,6 +2322,9 @@ pub struct InputItem {
 
     /// The input for the custom tool call generated by the model.
     input: Option<String>,
+
+    /// Opaque program replay fingerprint that must be round-tripped.
+    fingerprint: Option<String>,
 }
 
 /// A pending safety check for the computer call.
@@ -2617,15 +2727,38 @@ pub enum Arguments {
     #[schema(value_type = Object)]
     AnythingMap(HashMap<String, Option<serde_json::Value>>),
 
-    String(String),
+    PurpleString(String),
+}
+
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct DirectToolCallCaller {
+    /// The caller type. Always `direct`.
+    ///
+    /// The caller type. Always `program`.
+    #[serde(rename = "type")]
+    direct_tool_call_caller_type: DirectToolCallCallerType,
+
+    /// The call ID of the program item that produced this tool call.
+    caller_id: Option<String>,
+}
+
+/// The caller type. Always `direct`.
+///
+/// The caller type. Always `program`.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum DirectToolCallCallerType {
+    Direct,
+
+    Program,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
-pub enum ContentUnion {
-    ContentOutputContentListArray(Vec<ContentOutputContentList>),
+pub enum Content {
+    InputItemContentListElementArray(Vec<InputItemContentListElement>),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// A list of one or many input items to the model, containing different content
@@ -2647,7 +2780,9 @@ pub enum ContentUnion {
 ///
 /// Reasoning text from the model.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub struct ContentOutputContentList {
+pub struct InputItemContentListElement {
+    prompt_cache_breakpoint: Option<PromptCacheBreakpointClass>,
+
     /// The text input to the model.
     ///
     /// The text output from the model.
@@ -2667,13 +2802,15 @@ pub struct ContentOutputContentList {
     ///
     /// The type of the reasoning text. Always `reasoning_text`.
     #[serde(rename = "type")]
-    input_content_type: FluffyType,
+    input_content_type: InputItemContentListType,
 
     /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
     /// `original`. Defaults to `auto`.
     ///
-    /// The detail level of the file to be sent to the model. Use `low` for the default rendering
-    /// behavior, or `high` to render the file at higher quality. Defaults to `low`.
+    /// The detail level of the file to be sent to the model. Use `auto` to let the system select
+    /// the detail level; for GPT-5.6 and later models, `auto` uses high-quality rendering, which
+    /// may increase input token usage. Use `low` for lower-cost rendering, or `high` to render
+    /// the file at higher quality. Defaults to `auto`.
     detail: Option<DetailEnum>,
 
     file_id: Option<String>,
@@ -2701,8 +2838,10 @@ pub struct ContentOutputContentList {
 /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
 /// `original`. Defaults to `auto`.
 ///
-/// The detail level of the file to be sent to the model. Use `low` for the default rendering
-/// behavior, or `high` to render the file at higher quality. Defaults to `low`.
+/// The detail level of the file to be sent to the model. Use `auto` to let the system select
+/// the detail level; for GPT-5.6 and later models, `auto` uses high-quality rendering, which
+/// may increase input token usage. Use `low` for lower-cost rendering, or `high` to render
+/// the file at higher quality. Defaults to `auto`.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum DetailEnum {
@@ -2713,6 +2852,38 @@ pub enum DetailEnum {
     Low,
 
     Original,
+}
+
+/// The type of the input item. Always `input_text`.
+///
+/// The type of the input item. Always `input_image`.
+///
+/// The type of the input item. Always `input_file`.
+///
+/// The type of the output text. Always `output_text`.
+///
+/// The type of the refusal. Always `refusal`.
+///
+/// The type of the reasoning text. Always `reasoning_text`.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum InputItemContentListType {
+    #[serde(rename = "input_file")]
+    InputFile,
+
+    #[serde(rename = "input_image")]
+    InputImage,
+
+    #[serde(rename = "input_text")]
+    InputText,
+
+    #[serde(rename = "output_text")]
+    OutputText,
+
+    #[serde(rename = "reasoning_text")]
+    ReasoningText,
+
+    Refusal,
 }
 
 /// The log probability of a token.
@@ -2737,6 +2908,14 @@ pub struct TopLogProbability {
     token: String,
 }
 
+/// Marks the exact end of a reusable prompt prefix. The breakpoint inherits its TTL from the
+/// request's `prompt_cache_options.ttl`; the boundary is not rounded to a token block.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct PromptCacheBreakpointClass {
+    /// The breakpoint mode. Always `explicit`.
+    mode: PromptCacheBreakpointMode,
+}
+
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct InputItemLocalEnvironmentParam {
     /// An optional list of skills.
@@ -2746,22 +2925,10 @@ pub struct InputItemLocalEnvironmentParam {
     ///
     /// References a container created with the /v1/containers endpoint
     #[serde(rename = "type")]
-    param_type: TentacledType,
+    param_type: FluffyType,
 
     /// The ID of the referenced container.
     container_id: Option<String>,
-}
-
-/// Use a local computer environment.
-///
-/// References a container created with the /v1/containers endpoint
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
-#[serde(rename_all = "snake_case")]
-pub enum TentacledType {
-    #[serde(rename = "container_reference")]
-    ContainerReference,
-
-    Local,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -2863,6 +3030,10 @@ pub enum ToolSearchExecutionType {
 /// The type of the item. Always `compaction_trigger`.
 ///
 /// The type of item to reference. Always `item_reference`.
+///
+/// The item type. Always `program`.
+///
+/// The item type. Always `program_output`.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum InputItemType {
@@ -2929,6 +3100,11 @@ pub enum InputItemType {
     McpListTools,
 
     Message,
+
+    Program,
+
+    #[serde(rename = "program_output")]
+    ProgramOutput,
 
     Reasoning,
 
@@ -3001,18 +3177,14 @@ pub enum ApplyPatchOperationType {
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
-pub enum OutputUnion {
+pub enum Output {
     ComputerScreenshotImage(ComputerScreenshotImage),
 
-    OutputOutputContentListArray(Vec<OutputOutputContentList>),
+    OutputContentListElementArray(Vec<OutputContentListElement>),
 
-    String(String),
+    PurpleString(String),
 }
 
-/// An array of content outputs (text, image, file) for the function tool call.
-///
-/// A piece of message content, such as text, an image, or a file.
-///
 /// A text input to the model.
 ///
 /// An image input to the model. Learn about [image inputs](/docs/guides/vision)
@@ -3021,16 +3193,11 @@ pub enum OutputUnion {
 ///
 /// Captured stdout and stderr for a portion of a shell tool call output.
 ///
-/// A list of one or many input items to the model, containing different content
-/// types.
-///
-///
-/// Text, image, or file output of the custom tool call.
-///
-///
 /// An image input to the model. Learn about [image inputs](/docs/guides/vision).
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub struct OutputOutputContentList {
+pub struct OutputContentListElement {
+    prompt_cache_breakpoint: Option<PromptCacheBreakpoint>,
+
     /// The text input to the model.
     text: Option<String>,
 
@@ -3040,10 +3207,12 @@ pub struct OutputOutputContentList {
     ///
     /// The type of the input item. Always `input_file`.
     #[serde(rename = "type")]
-    input_content_type: Option<InputTextType>,
+    input_content_type: Option<OutputContentListType>,
 
-    /// The detail level of the file to be sent to the model. Use `low` for the default rendering
-    /// behavior, or `high` to render the file at higher quality. Defaults to `low`.
+    /// The detail level of the file to be sent to the model. Use `auto` to let the system select
+    /// the detail level; for GPT-5.6 and later models, `auto` uses high-quality rendering, which
+    /// may increase input token usage. Use `low` for lower-cost rendering, or `high` to render
+    /// the file at higher quality. Defaults to `auto`.
     ///
     /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
     /// `original`. Defaults to `auto`.
@@ -3079,7 +3248,7 @@ pub struct OutputOutputContentList {
 /// The type of the input item. Always `input_file`.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum InputTextType {
+pub enum OutputContentListType {
     #[serde(rename = "input_file")]
     InputFile,
 
@@ -3130,14 +3299,14 @@ pub struct ComputerScreenshotImage {
     /// Specifies the event type. For a computer screenshot, this property is
     /// always set to `computer_screenshot`.
     #[serde(rename = "type")]
-    computer_screenshot_image_type: StickyType,
+    computer_screenshot_image_type: ComputerScreenshotImageType,
 }
 
 /// Specifies the event type. For a computer screenshot, this property is
 /// always set to `computer_screenshot`.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum StickyType {
+pub enum ComputerScreenshotImageType {
     #[serde(rename = "computer_screenshot")]
     ComputerScreenshot,
 }
@@ -3158,7 +3327,7 @@ pub struct CodeInterpreterOutput {
     ///
     /// The type of the output. Always `image`.
     #[serde(rename = "type")]
-    code_interpreter_output_type: IndigoType,
+    code_interpreter_output_type: OutputType,
 
     /// The URL of the image output from the code interpreter.
     url: Option<String>,
@@ -3169,7 +3338,7 @@ pub struct CodeInterpreterOutput {
 /// The type of the output. Always `image`.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum IndigoType {
+pub enum OutputType {
     Image,
 
     Logs,
@@ -3192,7 +3361,7 @@ pub enum MessagePhase {
 
 /// The results of the file search tool call.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub struct Result {
+pub struct ResultElement {
     attributes: Option<HashMap<String, VectorStoreFileAttribute>>,
 
     /// The unique ID of the file.
@@ -3215,7 +3384,7 @@ pub enum VectorStoreFileAttribute {
 
     Double(f64),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// The status of item. One of `in_progress`, `completed`, or
@@ -3276,6 +3445,9 @@ pub enum VectorStoreFileAttribute {
 ///
 /// The status of the tool call. One of `in_progress`, `completed`, `incomplete`, `calling`,
 /// or `failed`.
+///
+///
+/// The terminal status of the program output.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum Status {
@@ -3316,27 +3488,6 @@ pub enum SummaryType {
     SummaryText,
 }
 
-/// An array of tools the model may call while generating a response. You
-/// can specify which tool to use by setting the `tool_choice` parameter.
-///
-/// We support the following categories of tools:
-/// - **Built-in tools**: Tools that are provided by OpenAI that extend the
-/// model's capabilities, like [web search](/docs/guides/tools-web-search)
-/// or [file search](/docs/guides/tools-file-search). Learn more about
-/// [built-in tools](/docs/guides/tools).
-/// - **MCP Tools**: Integrations with third-party systems via custom MCP servers
-/// or predefined connectors such as Google Drive and SharePoint. Learn more about
-/// [MCP Tools](/docs/guides/tools-connectors-mcp).
-/// - **Function calls (custom tools)**: Functions that are defined by you,
-/// enabling the model to call your own code with strongly typed arguments
-/// and outputs. Learn more about
-/// [function calling](/docs/guides/function-calling). You can also use
-/// custom tools to call your own code.
-///
-///
-/// A tool that can be used to generate a response.
-///
-///
 /// Defines a function in your own code the model can choose to call. Learn more about
 /// [function calling](https://platform.openai.com/docs/guides/function-calling).
 ///
@@ -3379,6 +3530,8 @@ pub enum SummaryType {
 /// A tool available on an MCP server.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ToolElement {
+    allowed_callers: Option<Vec<CallableToolAllowedCaller>>,
+
     /// Whether this function is deferred and loaded via tool search.
     ///
     /// Whether this MCP tool is deferred and discovered via tool search.
@@ -3402,6 +3555,9 @@ pub struct ToolElement {
     name: Option<String>,
 
     #[schema(value_type = Option<Object>)]
+    output_schema: Option<HashMap<String, Option<serde_json::Value>>>,
+
+    #[schema(value_type = Option<Object>)]
     parameters: Option<HashMap<String, Option<serde_json::Value>>>,
 
     strict: Option<bool>,
@@ -3420,6 +3576,8 @@ pub struct ToolElement {
     ///
     /// The type of the code interpreter tool. Always `code_interpreter`.
     ///
+    ///
+    /// The type of the tool. Always `programmatic_tool_calling`.
     ///
     /// The type of the image generation tool. Always `image_generation`.
     ///
@@ -3586,6 +3744,15 @@ pub enum ImageGenActionEnum {
     Generate,
 }
 
+/// The tool invocation context(s).
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum CallableToolAllowedCaller {
+    Direct,
+
+    Programmatic,
+}
+
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum AllowedToolsUnion {
@@ -3669,7 +3836,7 @@ pub enum ConnectorId {
 pub enum Container {
     CodeInterpreterToolAuto(CodeInterpreterToolAuto),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// Configuration for a code interpreter container. Optionally specify the IDs of the files
@@ -3855,13 +4022,13 @@ pub struct InlineSkillSourceParam {
 
     /// The type of the inline skill source. Must be `base64`.
     #[serde(rename = "type")]
-    inline_skill_source_param_type: IndecentType,
+    inline_skill_source_param_type: TentacledType,
 }
 
 /// The type of the inline skill source. Must be `base64`.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum IndecentType {
+pub enum TentacledType {
     Base64,
 }
 
@@ -3967,7 +4134,7 @@ pub enum ComparisonFilterValue {
 
     Double(f64),
 
-    String(String),
+    PurpleString(String),
 
     UnionArray(Vec<ValueElement>),
 }
@@ -3977,7 +4144,7 @@ pub enum ComparisonFilterValue {
 pub enum ValueElement {
     Double(f64),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// The syntax of the grammar definition. One of `lark` or `regex`.
@@ -4151,6 +4318,8 @@ pub enum SearchContextSize {
 /// The type of the code interpreter tool. Always `code_interpreter`.
 ///
 ///
+/// The type of the tool. Always `programmatic_tool_calling`.
+///
 /// The type of the image generation tool. Always `image_generation`.
 ///
 ///
@@ -4199,6 +4368,9 @@ pub enum ToolType {
 
     Namespace,
 
+    #[serde(rename = "programmatic_tool_calling")]
+    ProgrammaticToolCalling,
+
     Shell,
 
     #[serde(rename = "tool_search")]
@@ -4223,6 +4395,8 @@ pub enum ToolType {
 /// tools](/docs/guides/function-calling#custom-tools)
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct FunctionToolParam {
+    allowed_callers: Option<Vec<CallableToolAllowedCaller>>,
+
     /// Whether this function should be deferred and discovered via tool search.
     ///
     /// Whether this tool should be deferred and discovered via tool search.
@@ -4235,13 +4409,16 @@ pub struct FunctionToolParam {
     name: String,
 
     #[schema(value_type = Option<Object>)]
+    output_schema: Option<HashMap<String, Option<serde_json::Value>>>,
+
+    #[schema(value_type = Option<Object>)]
     parameters: Option<HashMap<String, Option<serde_json::Value>>>,
 
     strict: Option<bool>,
 
     /// The type of the custom tool. Always `custom`.
     #[serde(rename = "type")]
-    function_tool_param_type: HilariousType,
+    function_tool_param_type: StickyType,
 
     /// The input format for the custom tool. Default is unconstrained text.
     format: Option<Format>,
@@ -4250,7 +4427,7 @@ pub struct FunctionToolParam {
 /// The type of the custom tool. Always `custom`.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum HilariousType {
+pub enum StickyType {
     Custom,
 
     Function,
@@ -4299,7 +4476,7 @@ pub struct Prompt {
 pub enum PromptVariable {
     Input(Input),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// A text input to the model.
@@ -4309,6 +4486,8 @@ pub enum PromptVariable {
 /// A file input to the model.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Input {
+    prompt_cache_breakpoint: Option<PromptCacheBreakpointClass>,
+
     /// The text input to the model.
     text: Option<String>,
 
@@ -4318,13 +4497,15 @@ pub struct Input {
     ///
     /// The type of the input item. Always `input_file`.
     #[serde(rename = "type")]
-    input_type: InputTextType,
+    input_type: OutputContentListType,
 
     /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
     /// `original`. Defaults to `auto`.
     ///
-    /// The detail level of the file to be sent to the model. Use `low` for the default rendering
-    /// behavior, or `high` to render the file at higher quality. Defaults to `low`.
+    /// The detail level of the file to be sent to the model. Use `auto` to let the system select
+    /// the detail level; for GPT-5.6 and later models, `auto` uses high-quality rendering, which
+    /// may increase input token usage. Use `low` for lower-cost rendering, or `high` to render
+    /// the file at higher quality. Defaults to `auto`.
     detail: Option<DetailEnum>,
 
     file_id: Option<String>,
@@ -4352,6 +4533,11 @@ pub struct Reasoning {
     effort: Option<ReasoningEffort>,
 
     generate_summary: Option<Summary>,
+
+    /// Controls the reasoning execution mode for the request.
+    ///
+    /// When returned on a response, this is the effective execution mode.
+    mode: Option<String>,
 
     summary: Option<Summary>,
 }
@@ -4603,6 +4789,8 @@ pub struct Response {
     /// Whether to allow the model to run tool calls in parallel.
     parallel_tool_calls: bool,
 
+    prompt_cache_options: Option<PromptCacheOptions>,
+
     reasoning: Option<Reasoning>,
 
     /// The status of the response generation. One of `completed`, `failed`,
@@ -4635,6 +4823,9 @@ pub struct ResponseError {
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ResponseErrorCode {
+    #[serde(rename = "bio_policy")]
+    BioPolicy,
+
     #[serde(rename = "empty_image_file")]
     EmptyImageFile,
 
@@ -4713,7 +4904,7 @@ pub enum Reason {
 pub enum Instructions {
     InputItemArray(Vec<InputItem>),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// Flattened batched actions for `computer_use`. Each action includes an
@@ -4867,6 +5058,103 @@ pub struct InputItemAction {
     max_output_length: Option<i64>,
 }
 
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct InputItemDirectToolCallCaller {
+    /// The caller type. Always `direct`.
+    ///
+    /// The caller type. Always `program`.
+    #[serde(rename = "type")]
+    direct_tool_call_caller_type: DirectToolCallCallerType,
+
+    /// The call ID of the program item that produced this tool call.
+    caller_id: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(untagged)]
+pub enum ContentUnion {
+    ContentInputItemContentListArray(Vec<ContentInputItemContentList>),
+
+    PurpleString(String),
+}
+
+/// A list of one or many input items to the model, containing different content
+/// types.
+///
+///
+/// Text, image, or file output of the custom tool call.
+///
+///
+/// Text, image, or file output of the function call.
+///
+///
+/// A text input to the model.
+///
+/// An image input to the model. Learn about [image inputs](/docs/guides/vision).
+///
+/// A file input to the model.
+///
+/// A text output from the model.
+///
+/// A refusal from the model.
+///
+/// Reasoning text from the model.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ContentInputItemContentList {
+    prompt_cache_breakpoint: Option<PromptCacheBreakpointClass>,
+
+    /// The text input to the model.
+    ///
+    /// The text output from the model.
+    ///
+    /// The reasoning text from the model.
+    text: Option<String>,
+
+    /// The type of the input item. Always `input_text`.
+    ///
+    /// The type of the input item. Always `input_image`.
+    ///
+    /// The type of the input item. Always `input_file`.
+    ///
+    /// The type of the output text. Always `output_text`.
+    ///
+    /// The type of the refusal. Always `refusal`.
+    ///
+    /// The type of the reasoning text. Always `reasoning_text`.
+    #[serde(rename = "type")]
+    input_content_type: FluffyType,
+
+    /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
+    /// `original`. Defaults to `auto`.
+    ///
+    /// The detail level of the file to be sent to the model. Use `auto` to let the system select
+    /// the detail level; for GPT-5.6 and later models, `auto` uses high-quality rendering, which
+    /// may increase input token usage. Use `low` for lower-cost rendering, or `high` to render
+    /// the file at higher quality. Defaults to `auto`.
+    detail: Option<DetailEnum>,
+
+    file_id: Option<String>,
+
+    image_url: Option<String>,
+
+    /// The content of the file to be sent to the model.
+    file_data: Option<String>,
+
+    /// The URL of the file to be sent to the model.
+    file_url: Option<String>,
+
+    /// The name of the file to be sent to the model.
+    filename: Option<String>,
+
+    /// The annotations of the text output.
+    annotations: Option<Vec<Annotation>>,
+
+    logprobs: Option<Vec<LogProbability>>,
+
+    /// The refusal explanation from the model.
+    refusal: Option<String>,
+}
+
 /// Use a local computer environment.
 ///
 /// References a container created with the /v1/containers endpoint
@@ -4916,20 +5204,6 @@ pub struct PurpleApplyPatchOperation {
     apply_patch_operation_type: ApplyPatchOperationType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
-#[serde(untagged)]
-pub enum Output {
-    ComputerScreenshotImage(ComputerScreenshotImage),
-
-    PurpleInputContentArray(Vec<PurpleInputContent>),
-
-    String(String),
-}
-
-/// An array of content outputs (text, image, file) for the function tool call.
-///
-/// A piece of message content, such as text, an image, or a file.
-///
 /// A text input to the model.
 ///
 /// An image input to the model. Learn about [image inputs](/docs/guides/vision)
@@ -4938,19 +5212,11 @@ pub enum Output {
 ///
 /// Captured stdout and stderr for a portion of a shell tool call output.
 ///
-/// A list of one or many input items to the model, containing different content
-/// types.
-///
-///
-/// Text, image, or file output of the custom tool call.
-///
-///
-/// Text, image, or file output of the function call.
-///
-///
 /// An image input to the model. Learn about [image inputs](/docs/guides/vision).
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct PurpleInputContent {
+    prompt_cache_breakpoint: Option<PromptCacheBreakpoint>,
+
     /// The text input to the model.
     text: Option<String>,
 
@@ -4962,8 +5228,10 @@ pub struct PurpleInputContent {
     #[serde(rename = "type")]
     input_content_type: Option<InputTextType>,
 
-    /// The detail level of the file to be sent to the model. Use `low` for the default rendering
-    /// behavior, or `high` to render the file at higher quality. Defaults to `low`.
+    /// The detail level of the file to be sent to the model. Use `auto` to let the system select
+    /// the detail level; for GPT-5.6 and later models, `auto` uses high-quality rendering, which
+    /// may increase input token usage. Use `low` for lower-cost rendering, or `high` to render
+    /// the file at higher quality. Defaults to `auto`.
     ///
     /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
     /// `original`. Defaults to `auto`.
@@ -4992,6 +5260,24 @@ pub struct PurpleInputContent {
     stdout: Option<String>,
 }
 
+/// The type of the input item. Always `input_text`.
+///
+/// The type of the input item. Always `input_image`.
+///
+/// The type of the input item. Always `input_file`.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum InputTextType {
+    #[serde(rename = "input_file")]
+    InputFile,
+
+    #[serde(rename = "input_image")]
+    InputImage,
+
+    #[serde(rename = "input_text")]
+    InputText,
+}
+
 /// The exit or timeout outcome associated with this shell call.
 ///
 /// Indicates that the shell call exceeded its configured time limit.
@@ -5009,27 +5295,6 @@ pub struct PurpleShellCallOutcome {
     exit_code: Option<i64>,
 }
 
-/// An array of tools the model may call while generating a response. You
-/// can specify which tool to use by setting the `tool_choice` parameter.
-///
-/// We support the following categories of tools:
-/// - **Built-in tools**: Tools that are provided by OpenAI that extend the
-/// model's capabilities, like [web search](/docs/guides/tools-web-search)
-/// or [file search](/docs/guides/tools-file-search). Learn more about
-/// [built-in tools](/docs/guides/tools).
-/// - **MCP Tools**: Integrations with third-party systems via custom MCP servers
-/// or predefined connectors such as Google Drive and SharePoint. Learn more about
-/// [MCP Tools](/docs/guides/tools-connectors-mcp).
-/// - **Function calls (custom tools)**: Functions that are defined by you,
-/// enabling the model to call your own code with strongly typed arguments
-/// and outputs. Learn more about
-/// [function calling](/docs/guides/function-calling). You can also use
-/// custom tools to call your own code.
-///
-///
-/// A tool that can be used to generate a response.
-///
-///
 /// Defines a function in your own code the model can choose to call. Learn more about
 /// [function calling](https://platform.openai.com/docs/guides/function-calling).
 ///
@@ -5072,6 +5337,8 @@ pub struct PurpleShellCallOutcome {
 /// A tool available on an MCP server.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct InputItemTool {
+    allowed_callers: Option<Vec<CallableToolAllowedCaller>>,
+
     /// Whether this function is deferred and loaded via tool search.
     ///
     /// Whether this MCP tool is deferred and discovered via tool search.
@@ -5095,6 +5362,9 @@ pub struct InputItemTool {
     name: Option<String>,
 
     #[schema(value_type = Option<Object>)]
+    output_schema: Option<HashMap<String, Option<serde_json::Value>>>,
+
+    #[schema(value_type = Option<Object>)]
     parameters: Option<HashMap<String, Option<serde_json::Value>>>,
 
     strict: Option<bool>,
@@ -5113,6 +5383,8 @@ pub struct InputItemTool {
     ///
     /// The type of the code interpreter tool. Always `code_interpreter`.
     ///
+    ///
+    /// The type of the tool. Always `programmatic_tool_calling`.
     ///
     /// The type of the image generation tool. Always `image_generation`.
     ///
@@ -5285,6 +5557,15 @@ pub enum TType {
     Text,
 }
 
+/// The type of the custom tool. Always `custom`.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum IndigoType {
+    Custom,
+
+    Function,
+}
+
 /// An output message from the model.
 ///
 ///
@@ -5393,6 +5674,10 @@ pub struct OutputItem {
     /// The unique identifier of the reasoning content.
     ///
     ///
+    /// The unique ID of the program item.
+    ///
+    /// The unique ID of the program output item.
+    ///
     /// The unique ID of the tool search call item.
     ///
     /// The unique ID of the tool search output item.
@@ -5467,6 +5752,8 @@ pub struct OutputItem {
     /// The status of the web search tool call.
     ///
     ///
+    /// The terminal status of the program output item.
+    ///
     /// The status of the tool search call item that was recorded.
     ///
     /// The status of the tool search output item that was recorded.
@@ -5515,6 +5802,10 @@ pub struct OutputItem {
     ///
     /// The type of the object. Always `reasoning`.
     ///
+    ///
+    /// The type of the item. Always `program`.
+    ///
+    /// The type of the item. Always `program_output`.
     ///
     /// The type of the item. Always `tool_search_call`.
     ///
@@ -5566,7 +5857,7 @@ pub struct OutputItem {
     /// The queries used to search for files.
     queries: Option<Vec<String>>,
 
-    results: Option<Vec<Result>>,
+    results: Option<Vec<ResultElement>>,
 
     /// A JSON string of the arguments to pass to the function.
     ///
@@ -5589,6 +5880,10 @@ pub struct OutputItem {
     /// The ID of the computer tool call that produced the output.
     ///
     ///
+    /// The stable call ID of the program item.
+    ///
+    /// The call ID of the program item.
+    ///
     /// The unique ID of the local shell tool call generated by the model.
     ///
     ///
@@ -5602,6 +5897,8 @@ pub struct OutputItem {
     /// The call ID, used to map this custom tool call output to a custom tool call.
     #[schema(value_type = Option<Object>)]
     call_id: Option<serde_json::Value>,
+
+    caller: Option<OutputItemDirectToolCallCaller>,
 
     /// The name of the function to run.
     ///
@@ -5666,6 +5963,15 @@ pub struct OutputItem {
     /// Reasoning summary content.
     summary: Option<Vec<SummaryText>>,
 
+    /// The JavaScript source executed by programmatic tool calling.
+    code: Option<String>,
+
+    /// Opaque program replay fingerprint that must be round-tripped.
+    fingerprint: Option<String>,
+
+    /// The result produced by the program item.
+    result: Option<String>,
+
     /// Whether tool search was executed by the server or by the client.
     execution: Option<ToolSearchExecutionType>,
 
@@ -5675,10 +5981,6 @@ pub struct OutputItem {
     ///
     /// The tools available on the server.
     tools: Option<Vec<OutputItemTool>>,
-
-    result: Option<String>,
-
-    code: Option<String>,
 
     /// The ID of the container used to run the code.
     container_id: Option<String>,
@@ -5868,6 +6170,18 @@ pub struct OutputItemAction {
     max_output_length: Option<i64>,
 }
 
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+pub struct OutputItemDirectToolCallCaller {
+    /// The caller type. Always `direct`.
+    ///
+    /// The caller type. Always `program`.
+    #[serde(rename = "type")]
+    direct_tool_call_caller_type: DirectToolCallCallerType,
+
+    /// The call ID of the program item that produced this tool call.
+    caller_id: Option<String>,
+}
+
 /// A text output from the model.
 ///
 /// A refusal from the model.
@@ -5956,6 +6270,16 @@ pub struct FluffyApplyPatchOperation {
     apply_patch_operation_type: ApplyPatchOperationType,
 }
 
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(untagged)]
+pub enum OutputUnion {
+    ComputerScreenshotImage(ComputerScreenshotImage),
+
+    OutputInputItemContentListArray(Vec<OutputInputItemContentList>),
+
+    PurpleString(String),
+}
+
 /// A list of one or many input items to the model, containing different content
 /// types.
 ///
@@ -5974,7 +6298,9 @@ pub struct FluffyApplyPatchOperation {
 ///
 /// The content of a shell tool call output that was emitted.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub struct FluffyInputContent {
+pub struct OutputInputItemContentList {
+    prompt_cache_breakpoint: Option<PromptCacheBreakpointClass>,
+
     /// The text input to the model.
     text: Option<String>,
 
@@ -5989,8 +6315,10 @@ pub struct FluffyInputContent {
     /// The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or
     /// `original`. Defaults to `auto`.
     ///
-    /// The detail level of the file to be sent to the model. Use `low` for the default rendering
-    /// behavior, or `high` to render the file at higher quality. Defaults to `low`.
+    /// The detail level of the file to be sent to the model. Use `auto` to let the system select
+    /// the detail level; for GPT-5.6 and later models, `auto` uses high-quality rendering, which
+    /// may increase input token usage. Use `low` for lower-cost rendering, or `high` to render
+    /// the file at higher quality. Defaults to `auto`.
     detail: Option<DetailEnum>,
 
     file_id: Option<String>,
@@ -6060,6 +6388,10 @@ pub struct FluffyShellCallOutcome {
 ///
 /// The type of the object. Always `reasoning`.
 ///
+///
+/// The type of the item. Always `program`.
+///
+/// The type of the item. Always `program_output`.
 ///
 /// The type of the item. Always `tool_search_call`.
 ///
@@ -6166,6 +6498,11 @@ pub enum OutputItemType {
 
     Message,
 
+    Program,
+
+    #[serde(rename = "program_output")]
+    ProgramOutput,
+
     Reasoning,
 
     #[serde(rename = "shell_call")]
@@ -6271,6 +6608,8 @@ pub enum MessageRole {
 /// A tool available on an MCP server.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct OutputItemTool {
+    allowed_callers: Option<Vec<CallableToolAllowedCaller>>,
+
     /// Whether this function is deferred and loaded via tool search.
     ///
     /// Whether this MCP tool is deferred and discovered via tool search.
@@ -6294,6 +6633,9 @@ pub struct OutputItemTool {
     name: Option<String>,
 
     #[schema(value_type = Option<Object>)]
+    output_schema: Option<HashMap<String, Option<serde_json::Value>>>,
+
+    #[schema(value_type = Option<Object>)]
     parameters: Option<HashMap<String, Option<serde_json::Value>>>,
 
     strict: Option<bool>,
@@ -6312,6 +6654,8 @@ pub struct OutputItemTool {
     ///
     /// The type of the code interpreter tool. Always `code_interpreter`.
     ///
+    ///
+    /// The type of the tool. Always `programmatic_tool_calling`.
     ///
     /// The type of the image generation tool. Always `image_generation`.
     ///
@@ -6509,6 +6853,9 @@ pub struct ResponseUsage {
 /// A detailed breakdown of the input tokens.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct InputTokensDetails {
+    /// The number of input tokens that were written to the cache.
+    cache_write_tokens: i64,
+
     /// The number of tokens that were retrieved from the cache.
     /// [More on prompt caching](/docs/guides/prompt-caching).
     cached_tokens: i64,
@@ -7056,6 +7403,10 @@ pub struct ResponseStreamEvent {
     /// The index of the summary part within the reasoning summary.
     summary_index: Option<i64>,
 
+    /// The completion status of the summary part. Omitted when the part completed
+    /// normally and set to `incomplete` when generation was interrupted.
+    status: Option<ResponseStreamEventStatus>,
+
     /// The full text of the completed reasoning summary.
     ///
     ///
@@ -7104,12 +7455,6 @@ pub struct ResponseLogProb {
     top_logprobs: Option<Vec<TopLogprob>>,
 }
 
-/// The content part that was added.
-///
-///
-/// The content part that is done.
-///
-///
 /// A text output from the model.
 ///
 /// A refusal from the model.
@@ -7278,15 +7623,36 @@ pub struct TheResponseObject {
     /// Whether to allow the model to run tool calls in parallel.
     parallel_tool_calls: bool,
 
+    prompt_cache_options: Option<PromptCacheOptions>,
+
     reasoning: Option<Reasoning>,
 
     /// The status of the response generation. One of `completed`, `failed`,
     /// `in_progress`, `cancelled`, `queued`, or `incomplete`.
-    status: Option<StatusEnum>,
+    status: Option<TheResponseObjectStatus>,
 
     truncation: Option<Truncation>,
 
     usage: Option<ResponseUsage>,
+}
+
+/// The status of the response generation. One of `completed`, `failed`,
+/// `in_progress`, `cancelled`, `queued`, or `incomplete`.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum TheResponseObjectStatus {
+    Cancelled,
+
+    Completed,
+
+    Failed,
+
+    #[serde(rename = "in_progress")]
+    InProgress,
+
+    Incomplete,
+
+    Queued,
 }
 
 /// The type of the event. Always `response.audio.delta`.
@@ -7581,4 +7947,12 @@ pub enum ResponseStreamEventType {
 
     #[serde(rename = "response.web_search_call.searching")]
     ResponseWebSearchCallSearching,
+}
+
+/// The completion status of the summary part. Omitted when the part completed
+/// normally and set to `incomplete` when generation was interrupted.
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ResponseStreamEventStatus {
+    Incomplete,
 }

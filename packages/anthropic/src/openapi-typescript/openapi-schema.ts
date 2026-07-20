@@ -101,7 +101,7 @@ export interface components {
          * @enum {string}
          */
         AllowedCaller: "direct" | "code_execution_20250825" | "code_execution_20260120" | "code_execution_20260521";
-        AnthropicBeta: string | ("message-batches-2024-09-24" | "prompt-caching-2024-07-31" | "computer-use-2024-10-22" | "computer-use-2025-01-24" | "pdfs-2024-09-25" | "token-counting-2024-11-01" | "token-efficient-tools-2025-02-19" | "output-128k-2025-02-19" | "files-api-2025-04-14" | "mcp-client-2025-04-04" | "mcp-client-2025-11-20" | "dev-full-thinking-2025-05-14" | "interleaved-thinking-2025-05-14" | "code-execution-2025-05-22" | "extended-cache-ttl-2025-04-11" | "context-1m-2025-08-07" | "context-management-2025-06-27" | "model-context-window-exceeded-2025-08-26" | "skills-2025-10-02" | "fast-mode-2026-02-01" | "output-300k-2026-03-24" | "user-profiles-2026-03-24" | "advisor-tool-2026-03-01" | "managed-agents-2026-04-01" | "cache-diagnosis-2026-04-07" | "thinking-token-count-2026-05-13" | "server-side-fallback-2026-06-01" | "fallback-credit-2026-06-01" | "agent-memory-2026-07-22");
+        AnthropicBeta: string | ("message-batches-2024-09-24" | "prompt-caching-2024-07-31" | "computer-use-2024-10-22" | "computer-use-2025-01-24" | "pdfs-2024-09-25" | "token-counting-2024-11-01" | "token-efficient-tools-2025-02-19" | "output-128k-2025-02-19" | "files-api-2025-04-14" | "mcp-client-2025-04-04" | "mcp-client-2025-11-20" | "dev-full-thinking-2025-05-14" | "interleaved-thinking-2025-05-14" | "code-execution-2025-05-22" | "extended-cache-ttl-2025-04-11" | "context-1m-2025-08-07" | "context-management-2025-06-27" | "model-context-window-exceeded-2025-08-26" | "skills-2025-10-02" | "fast-mode-2026-02-01" | "output-300k-2026-03-24" | "user-profiles-2026-03-24" | "advisor-tool-2026-03-01" | "managed-agents-2026-04-01" | "cache-diagnosis-2026-04-07" | "dreaming-2026-04-21" | "thinking-token-count-2026-05-13" | "server-side-fallback-2026-06-01" | "fallback-credit-2026-06-01" | "agent-memory-2026-07-22");
         /** AuthenticationError */
         AuthenticationError: {
             /**
@@ -409,6 +409,7 @@ export interface components {
             /**
              * Id
              * @description Identifier for the container used in this request
+             * @example container_011CpZohnwH4vuy7gazohgSP
              */
             id: string;
         };
@@ -1222,6 +1223,7 @@ export interface components {
              *
              *     This text is not guaranteed to be stable. `null` when no explanation is available for the category.
              * @default null
+             * @example This request was declined because it conflicts with Anthropic's Usage Policy.
              */
             explanation: string | null;
             /**
@@ -1285,7 +1287,10 @@ export interface components {
         };
         /** RequestCharLocationCitation */
         RequestCharLocationCitation: {
-            /** Cited Text */
+            /**
+             * Cited Text
+             * @example The grass is green. The sky is blue.
+             */
             cited_text: string;
             /** Document Index */
             document_index: number;
@@ -1384,6 +1389,7 @@ export interface components {
              * @description The full text of the cited block range, concatenated.
              *
              *     Always equals the contents of `content[start_block_index:end_block_index]` joined together. The text block is the minimal citable unit; this field is never a substring of a single block. Not counted toward output tokens, and not counted toward input tokens when sent back in subsequent turns.
+             * @example The grass is green. The sky is blue.
              */
             cited_text: string;
             /** Document Index */
@@ -1488,7 +1494,10 @@ export interface components {
         };
         /** RequestPageLocationCitation */
         RequestPageLocationCitation: {
-            /** Cited Text */
+            /**
+             * Cited Text
+             * @example The grass is green. The sky is blue.
+             */
             cited_text: string;
             /** Document Index */
             document_index: number;
@@ -1541,6 +1550,7 @@ export interface components {
              * @description The full text of the cited block range, concatenated.
              *
              *     Always equals the contents of `content[start_block_index:end_block_index]` joined together. The text block is the minimal citable unit; this field is never a substring of a single block. Not counted toward output tokens, and not counted toward input tokens when sent back in subsequent turns.
+             * @example The grass is green. The sky is blue.
              */
             cited_text: string;
             /**
@@ -1867,7 +1877,10 @@ export interface components {
         };
         /** RequestWebSearchResultLocationCitation */
         RequestWebSearchResultLocationCitation: {
-            /** Cited Text */
+            /**
+             * Cited Text
+             * @example The grass is green. The sky is blue.
+             */
             cited_text: string;
             /** Encrypted Index */
             encrypted_index: string;
@@ -1961,17 +1974,24 @@ export interface components {
         };
         /** ResponseCharLocationCitation */
         ResponseCharLocationCitation: {
-            /** Cited Text */
+            /**
+             * Cited Text
+             * @example The grass is green. The sky is blue.
+             */
             cited_text: string;
             /** Document Index */
             document_index: number;
-            /** Document Title */
+            /**
+             * Document Title
+             * @example My Document
+             */
             document_title: string | null;
             /** End Char Index */
             end_char_index: number;
             /**
              * File Id
              * @default null
+             * @example file_011CNha8iCJcU1wXNR6q4V8w
              */
             file_id: string | null;
             /** Start Char Index */
@@ -2060,11 +2080,15 @@ export interface components {
              * @description The full text of the cited block range, concatenated.
              *
              *     Always equals the contents of `content[start_block_index:end_block_index]` joined together. The text block is the minimal citable unit; this field is never a substring of a single block. Not counted toward output tokens, and not counted toward input tokens when sent back in subsequent turns.
+             * @example The grass is green. The sky is blue.
              */
             cited_text: string;
             /** Document Index */
             document_index: number;
-            /** Document Title */
+            /**
+             * Document Title
+             * @example My Document
+             */
             document_title: string | null;
             /**
              * End Block Index
@@ -2076,6 +2100,7 @@ export interface components {
             /**
              * File Id
              * @default null
+             * @example file_011CNha8iCJcU1wXNR6q4V8w
              */
             file_id: string | null;
             /**
@@ -2133,17 +2158,24 @@ export interface components {
         };
         /** ResponsePageLocationCitation */
         ResponsePageLocationCitation: {
-            /** Cited Text */
+            /**
+             * Cited Text
+             * @example The grass is green. The sky is blue.
+             */
             cited_text: string;
             /** Document Index */
             document_index: number;
-            /** Document Title */
+            /**
+             * Document Title
+             * @example My Document
+             */
             document_title: string | null;
             /** End Page Number */
             end_page_number: number;
             /**
              * File Id
              * @default null
+             * @example file_011CNha8iCJcU1wXNR6q4V8w
              */
             file_id: string | null;
             /** Start Page Number */
@@ -2171,6 +2203,7 @@ export interface components {
              * @description The full text of the cited block range, concatenated.
              *
              *     Always equals the contents of `content[start_block_index:end_block_index]` joined together. The text block is the minimal citable unit; this field is never a substring of a single block. Not counted toward output tokens, and not counted toward input tokens when sent back in subsequent turns.
+             * @example The grass is green. The sky is blue.
              */
             cited_text: string;
             /**
@@ -2505,7 +2538,10 @@ export interface components {
         };
         /** ResponseWebSearchResultLocationCitation */
         ResponseWebSearchResultLocationCitation: {
-            /** Cited Text */
+            /**
+             * Cited Text
+             * @example The grass is green. The sky is blue.
+             */
             cited_text: string;
             /** Encrypted Index */
             encrypted_index: string;
@@ -3046,6 +3082,7 @@ export interface components {
              * Inference Geo
              * @description The geographic region where inference was performed for this request.
              * @default null
+             * @example global
              */
             inference_geo: string | null;
             /**

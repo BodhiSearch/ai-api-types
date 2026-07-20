@@ -296,7 +296,7 @@ pub struct InputMessage {
 pub enum MessageContent {
     InputContentBlockArray(Vec<InputContentBlock>),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// Regular text content.
@@ -335,7 +335,7 @@ pub struct InputContentBlock {
     #[serde(rename = "type")]
     input_content_block_type: InputContentBlockType,
 
-    source: Option<Source>,
+    source: Option<SourceUnion>,
 
     context: Option<String>,
 
@@ -476,9 +476,9 @@ pub struct RequestCitationsConfig {
 pub enum Content {
     BlockArray(Vec<Block>),
 
-    RequestWebSearchToolResultError(RequestWebSearchToolResultError),
+    PurpleString(String),
 
-    String(String),
+    Request(Request),
 }
 
 /// Regular text content.
@@ -503,7 +503,7 @@ pub struct Block {
     #[serde(rename = "type")]
     block_type: WebSearchToolResultBlockItemType,
 
-    source: Option<Source>,
+    source: Option<SourceUnion>,
 
     content: Option<Vec<RequestTextBlock>>,
 
@@ -561,32 +561,32 @@ pub enum SystemType {
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
-pub enum Source {
-    SourceSource(SourceSource),
+pub enum SourceUnion {
+    PurpleString(String),
 
-    String(String),
+    Source(Source),
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub struct SourceSource {
+pub struct Source {
     data: Option<String>,
 
-    media_type: Option<FluffyMediaType>,
+    media_type: Option<Base64ImageSourceMediaType>,
 
     #[serde(rename = "type")]
-    source_type: FluffyType,
+    source_type: Base64ImageSourceType,
 
     url: Option<String>,
 
-    content: Option<SourceContent>,
+    content: Option<Base64ImageSourceContent>,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
-pub enum SourceContent {
+pub enum Base64ImageSourceContent {
     ContentBlockSourceContentItemArray(Vec<ContentBlockSourceContentItem>),
 
-    String(String),
+    PurpleString(String),
 }
 
 /// Regular text content.
@@ -604,7 +604,7 @@ pub struct ContentBlockSourceContentItem {
     #[serde(rename = "type")]
     content_block_source_content_item_type: ContentBlockSourceContentItemType,
 
-    source: Option<SourceSourceClass>,
+    source: Option<SourceSource>,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -616,7 +616,7 @@ pub enum ContentBlockSourceContentItemType {
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub struct SourceSourceClass {
+pub struct SourceSource {
     data: Option<String>,
 
     media_type: Option<PurpleMediaType>,
@@ -651,7 +651,7 @@ pub enum PurpleType {
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub enum FluffyMediaType {
+pub enum Base64ImageSourceMediaType {
     #[serde(rename = "application/pdf")]
     ApplicationPdf,
 
@@ -673,7 +673,7 @@ pub enum FluffyMediaType {
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum FluffyType {
+pub enum Base64ImageSourceType {
     Base64,
 
     Content,
@@ -685,11 +685,11 @@ pub enum FluffyType {
 
 /// Code execution result with encrypted stdout for PFC + web_search results.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub struct RequestWebSearchToolResultError {
+pub struct Request {
     error_code: Option<ToolResultErrorCode>,
 
     #[serde(rename = "type")]
-    request_web_search_tool_result_error_type: RequestWebSearchToolResultErrorType,
+    request_type: RequestWebSearchToolResultErrorType,
 
     content: Option<RequestWebSearchToolResultErrorContent>,
 
@@ -735,11 +735,11 @@ pub struct RequestWebSearchToolResultError {
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum RequestWebSearchToolResultErrorContent {
+    PurpleString(String),
+
     RequestCodeExecutionOutputBlockArray(Vec<RequestCodeExecutionOutputBlock>),
 
     RequestDocumentBlock(RequestDocumentBlock),
-
-    String(String),
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -747,12 +747,12 @@ pub struct RequestCodeExecutionOutputBlock {
     file_id: String,
 
     #[serde(rename = "type")]
-    request_code_execution_output_block_type: TentacledType,
+    request_code_execution_output_block_type: FluffyType,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum TentacledType {
+pub enum FluffyType {
     #[serde(rename = "bash_code_execution_output")]
     BashCodeExecutionOutput,
 
@@ -771,36 +771,36 @@ pub struct RequestDocumentBlock {
 
     context: Option<String>,
 
-    source: ContentSource,
+    source: RequestDocumentBlockSource,
 
     title: Option<String>,
 
     #[serde(rename = "type")]
-    request_document_block_type: StickyType,
+    request_document_block_type: RequestDocumentBlockType,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum StickyType {
+pub enum RequestDocumentBlockType {
     Document,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub struct ContentSource {
+pub struct RequestDocumentBlockSource {
     data: Option<String>,
 
-    media_type: Option<TentacledMediaType>,
+    media_type: Option<FluffyMediaType>,
 
     #[serde(rename = "type")]
-    source_type: FluffyType,
+    source_type: Base64ImageSourceType,
 
-    content: Option<SourceContent>,
+    content: Option<Base64ImageSourceContent>,
 
     url: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub enum TentacledMediaType {
+pub enum FluffyMediaType {
     #[serde(rename = "application/pdf")]
     ApplicationPdf,
 
@@ -1068,9 +1068,9 @@ pub enum ServiceTier {
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum System {
-    RequestTextBlockArray(Vec<RequestTextBlock>),
+    PurpleString(String),
 
-    String(String),
+    RequestTextBlockArray(Vec<RequestTextBlock>),
 }
 
 /// Configuration for enabling Claude's extended thinking.
@@ -1157,9 +1157,10 @@ pub enum ToolChoiceType {
 
     Auto,
 
-    None,
-
     Tool,
+
+    #[serde(rename = "none")]
+    TypeNone,
 }
 
 /// Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint).
@@ -1211,7 +1212,7 @@ pub struct Tool {
     strict: Option<bool>,
 
     #[serde(rename = "type")]
-    tool_type: Option<ToolType>,
+    tool_type: Option<Type>,
 
     /// Maximum number of characters to display when viewing a file. If not specified, defaults
     /// to displaying the full file.
@@ -1316,7 +1317,7 @@ pub enum ResponseInclusion {
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum ToolType {
+pub enum Type {
     #[serde(rename = "bash_20250124")]
     Bash20250124,
 
@@ -1613,18 +1614,25 @@ pub struct ResponseWebSearchResultBlock {
     title: String,
 
     #[serde(rename = "type")]
-    response_web_search_result_block_type: PurpleType,
+    response_web_search_result_block_type: ContentType,
 
     url: String,
 }
 
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ContentType {
+    #[serde(rename = "web_search_result")]
+    WebSearchResult,
+}
+
 /// Code execution result with encrypted stdout for PFC + web_search results.
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
-pub struct ResponseWebSearchToolResultError {
+pub struct Response {
     error_code: Option<ToolResultErrorCode>,
 
     #[serde(rename = "type")]
-    response_web_search_tool_result_error_type: ResponseWebSearchToolResultErrorType,
+    response_type: ResponseWebSearchToolResultErrorType,
 
     content: Option<ResponseWebSearchToolResultErrorContent>,
 
@@ -1670,11 +1678,11 @@ pub struct ResponseWebSearchToolResultError {
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum ResponseWebSearchToolResultErrorContent {
+    PurpleString(String),
+
     ResponseCodeExecutionOutputBlockArray(Vec<ResponseCodeExecutionOutputBlock>),
 
     ResponseDocumentBlock(ResponseDocumentBlock),
-
-    String(String),
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -1682,7 +1690,17 @@ pub struct ResponseCodeExecutionOutputBlock {
     file_id: String,
 
     #[serde(rename = "type")]
-    response_code_execution_output_block_type: FluffyType,
+    response_code_execution_output_block_type: ContentTypeEnum,
+}
+
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ContentTypeEnum {
+    #[serde(rename = "bash_code_execution_output")]
+    BashCodeExecutionOutput,
+
+    #[serde(rename = "code_execution_output")]
+    CodeExecutionOutput,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -1696,12 +1714,18 @@ pub struct ResponseDocumentBlock {
     title: Option<String>,
 
     #[serde(rename = "type")]
-    response_document_block_type: TentacledType,
+    response_document_block_type: ResponseDocumentBlockType,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ResponseCitationsConfig {
     enabled: bool,
+}
+
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ResponseDocumentBlockType {
+    Document,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
@@ -2131,15 +2155,6 @@ pub struct ThinkingTypes {
 
     /// Whether the model supports thinking with type 'enabled'.
     enabled: CapabilitySupport,
-}
-
-/// Object type.
-///
-/// For Models, this is always `"model"`.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
-#[serde(rename_all = "snake_case")]
-pub enum Type {
-    Model,
 }
 
 #[derive(Serialize, Deserialize, utoipa::ToSchema)]
