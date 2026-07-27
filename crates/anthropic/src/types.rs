@@ -7,18 +7,18 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct CreateMessageParams {
     /// Top-level cache control automatically applies a cache_control marker to the last
     /// cacheable block in the request.
-    cache_control: Option<CacheControlEphemeral>,
+    pub cache_control: Option<CacheControlEphemeral>,
 
     /// Container identifier for reuse across requests.
-    container: Option<String>,
+    pub container: Option<String>,
 
     /// Specifies the geographic region for inference processing. If not specified, the
     /// workspace's `default_inference_geo` is used.
-    inference_geo: Option<String>,
+    pub inference_geo: Option<String>,
 
     /// The maximum number of tokens to generate before stopping.
     ///
@@ -31,7 +31,7 @@ pub struct CreateMessageParams {
     ///
     /// Different models have different maximum values for this parameter.  See
     /// [models](https://platform.claude.com/docs/en/about-claude/models/overview) for details.
-    max_tokens: i64,
+    pub max_tokens: i64,
 
     /// Input messages.
     ///
@@ -96,22 +96,22 @@ pub struct CreateMessageParams {
     /// messages in the Messages API.
     ///
     /// There is a limit of 100,000 messages in a single request.
-    messages: Vec<InputMessage>,
+    pub messages: Vec<InputMessage>,
 
     /// An object describing metadata about the request.
-    metadata: Option<Metadata>,
+    pub metadata: Option<Metadata>,
 
-    model: String,
+    pub model: String,
 
     /// Configuration options for the model's output, such as the output format.
-    output_config: Option<OutputConfig>,
+    pub output_config: Option<OutputConfig>,
 
     /// Determines whether to use priority capacity (if available) or standard capacity for this
     /// request.
     ///
     /// Anthropic offers different levels of service for your API requests. See
     /// [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
-    service_tier: Option<ServiceTier>,
+    pub service_tier: Option<ServiceTier>,
 
     /// Custom text sequences that will cause the model to stop generating.
     ///
@@ -122,20 +122,20 @@ pub struct CreateMessageParams {
     /// can use the `stop_sequences` parameter. If the model encounters one of the custom
     /// sequences, the response `stop_reason` value will be `"stop_sequence"` and the response
     /// `stop_sequence` value will contain the matched stop sequence.
-    stop_sequences: Option<Vec<String>>,
+    pub stop_sequences: Option<Vec<String>>,
 
     /// Whether to incrementally stream the response using server-sent events.
     ///
     /// See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming) for
     /// details.
-    stream: Option<bool>,
+    pub stream: Option<bool>,
 
     /// System prompt.
     ///
     /// A system prompt is a way of providing context and instructions to Claude, such as
     /// specifying a particular goal or role. See our [guide to system
     /// prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
-    system: Option<System>,
+    pub system: Option<System>,
 
     /// Amount of randomness injected into the response.
     ///
@@ -143,11 +143,11 @@ pub struct CreateMessageParams {
     /// analytical / multiple choice, and closer to `1.0` for creative and generative tasks.
     ///
     /// Note that even with `temperature` of `0.0`, the results will not be fully deterministic.
-    temperature: Option<f64>,
+    pub temperature: Option<f64>,
 
-    thinking: Option<Thinking>,
+    pub thinking: Option<Thinking>,
 
-    tool_choice: Option<ToolChoice>,
+    pub tool_choice: Option<ToolChoice>,
 
     /// Definitions of tools that the model may use.
     ///
@@ -223,7 +223,7 @@ pub struct CreateMessageParams {
     ///
     /// See our [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview)
     /// for more details.
-    tools: Option<Vec<Tool>>,
+    pub tools: Option<Vec<Tool>>,
 
     /// Only sample from the top K options for each subsequent token.
     ///
@@ -231,7 +231,7 @@ pub struct CreateMessageParams {
     /// here](https://towardsdatascience.com/how-to-sample-from-language-models-682bceb97277).
     ///
     /// Recommended for advanced use cases only.
-    top_k: Option<i64>,
+    pub top_k: Option<i64>,
 
     /// Use nucleus sampling.
     ///
@@ -240,10 +240,10 @@ pub struct CreateMessageParams {
     /// particular probability specified by `top_p`.
     ///
     /// Recommended for advanced use cases only.
-    top_p: Option<f64>,
+    pub top_p: Option<f64>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct CacheControlEphemeral {
     /// The time-to-live for the cache control breakpoint.
     ///
@@ -254,13 +254,13 @@ pub struct CacheControlEphemeral {
     /// Defaults to `5m`. See [prompt caching
     /// pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) for
     /// details.
-    ttl: Option<Ttl>,
+    pub ttl: Option<Ttl>,
 
     #[serde(rename = "type")]
-    cache_control_ephemeral_type: CacheControlEphemeralType,
+    pub cache_control_ephemeral_type: CacheControlEphemeralType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum CacheControlEphemeralType {
     Ephemeral,
@@ -275,7 +275,7 @@ pub enum CacheControlEphemeralType {
 /// Defaults to `5m`. See [prompt caching
 /// pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) for
 /// details.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub enum Ttl {
     #[serde(rename = "1h")]
     The1H,
@@ -284,14 +284,14 @@ pub enum Ttl {
     The5M,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct InputMessage {
-    content: MessageContent,
+    pub content: MessageContent,
 
-    role: Role,
+    pub role: Role,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum MessageContent {
     InputContentBlockArray(Vec<InputContentBlock>),
@@ -323,61 +323,61 @@ pub enum MessageContent {
 ///
 /// Use this block to provide or update system-level instructions at a specific
 /// point in the conversation, rather than only via the top-level `system` parameter.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct InputContentBlock {
     /// Create a cache control breakpoint at this content block.
-    cache_control: Option<CacheControlEphemeral>,
+    pub cache_control: Option<CacheControlEphemeral>,
 
-    citations: Option<Citations>,
+    pub citations: Option<Citations>,
 
-    text: Option<String>,
+    pub text: Option<String>,
 
     #[serde(rename = "type")]
-    input_content_block_type: InputContentBlockType,
+    pub input_content_block_type: InputContentBlockType,
 
-    source: Option<SourceUnion>,
+    pub source: Option<SourceUnion>,
 
-    context: Option<String>,
+    pub context: Option<String>,
 
-    title: Option<String>,
+    pub title: Option<String>,
 
     /// System instruction text blocks.
-    content: Option<Content>,
+    pub content: Option<Content>,
 
-    signature: Option<String>,
+    pub signature: Option<String>,
 
-    thinking: Option<String>,
+    pub thinking: Option<String>,
 
-    data: Option<String>,
+    pub data: Option<String>,
 
-    caller: Option<Caller>,
+    pub caller: Option<Caller>,
 
-    id: Option<String>,
+    pub id: Option<String>,
 
     #[schema(value_type = Option<Object>)]
-    input: Option<HashMap<String, Option<serde_json::Value>>>,
+    pub input: Option<HashMap<String, Option<serde_json::Value>>>,
 
-    name: Option<String>,
+    pub name: Option<String>,
 
-    is_error: Option<bool>,
+    pub is_error: Option<bool>,
 
-    tool_use_id: Option<String>,
+    pub tool_use_id: Option<String>,
 
-    file_id: Option<String>,
+    pub file_id: Option<String>,
 }
 
 /// Tool invocation directly from the model.
 ///
 /// Tool invocation generated by a server-side tool.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Caller {
     #[serde(rename = "type")]
-    caller_type: CallerType,
+    pub caller_type: CallerType,
 
-    tool_id: Option<String>,
+    pub tool_id: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum CallerType {
     #[serde(rename = "code_execution_20250825")]
@@ -389,7 +389,7 @@ pub enum CallerType {
     Direct,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum Citations {
     RequestCitationsConfig(RequestCitationsConfig),
@@ -397,7 +397,7 @@ pub enum Citations {
     RequestLocationCitationArray(Vec<RequestLocationCitation>),
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct RequestLocationCitation {
     /// The full text of the cited block range, concatenated.
     ///
@@ -405,49 +405,49 @@ pub struct RequestLocationCitation {
     /// together. The text block is the minimal citable unit; this field is never a substring of
     /// a single block. Not counted toward output tokens, and not counted toward input tokens
     /// when sent back in subsequent turns.
-    cited_text: String,
+    pub cited_text: String,
 
-    document_index: Option<i64>,
+    pub document_index: Option<i64>,
 
-    document_title: Option<String>,
+    pub document_title: Option<String>,
 
-    end_char_index: Option<i64>,
+    pub end_char_index: Option<i64>,
 
-    start_char_index: Option<i64>,
+    pub start_char_index: Option<i64>,
 
     #[serde(rename = "type")]
-    request_location_citation_type: CitationType,
+    pub request_location_citation_type: CitationType,
 
-    end_page_number: Option<i64>,
+    pub end_page_number: Option<i64>,
 
-    start_page_number: Option<i64>,
+    pub start_page_number: Option<i64>,
 
     /// Exclusive 0-based end index of the cited block range in the source's `content` array.
     ///
     /// Always greater than `start_block_index`; a single-block citation has `end_block_index =
     /// start_block_index + 1`.
-    end_block_index: Option<i64>,
+    pub end_block_index: Option<i64>,
 
     /// 0-based index of the first cited block in the source's `content` array.
-    start_block_index: Option<i64>,
+    pub start_block_index: Option<i64>,
 
-    encrypted_index: Option<String>,
+    pub encrypted_index: Option<String>,
 
-    title: Option<String>,
+    pub title: Option<String>,
 
-    url: Option<String>,
+    pub url: Option<String>,
 
     /// 0-based index of the cited search result among all `search_result` content blocks in the
     /// request, in the order they appear across messages and tool results.
     ///
     /// Counted separately from `document_index`; server-side web search results are not included
     /// in this count.
-    search_result_index: Option<i64>,
+    pub search_result_index: Option<i64>,
 
-    source: Option<String>,
+    pub source: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum CitationType {
     #[serde(rename = "char_location")]
@@ -466,12 +466,12 @@ pub enum CitationType {
     WebSearchResultLocation,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct RequestCitationsConfig {
-    enabled: Option<bool>,
+    pub enabled: Option<bool>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum Content {
     BlockArray(Vec<Block>),
@@ -491,36 +491,36 @@ pub enum Content {
 /// via a URL.
 ///
 /// Tool reference block that can be included in tool_result content.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Block {
     /// Create a cache control breakpoint at this content block.
-    cache_control: Option<CacheControlEphemeral>,
+    pub cache_control: Option<CacheControlEphemeral>,
 
-    citations: Option<Citations>,
+    pub citations: Option<Citations>,
 
-    text: Option<String>,
+    pub text: Option<String>,
 
     #[serde(rename = "type")]
-    block_type: WebSearchToolResultBlockItemType,
+    pub block_type: WebSearchToolResultBlockItemType,
 
-    source: Option<SourceUnion>,
+    pub source: Option<SourceUnion>,
 
-    content: Option<Vec<RequestTextBlock>>,
+    pub content: Option<Vec<RequestTextBlock>>,
 
-    title: Option<String>,
+    pub title: Option<String>,
 
-    context: Option<String>,
+    pub context: Option<String>,
 
-    tool_name: Option<String>,
+    pub tool_name: Option<String>,
 
-    encrypted_content: Option<String>,
+    pub encrypted_content: Option<String>,
 
-    page_age: Option<String>,
+    pub page_age: Option<String>,
 
-    url: Option<String>,
+    pub url: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum WebSearchToolResultBlockItemType {
     Document,
@@ -540,26 +540,26 @@ pub enum WebSearchToolResultBlockItemType {
 }
 
 /// Regular text content.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct RequestTextBlock {
     /// Create a cache control breakpoint at this content block.
-    cache_control: Option<CacheControlEphemeral>,
+    pub cache_control: Option<CacheControlEphemeral>,
 
-    citations: Option<Vec<RequestLocationCitation>>,
+    pub citations: Option<Vec<RequestLocationCitation>>,
 
-    text: String,
+    pub text: String,
 
     #[serde(rename = "type")]
-    request_text_block_type: SystemType,
+    pub request_text_block_type: SystemType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum SystemType {
     Text,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum SourceUnion {
     PurpleString(String),
@@ -567,21 +567,21 @@ pub enum SourceUnion {
     Source(Source),
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Source {
-    data: Option<String>,
+    pub data: Option<String>,
 
-    media_type: Option<Base64ImageSourceMediaType>,
+    pub media_type: Option<Base64ImageSourceMediaType>,
 
     #[serde(rename = "type")]
-    source_type: Base64ImageSourceType,
+    pub source_type: Base64ImageSourceType,
 
-    url: Option<String>,
+    pub url: Option<String>,
 
-    content: Option<Base64ImageSourceContent>,
+    pub content: Option<Base64ImageSourceContent>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum Base64ImageSourceContent {
     ContentBlockSourceContentItemArray(Vec<ContentBlockSourceContentItem>),
@@ -592,22 +592,22 @@ pub enum Base64ImageSourceContent {
 /// Regular text content.
 ///
 /// Image content specified directly as base64 data or as a reference via a URL.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ContentBlockSourceContentItem {
     /// Create a cache control breakpoint at this content block.
-    cache_control: Option<CacheControlEphemeral>,
+    pub cache_control: Option<CacheControlEphemeral>,
 
-    citations: Option<Vec<RequestLocationCitation>>,
+    pub citations: Option<Vec<RequestLocationCitation>>,
 
-    text: Option<String>,
+    pub text: Option<String>,
 
     #[serde(rename = "type")]
-    content_block_source_content_item_type: ContentBlockSourceContentItemType,
+    pub content_block_source_content_item_type: ContentBlockSourceContentItemType,
 
-    source: Option<SourceSource>,
+    pub source: Option<SourceSource>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ContentBlockSourceContentItemType {
     Image,
@@ -615,19 +615,19 @@ pub enum ContentBlockSourceContentItemType {
     Text,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct SourceSource {
-    data: Option<String>,
+    pub data: Option<String>,
 
-    media_type: Option<PurpleMediaType>,
+    pub media_type: Option<PurpleMediaType>,
 
     #[serde(rename = "type")]
-    source_type: PurpleType,
+    pub source_type: PurpleType,
 
-    url: Option<String>,
+    pub url: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub enum PurpleMediaType {
     #[serde(rename = "image/gif")]
     ImageGif,
@@ -642,7 +642,7 @@ pub enum PurpleMediaType {
     ImageWebp,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum PurpleType {
     Base64,
@@ -650,7 +650,7 @@ pub enum PurpleType {
     Url,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub enum Base64ImageSourceMediaType {
     #[serde(rename = "application/pdf")]
     ApplicationPdf,
@@ -671,7 +671,7 @@ pub enum Base64ImageSourceMediaType {
     TextPlain,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum Base64ImageSourceType {
     Base64,
@@ -684,55 +684,55 @@ pub enum Base64ImageSourceType {
 }
 
 /// Code execution result with encrypted stdout for PFC + web_search results.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Request {
-    error_code: Option<ToolResultErrorCode>,
+    pub error_code: Option<ToolResultErrorCode>,
 
     #[serde(rename = "type")]
-    request_type: RequestWebSearchToolResultErrorType,
+    pub request_type: RequestWebSearchToolResultErrorType,
 
-    content: Option<RequestWebSearchToolResultErrorContent>,
+    pub content: Option<RequestWebSearchToolResultErrorContent>,
 
     /// ISO 8601 timestamp when the content was retrieved
-    retrieved_at: Option<String>,
+    pub retrieved_at: Option<String>,
 
     /// Fetched content URL
-    url: Option<String>,
+    pub url: Option<String>,
 
-    return_code: Option<i64>,
+    pub return_code: Option<i64>,
 
-    stderr: Option<String>,
+    pub stderr: Option<String>,
 
-    stdout: Option<String>,
+    pub stdout: Option<String>,
 
-    encrypted_stdout: Option<String>,
+    pub encrypted_stdout: Option<String>,
 
-    error_message: Option<String>,
+    pub error_message: Option<String>,
 
-    file_type: Option<FileType>,
+    pub file_type: Option<FileType>,
 
-    num_lines: Option<i64>,
+    pub num_lines: Option<i64>,
 
-    start_line: Option<i64>,
+    pub start_line: Option<i64>,
 
-    total_lines: Option<i64>,
+    pub total_lines: Option<i64>,
 
-    is_file_update: Option<bool>,
+    pub is_file_update: Option<bool>,
 
-    lines: Option<Vec<String>>,
+    pub lines: Option<Vec<String>>,
 
-    new_lines: Option<i64>,
+    pub new_lines: Option<i64>,
 
-    new_start: Option<i64>,
+    pub new_start: Option<i64>,
 
-    old_lines: Option<i64>,
+    pub old_lines: Option<i64>,
 
-    old_start: Option<i64>,
+    pub old_start: Option<i64>,
 
-    tool_references: Option<Vec<RequestToolReferenceBlock>>,
+    pub tool_references: Option<Vec<RequestToolReferenceBlock>>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum RequestWebSearchToolResultErrorContent {
     PurpleString(String),
@@ -742,15 +742,15 @@ pub enum RequestWebSearchToolResultErrorContent {
     RequestDocumentBlock(RequestDocumentBlock),
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct RequestCodeExecutionOutputBlock {
-    file_id: String,
+    pub file_id: String,
 
     #[serde(rename = "type")]
-    request_code_execution_output_block_type: FluffyType,
+    pub request_code_execution_output_block_type: FluffyType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum FluffyType {
     #[serde(rename = "bash_code_execution_output")]
@@ -762,44 +762,44 @@ pub enum FluffyType {
 
 /// Document content, either specified directly as base64 data, as text, or as a reference
 /// via a URL.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct RequestDocumentBlock {
     /// Create a cache control breakpoint at this content block.
-    cache_control: Option<CacheControlEphemeral>,
+    pub cache_control: Option<CacheControlEphemeral>,
 
-    citations: Option<RequestCitationsConfig>,
+    pub citations: Option<RequestCitationsConfig>,
 
-    context: Option<String>,
+    pub context: Option<String>,
 
-    source: RequestDocumentBlockSource,
+    pub source: RequestDocumentBlockSource,
 
-    title: Option<String>,
+    pub title: Option<String>,
 
     #[serde(rename = "type")]
-    request_document_block_type: RequestDocumentBlockType,
+    pub request_document_block_type: RequestDocumentBlockType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum RequestDocumentBlockType {
     Document,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct RequestDocumentBlockSource {
-    data: Option<String>,
+    pub data: Option<String>,
 
-    media_type: Option<FluffyMediaType>,
+    pub media_type: Option<FluffyMediaType>,
 
     #[serde(rename = "type")]
-    source_type: Base64ImageSourceType,
+    pub source_type: Base64ImageSourceType,
 
-    content: Option<Base64ImageSourceContent>,
+    pub content: Option<Base64ImageSourceContent>,
 
-    url: Option<String>,
+    pub url: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub enum FluffyMediaType {
     #[serde(rename = "application/pdf")]
     ApplicationPdf,
@@ -808,7 +808,7 @@ pub enum FluffyMediaType {
     TextPlain,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ToolResultErrorCode {
     #[serde(rename = "execution_time_exceeded")]
@@ -853,7 +853,7 @@ pub enum ToolResultErrorCode {
     UrlTooLong,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum FileType {
     Image,
@@ -863,7 +863,7 @@ pub enum FileType {
     Text,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum RequestWebSearchToolResultErrorType {
     #[serde(rename = "bash_code_execution_result")]
@@ -910,25 +910,25 @@ pub enum RequestWebSearchToolResultErrorType {
 }
 
 /// Tool reference block that can be included in tool_result content.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct RequestToolReferenceBlock {
     /// Create a cache control breakpoint at this content block.
-    cache_control: Option<CacheControlEphemeral>,
+    pub cache_control: Option<CacheControlEphemeral>,
 
-    tool_name: String,
+    pub tool_name: String,
 
     #[serde(rename = "type")]
-    request_tool_reference_block_type: ToolReferenceType,
+    pub request_tool_reference_block_type: ToolReferenceType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ToolReferenceType {
     #[serde(rename = "tool_reference")]
     ToolReference,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum InputContentBlockType {
     #[serde(rename = "bash_code_execution_tool_result")]
@@ -979,7 +979,7 @@ pub enum InputContentBlockType {
     WebSearchToolResult,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum Role {
     Assistant,
@@ -990,32 +990,32 @@ pub enum Role {
 }
 
 /// An object describing metadata about the request.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Metadata {
     /// An external identifier for the user who is associated with the request.
     ///
     /// This should be a uuid, hash value, or other opaque identifier. Anthropic may use this id
     /// to help detect abuse. Do not include any identifying information such as name, email
     /// address, or phone number.
-    user_id: Option<String>,
+    pub user_id: Option<String>,
 }
 
 /// Configuration options for the model's output, such as the output format.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct OutputConfig {
     /// How much effort the model should put into its response. Higher effort levels may result
     /// in more thorough analysis but take longer.
     ///
     /// Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
-    effort: Option<EffortLevel>,
+    pub effort: Option<EffortLevel>,
 
     /// A schema to specify Claude's output format in responses. See [structured
     /// outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
-    format: Option<JsonOutputFormat>,
+    pub format: Option<JsonOutputFormat>,
 }
 
 /// All possible effort levels.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum EffortLevel {
     High,
@@ -1029,17 +1029,17 @@ pub enum EffortLevel {
     Xhigh,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct JsonOutputFormat {
     /// The JSON schema of the format
     #[schema(value_type = Object)]
-    schema: HashMap<String, Option<serde_json::Value>>,
+    pub schema: HashMap<String, Option<serde_json::Value>>,
 
     #[serde(rename = "type")]
-    json_output_format_type: JsonOutputFormatType,
+    pub json_output_format_type: JsonOutputFormatType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum JsonOutputFormatType {
     #[serde(rename = "json_schema")]
@@ -1051,7 +1051,7 @@ pub enum JsonOutputFormatType {
 ///
 /// Anthropic offers different levels of service for your API requests. See
 /// [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ServiceTier {
     Auto,
@@ -1065,7 +1065,7 @@ pub enum ServiceTier {
 /// A system prompt is a way of providing context and instructions to Claude, such as
 /// specifying a particular goal or role. See our [guide to system
 /// prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum System {
     PurpleString(String),
@@ -1082,7 +1082,7 @@ pub enum System {
 /// See [extended
 /// thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) for
 /// details.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Thinking {
     /// Determines how many tokens Claude can use for its internal reasoning process. Larger
     /// budgets can enable more thorough analysis for complex problems, improving response
@@ -1093,18 +1093,18 @@ pub struct Thinking {
     /// See [extended
     /// thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) for
     /// details.
-    budget_tokens: Option<i64>,
+    pub budget_tokens: Option<i64>,
 
     /// Controls how thinking content appears in the response. When set to `summarized`, thinking
     /// is returned normally. When set to `omitted`, thinking content is redacted but a signature
     /// is returned for multi-turn continuity. Defaults to `summarized`.
-    display: Option<ThinkingDisplayMode>,
+    pub display: Option<ThinkingDisplayMode>,
 
     #[serde(rename = "type")]
-    thinking_type: ThinkingType,
+    pub thinking_type: ThinkingType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ThinkingDisplayMode {
     Omitted,
@@ -1112,7 +1112,7 @@ pub enum ThinkingDisplayMode {
     Summarized,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ThinkingType {
     Adaptive,
@@ -1132,7 +1132,7 @@ pub enum ThinkingType {
 /// The model will use the specified tool with `tool_choice.name`.
 ///
 /// The model will not be allowed to use tools.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ToolChoice {
     /// Whether to disable parallel tool use.
     ///
@@ -1141,16 +1141,16 @@ pub struct ToolChoice {
     /// Whether to disable parallel tool use.
     ///
     /// Defaults to `false`. If set to `true`, the model will output exactly one tool use.
-    disable_parallel_tool_use: Option<bool>,
+    pub disable_parallel_tool_use: Option<bool>,
 
     #[serde(rename = "type")]
-    tool_choice_type: ToolChoiceType,
+    pub tool_choice_type: ToolChoiceType,
 
     /// The name of the tool to use.
-    name: Option<String>,
+    pub name: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ToolChoiceType {
     Any,
@@ -1168,16 +1168,16 @@ pub enum ToolChoiceType {
 /// Code execution tool with REPL state persistence.
 ///
 /// Web fetch tool with use_cache parameter for bypassing cached content.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Tool {
-    allowed_callers: Option<Vec<AllowedCaller>>,
+    pub allowed_callers: Option<Vec<AllowedCaller>>,
 
     /// Create a cache control breakpoint at this content block.
-    cache_control: Option<CacheControlEphemeral>,
+    pub cache_control: Option<CacheControlEphemeral>,
 
     /// If true, tool will not be included in initial system prompt. Only loaded when returned
     /// via tool_reference from tool search.
-    defer_loading: Option<bool>,
+    pub defer_loading: Option<bool>,
 
     /// Description of what this tool does.
     ///
@@ -1185,75 +1185,75 @@ pub struct Tool {
     /// has about what the tool is and how to use it, the better it will perform. You can use
     /// natural language descriptions to reinforce important aspects of the tool input JSON
     /// schema.
-    description: Option<String>,
+    pub description: Option<String>,
 
     /// Enable eager input streaming for this tool. When true, tool input parameters will be
     /// streamed incrementally as they are generated, and types will be inferred on-the-fly
     /// rather than buffering the full JSON output. When false, streaming is disabled for this
     /// tool even if the fine-grained-tool-streaming beta is active. When null (default), uses
     /// the default behavior based on beta headers.
-    eager_input_streaming: Option<bool>,
+    pub eager_input_streaming: Option<bool>,
 
     #[schema(value_type = Option<Vec<Object>>)]
-    input_examples: Option<Vec<HashMap<String, Option<serde_json::Value>>>>,
+    pub input_examples: Option<Vec<HashMap<String, Option<serde_json::Value>>>>,
 
     /// [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
     ///
     /// This defines the shape of the `input` that your tool accepts and that the model will
     /// produce.
-    input_schema: Option<InputSchema>,
+    pub input_schema: Option<InputSchema>,
 
     /// Name of the tool.
     ///
     /// This is how the tool will be called by the model and in `tool_use` blocks.
-    name: String,
+    pub name: String,
 
     /// When true, guarantees schema validation on tool names and inputs
-    strict: Option<bool>,
+    pub strict: Option<bool>,
 
     #[serde(rename = "type")]
-    tool_type: Option<Type>,
+    pub tool_type: Option<Type>,
 
     /// Maximum number of characters to display when viewing a file. If not specified, defaults
     /// to displaying the full file.
-    max_characters: Option<i64>,
+    pub max_characters: Option<i64>,
 
     /// If provided, only these domains will be included in results. Cannot be used alongside
     /// `blocked_domains`.
     ///
     /// List of domains to allow fetching from
-    allowed_domains: Option<Vec<String>>,
+    pub allowed_domains: Option<Vec<String>>,
 
     /// If provided, these domains will never appear in results. Cannot be used alongside
     /// `allowed_domains`.
     ///
     /// List of domains to block fetching from
-    blocked_domains: Option<Vec<String>>,
+    pub blocked_domains: Option<Vec<String>>,
 
     /// Maximum number of times the tool can be used in the API request.
-    max_uses: Option<i64>,
+    pub max_uses: Option<i64>,
 
     /// Parameters for the user's location. Used to provide more relevant search results.
-    user_location: Option<UserLocation>,
+    pub user_location: Option<UserLocation>,
 
     /// Citations configuration for fetched documents. Citations are disabled by default.
-    citations: Option<RequestCitationsConfig>,
+    pub citations: Option<RequestCitationsConfig>,
 
     /// Maximum number of tokens used by including web page text content in the context. The
     /// limit is approximate and does not apply to binary content such as PDFs.
-    max_content_tokens: Option<i64>,
+    pub max_content_tokens: Option<i64>,
 
     /// Whether to use cached content. Set to false to bypass the cache and fetch fresh content.
     /// Only set to false when the user explicitly requests fresh content or when fetching
     /// rapidly-changing sources.
-    use_cache: Option<bool>,
+    pub use_cache: Option<bool>,
 
     /// How this tool's result blocks appear in the API response when the result was consumed by
     /// a completed code_execution call in the same turn. 'full' returns the complete content
     /// (default). 'excluded' drops the nested server_tool_use and result block pair entirely.
     /// Results from direct calls, or from code_execution calls that paused before completing,
     /// are always returned in full so they can be sent back on the next turn.
-    response_inclusion: Option<ResponseInclusion>,
+    pub response_inclusion: Option<ResponseInclusion>,
 }
 
 /// Specifies who can invoke a tool.
@@ -1266,7 +1266,7 @@ pub struct Tool {
 /// with persistence).
 /// code_execution_20260521: The tool can be called from the code execution environment (v2
 /// with persistence).
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum AllowedCaller {
     #[serde(rename = "code_execution_20250825")]
@@ -1285,18 +1285,18 @@ pub enum AllowedCaller {
 ///
 /// This defines the shape of the `input` that your tool accepts and that the model will
 /// produce.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct InputSchema {
     #[schema(value_type = Option<Object>)]
-    properties: Option<HashMap<String, Option<serde_json::Value>>>,
+    pub properties: Option<HashMap<String, Option<serde_json::Value>>>,
 
-    required: Option<Vec<String>>,
+    pub required: Option<Vec<String>>,
 
     #[serde(rename = "type")]
-    input_schema_type: InputSchemaType,
+    pub input_schema_type: InputSchemaType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum InputSchemaType {
     Object,
@@ -1307,7 +1307,7 @@ pub enum InputSchemaType {
 /// (default). 'excluded' drops the nested server_tool_use and result block pair entirely.
 /// Results from direct calls, or from code_execution calls that paused before completing,
 /// are always returned in full so they can be sent back on the next turn.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ResponseInclusion {
     Excluded,
@@ -1315,7 +1315,7 @@ pub enum ResponseInclusion {
     Full,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum Type {
     #[serde(rename = "bash_20250124")]
@@ -1381,37 +1381,37 @@ pub enum Type {
     WebSearch20260318,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct UserLocation {
     /// The city of the user.
-    city: Option<String>,
+    pub city: Option<String>,
 
     /// The two letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) of
     /// the user.
-    country: Option<String>,
+    pub country: Option<String>,
 
     /// The region of the user.
-    region: Option<String>,
+    pub region: Option<String>,
 
     /// The [IANA timezone](https://nodatime.org/TimeZones) of the user.
-    timezone: Option<String>,
+    pub timezone: Option<String>,
 
     #[serde(rename = "type")]
-    user_location_type: UserLocationType,
+    pub user_location_type: UserLocationType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum UserLocationType {
     Approximate,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Message {
     /// Information about the container used in this request.
     ///
     /// This will be non-null if a container tool (e.g. code execution) was used.
-    container: Option<Container>,
+    pub container: Option<Container>,
 
     /// Content generated by the model.
     ///
@@ -1442,24 +1442,24 @@ pub struct Message {
     /// ```json
     /// [{"type": "text", "text": "B)"}]
     /// ```
-    content: Vec<ContentBlock>,
+    pub content: Vec<ContentBlock>,
 
     /// Unique object identifier.
     ///
     /// The format and length of IDs may change over time.
-    id: String,
+    pub id: String,
 
-    model: String,
+    pub model: String,
 
     /// Conversational role of the generated message.
     ///
     /// This will always be `"assistant"`.
-    role: Role,
+    pub role: Role,
 
     /// Structured information about why model output stopped.
     ///
     /// This is `null` when the `stop_reason` has no additional detail to report.
-    stop_details: Option<RefusalStopDetails>,
+    pub stop_details: Option<RefusalStopDetails>,
 
     /// The reason that we stopped.
     ///
@@ -1470,23 +1470,23 @@ pub struct Message {
     /// * `"tool_use"`: the model invoked one or more tools
     /// * `"pause_turn"`: we paused a long-running turn. You may provide the response back as-is
     /// in a subsequent request to let the model continue.
-    /// * `"refusal"`: when streaming classifiers intervene to handle potential policy
-    /// violations
+    /// * `"refusal"`: when streaming classifiers intervene to handle potential policy violations
+    /// * `"model_context_window_exceeded"`: we exceeded the model's context window
     ///
     /// In non-streaming mode this value is always non-null. In streaming mode, it is null in the
     /// `message_start` event and non-null otherwise.
-    stop_reason: Option<StopReason>,
+    pub stop_reason: Option<StopReason>,
 
     /// Which custom stop sequence was generated, if any.
     ///
     /// This value will be a non-null string if one of your custom stop sequences was generated.
-    stop_sequence: Option<String>,
+    pub stop_sequence: Option<String>,
 
     /// Object type.
     ///
     /// For Messages, this is always `"message"`.
     #[serde(rename = "type")]
-    message_type: MessageType,
+    pub message_type: MessageType,
 
     /// Billing and rate-limit usage.
     ///
@@ -1503,57 +1503,57 @@ pub struct Message {
     ///
     /// Total input tokens in a request is the summation of `input_tokens`,
     /// `cache_creation_input_tokens`, and `cache_read_input_tokens`.
-    usage: Usage,
+    pub usage: Usage,
 }
 
 /// Information about the container used in the request (for the code execution tool)
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Container {
     /// The time at which the container will expire.
-    expires_at: String,
+    pub expires_at: String,
 
     /// Identifier for the container used in this request
-    id: String,
+    pub id: String,
 }
 
 /// Response model for a file uploaded to the container.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ContentBlock {
     /// Citations supporting the text block.
     ///
     /// The type of citation returned will depend on the type of document being cited. Citing a
     /// PDF results in `page_location`, plain text results in `char_location`, and content
     /// document results in `content_block_location`.
-    citations: Option<Vec<ResponseLocationCitation>>,
+    pub citations: Option<Vec<ResponseLocationCitation>>,
 
-    text: Option<String>,
+    pub text: Option<String>,
 
     #[serde(rename = "type")]
-    content_block_type: ContentBlockType,
+    pub content_block_type: ContentBlockType,
 
-    signature: Option<String>,
+    pub signature: Option<String>,
 
-    thinking: Option<String>,
+    pub thinking: Option<String>,
 
-    data: Option<String>,
+    pub data: Option<String>,
 
-    caller: Option<Caller>,
+    pub caller: Option<Caller>,
 
-    id: Option<String>,
+    pub id: Option<String>,
 
     #[schema(value_type = Option<Object>)]
-    input: Option<HashMap<String, Option<serde_json::Value>>>,
+    pub input: Option<HashMap<String, Option<serde_json::Value>>>,
 
-    name: Option<String>,
+    pub name: Option<String>,
 
-    content: Option<Content>,
+    pub content: Option<Content>,
 
-    tool_use_id: Option<String>,
+    pub tool_use_id: Option<String>,
 
-    file_id: Option<String>,
+    pub file_id: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ResponseLocationCitation {
     /// The full text of the cited block range, concatenated.
     ///
@@ -1561,65 +1561,65 @@ pub struct ResponseLocationCitation {
     /// together. The text block is the minimal citable unit; this field is never a substring of
     /// a single block. Not counted toward output tokens, and not counted toward input tokens
     /// when sent back in subsequent turns.
-    cited_text: String,
+    pub cited_text: String,
 
-    document_index: Option<i64>,
+    pub document_index: Option<i64>,
 
-    document_title: Option<String>,
+    pub document_title: Option<String>,
 
-    end_char_index: Option<i64>,
+    pub end_char_index: Option<i64>,
 
-    file_id: Option<String>,
+    pub file_id: Option<String>,
 
-    start_char_index: Option<i64>,
+    pub start_char_index: Option<i64>,
 
     #[serde(rename = "type")]
-    response_location_citation_type: CitationType,
+    pub response_location_citation_type: CitationType,
 
-    end_page_number: Option<i64>,
+    pub end_page_number: Option<i64>,
 
-    start_page_number: Option<i64>,
+    pub start_page_number: Option<i64>,
 
     /// Exclusive 0-based end index of the cited block range in the source's `content` array.
     ///
     /// Always greater than `start_block_index`; a single-block citation has `end_block_index =
     /// start_block_index + 1`.
-    end_block_index: Option<i64>,
+    pub end_block_index: Option<i64>,
 
     /// 0-based index of the first cited block in the source's `content` array.
-    start_block_index: Option<i64>,
+    pub start_block_index: Option<i64>,
 
-    encrypted_index: Option<String>,
+    pub encrypted_index: Option<String>,
 
-    title: Option<String>,
+    pub title: Option<String>,
 
-    url: Option<String>,
+    pub url: Option<String>,
 
     /// 0-based index of the cited search result among all `search_result` content blocks in the
     /// request, in the order they appear across messages and tool results.
     ///
     /// Counted separately from `document_index`; server-side web search results are not included
     /// in this count.
-    search_result_index: Option<i64>,
+    pub search_result_index: Option<i64>,
 
-    source: Option<String>,
+    pub source: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ResponseWebSearchResultBlock {
-    encrypted_content: String,
+    pub encrypted_content: String,
 
-    page_age: Option<String>,
+    pub page_age: Option<String>,
 
-    title: String,
+    pub title: String,
 
     #[serde(rename = "type")]
-    response_web_search_result_block_type: ContentType,
+    pub response_web_search_result_block_type: ContentType,
 
-    url: String,
+    pub url: String,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ContentType {
     #[serde(rename = "web_search_result")]
@@ -1627,55 +1627,55 @@ pub enum ContentType {
 }
 
 /// Code execution result with encrypted stdout for PFC + web_search results.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Response {
-    error_code: Option<ToolResultErrorCode>,
+    pub error_code: Option<ToolResultErrorCode>,
 
     #[serde(rename = "type")]
-    response_type: ResponseWebSearchToolResultErrorType,
+    pub response_type: ResponseWebSearchToolResultErrorType,
 
-    content: Option<ResponseWebSearchToolResultErrorContent>,
+    pub content: Option<ResponseWebSearchToolResultErrorContent>,
 
     /// ISO 8601 timestamp when the content was retrieved
-    retrieved_at: Option<String>,
+    pub retrieved_at: Option<String>,
 
     /// Fetched content URL
-    url: Option<String>,
+    pub url: Option<String>,
 
-    return_code: Option<i64>,
+    pub return_code: Option<i64>,
 
-    stderr: Option<String>,
+    pub stderr: Option<String>,
 
-    stdout: Option<String>,
+    pub stdout: Option<String>,
 
-    encrypted_stdout: Option<String>,
+    pub encrypted_stdout: Option<String>,
 
-    error_message: Option<String>,
+    pub error_message: Option<String>,
 
-    file_type: Option<FileType>,
+    pub file_type: Option<FileType>,
 
-    num_lines: Option<i64>,
+    pub num_lines: Option<i64>,
 
-    start_line: Option<i64>,
+    pub start_line: Option<i64>,
 
-    total_lines: Option<i64>,
+    pub total_lines: Option<i64>,
 
-    is_file_update: Option<bool>,
+    pub is_file_update: Option<bool>,
 
-    lines: Option<Vec<String>>,
+    pub lines: Option<Vec<String>>,
 
-    new_lines: Option<i64>,
+    pub new_lines: Option<i64>,
 
-    new_start: Option<i64>,
+    pub new_start: Option<i64>,
 
-    old_lines: Option<i64>,
+    pub old_lines: Option<i64>,
 
-    old_start: Option<i64>,
+    pub old_start: Option<i64>,
 
-    tool_references: Option<Vec<ResponseToolReferenceBlock>>,
+    pub tool_references: Option<Vec<ResponseToolReferenceBlock>>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 pub enum ResponseWebSearchToolResultErrorContent {
     PurpleString(String),
@@ -1685,15 +1685,15 @@ pub enum ResponseWebSearchToolResultErrorContent {
     ResponseDocumentBlock(ResponseDocumentBlock),
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ResponseCodeExecutionOutputBlock {
-    file_id: String,
+    pub file_id: String,
 
     #[serde(rename = "type")]
-    response_code_execution_output_block_type: ContentTypeEnum,
+    pub response_code_execution_output_block_type: ContentTypeEnum,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ContentTypeEnum {
     #[serde(rename = "bash_code_execution_output")]
@@ -1703,32 +1703,32 @@ pub enum ContentTypeEnum {
     CodeExecutionOutput,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ResponseDocumentBlock {
     /// Citation configuration for the document
-    citations: Option<ResponseCitationsConfig>,
+    pub citations: Option<ResponseCitationsConfig>,
 
-    source: Source,
+    pub source: Source,
 
     /// The title of the document
-    title: Option<String>,
+    pub title: Option<String>,
 
     #[serde(rename = "type")]
-    response_document_block_type: ResponseDocumentBlockType,
+    pub response_document_block_type: ResponseDocumentBlockType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ResponseCitationsConfig {
-    enabled: bool,
+    pub enabled: bool,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ResponseDocumentBlockType {
     Document,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub enum MediaType {
     #[serde(rename = "application/pdf")]
     ApplicationPdf,
@@ -1737,7 +1737,7 @@ pub enum MediaType {
     TextPlain,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum SourceType {
     Base64,
@@ -1745,7 +1745,7 @@ pub enum SourceType {
     Text,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ResponseWebSearchToolResultErrorType {
     #[serde(rename = "bash_code_execution_result")]
@@ -1791,15 +1791,15 @@ pub enum ResponseWebSearchToolResultErrorType {
     WebSearchToolResultError,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ResponseToolReferenceBlock {
-    tool_name: String,
+    pub tool_name: String,
 
     #[serde(rename = "type")]
-    response_tool_reference_block_type: ToolReferenceType,
+    pub response_tool_reference_block_type: ToolReferenceType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ContentBlockType {
     #[serde(rename = "bash_code_execution_tool_result")]
@@ -1840,32 +1840,32 @@ pub enum ContentBlockType {
 /// Object type.
 ///
 /// For Messages, this is always `"message"`.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum MessageType {
     Message,
 }
 
 /// Structured information about a refusal.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct RefusalStopDetails {
     /// The policy category that triggered the refusal.
     ///
     /// `null` when the refusal doesn't map to a named category.
-    category: Option<RefusalCategory>,
+    pub category: Option<RefusalCategory>,
 
     /// Human-readable explanation of the refusal.
     ///
     /// This text is not guaranteed to be stable. `null` when no explanation is available for the
     /// category.
-    explanation: Option<String>,
+    pub explanation: Option<String>,
 
     #[serde(rename = "type")]
-    refusal_stop_details_type: RefusalStopDetailsType,
+    pub refusal_stop_details_type: RefusalStopDetailsType,
 }
 
 /// The policy category that triggered a refusal.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum RefusalCategory {
     Bio,
@@ -1875,17 +1875,20 @@ pub enum RefusalCategory {
     #[serde(rename = "frontier_llm")]
     FrontierLlm,
 
+    #[serde(rename = "general_harms")]
+    GeneralHarms,
+
     #[serde(rename = "reasoning_extraction")]
     ReasoningExtraction,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum RefusalStopDetailsType {
     Refusal,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum StopReason {
     #[serde(rename = "end_turn")]
@@ -1893,6 +1896,9 @@ pub enum StopReason {
 
     #[serde(rename = "max_tokens")]
     MaxTokens,
+
+    #[serde(rename = "model_context_window_exceeded")]
+    ModelContextWindowExceeded,
 
     #[serde(rename = "pause_turn")]
     PauseTurn,
@@ -1921,25 +1927,25 @@ pub enum StopReason {
 ///
 /// Total input tokens in a request is the summation of `input_tokens`,
 /// `cache_creation_input_tokens`, and `cache_read_input_tokens`.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Usage {
     /// Breakdown of cached tokens by TTL
-    cache_creation: Option<CacheCreation>,
+    pub cache_creation: Option<CacheCreation>,
 
     /// The number of input tokens used to create the cache entry.
-    cache_creation_input_tokens: Option<i64>,
+    pub cache_creation_input_tokens: Option<i64>,
 
     /// The number of input tokens read from the cache.
-    cache_read_input_tokens: Option<i64>,
+    pub cache_read_input_tokens: Option<i64>,
 
     /// The geographic region where inference was performed for this request.
-    inference_geo: Option<String>,
+    pub inference_geo: Option<String>,
 
     /// The number of input tokens which were used.
-    input_tokens: i64,
+    pub input_tokens: i64,
 
     /// The number of output tokens which were used.
-    output_tokens: i64,
+    pub output_tokens: i64,
 
     /// Breakdown of output tokens by category.
     ///
@@ -1947,27 +1953,27 @@ pub struct Usage {
     /// This object provides a read-only decomposition for observability — for example,
     /// how many of the billed output tokens were spent on internal reasoning that may
     /// have been summarized before being returned to you.
-    output_tokens_details: Option<OutputTokensDetails>,
+    pub output_tokens_details: Option<OutputTokensDetails>,
 
     /// The number of server tool requests.
-    server_tool_use: Option<ServerToolUsage>,
+    pub server_tool_use: Option<ServerToolUsage>,
 
     /// If the request used the priority, standard, or batch tier.
-    service_tier: Option<ServiceTier>,
+    pub service_tier: Option<ServiceTier>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct CacheCreation {
     /// The number of input tokens used to create the 1 hour cache entry.
     #[serde(rename = "ephemeral_1h_input_tokens")]
-    ephemeral_1_h_input_tokens: i64,
+    pub ephemeral_1_h_input_tokens: i64,
 
     /// The number of input tokens used to create the 5 minute cache entry.
     #[serde(rename = "ephemeral_5m_input_tokens")]
-    ephemeral_5_m_input_tokens: i64,
+    pub ephemeral_5_m_input_tokens: i64,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct OutputTokensDetails {
     /// Number of output tokens the model generated as internal reasoning, including
     /// the thinking-block delimiter tokens.
@@ -1977,90 +1983,90 @@ pub struct OutputTokensDetails {
     /// re-tokenizing the raw reasoning text, so it may differ from the model's exact
     /// generation count by a small number of tokens. Always ≤ `output_tokens`;
     /// `output_tokens - thinking_tokens` approximates the non-reasoning output.
-    thinking_tokens: i64,
+    pub thinking_tokens: i64,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ServerToolUsage {
     /// The number of web fetch tool requests.
-    web_fetch_requests: i64,
+    pub web_fetch_requests: i64,
 
     /// The number of web search tool requests.
-    web_search_requests: i64,
+    pub web_search_requests: i64,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ListResponseModelInfo {
-    data: Vec<ModelInfo>,
+    pub data: Vec<ModelInfo>,
 
     /// First ID in the `data` list. Can be used as the `before_id` for the previous page.
-    first_id: Option<String>,
+    pub first_id: Option<String>,
 
     /// Indicates if there are more results in the requested page direction.
-    has_more: bool,
+    pub has_more: bool,
 
     /// Last ID in the `data` list. Can be used as the `after_id` for the next page.
-    last_id: Option<String>,
+    pub last_id: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ModelInfo {
     /// Object mapping capability names to their support details. Keys are always present for all
     /// known capabilities.
-    capabilities: Option<ModelCapabilities>,
+    pub capabilities: Option<ModelCapabilities>,
 
     /// RFC 3339 datetime string representing the time at which the model was released. May be
     /// set to an epoch value if the release date is unknown.
-    created_at: String,
+    pub created_at: String,
 
     /// A human-readable name for the model.
-    display_name: String,
+    pub display_name: String,
 
     /// Unique model identifier.
-    id: String,
+    pub id: String,
 
     /// Maximum input context window size in tokens for this model.
-    max_input_tokens: Option<i64>,
+    pub max_input_tokens: Option<i64>,
 
     /// Maximum value for the `max_tokens` parameter when using this model.
-    max_tokens: Option<i64>,
+    pub max_tokens: Option<i64>,
 
     /// Object type.
     ///
     /// For Models, this is always `"model"`.
     #[serde(rename = "type")]
-    model_info_type: Type,
+    pub model_info_type: Type,
 }
 
 /// Model capability information.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ModelCapabilities {
     /// Whether the model supports the Batch API.
-    batch: CapabilitySupport,
+    pub batch: CapabilitySupport,
 
     /// Whether the model supports citation generation.
-    citations: CapabilitySupport,
+    pub citations: CapabilitySupport,
 
     /// Whether the model supports code execution tools.
-    code_execution: CapabilitySupport,
+    pub code_execution: CapabilitySupport,
 
     /// Context management support and available strategies.
-    context_management: ContextManagementCapability,
+    pub context_management: ContextManagementCapability,
 
     /// Effort (reasoning_effort) support and available levels.
-    effort: EffortCapability,
+    pub effort: EffortCapability,
 
     /// Whether the model accepts image content blocks.
-    image_input: CapabilitySupport,
+    pub image_input: CapabilitySupport,
 
     /// Whether the model accepts PDF content blocks.
-    pdf_input: CapabilitySupport,
+    pub pdf_input: CapabilitySupport,
 
     /// Whether the model supports structured output / JSON mode / strict tool schemas.
-    structured_outputs: CapabilitySupport,
+    pub structured_outputs: CapabilitySupport,
 
     /// Thinking capability and supported type configurations.
-    thinking: ThinkingCapability,
+    pub thinking: ThinkingCapability,
 }
 
 /// Whether the model supports the Batch API.
@@ -2088,94 +2094,94 @@ pub struct ModelCapabilities {
 /// Whether the model supports thinking with type 'adaptive' (auto).
 ///
 /// Whether the model supports thinking with type 'enabled'.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct CapabilitySupport {
     /// Whether this capability is supported by the model.
-    supported: bool,
+    pub supported: bool,
 }
 
 /// Context management support and available strategies.
 ///
 /// Context management capability details.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ContextManagementCapability {
     /// Whether the clear_thinking_20251015 strategy is supported.
-    clear_thinking_20251015: Option<CapabilitySupport>,
+    pub clear_thinking_20251015: Option<CapabilitySupport>,
 
     /// Whether the clear_tool_uses_20250919 strategy is supported.
-    clear_tool_uses_20250919: Option<CapabilitySupport>,
+    pub clear_tool_uses_20250919: Option<CapabilitySupport>,
 
     /// Whether the compact_20260112 strategy is supported.
-    compact_20260112: Option<CapabilitySupport>,
+    pub compact_20260112: Option<CapabilitySupport>,
 
     /// Whether this capability is supported by the model.
-    supported: bool,
+    pub supported: bool,
 }
 
 /// Effort (reasoning_effort) support and available levels.
 ///
 /// Effort (reasoning_effort) capability details.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct EffortCapability {
     /// Whether the model supports high effort level.
-    high: CapabilitySupport,
+    pub high: CapabilitySupport,
 
     /// Whether the model supports low effort level.
-    low: CapabilitySupport,
+    pub low: CapabilitySupport,
 
     /// Whether the model supports max effort level.
-    max: CapabilitySupport,
+    pub max: CapabilitySupport,
 
     /// Whether the model supports medium effort level.
-    medium: CapabilitySupport,
+    pub medium: CapabilitySupport,
 
     /// Whether this capability is supported by the model.
-    supported: bool,
+    pub supported: bool,
 
     /// Whether the model supports xhigh effort level.
-    xhigh: Option<CapabilitySupport>,
+    pub xhigh: Option<CapabilitySupport>,
 }
 
 /// Thinking capability and supported type configurations.
 ///
 /// Thinking capability details.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ThinkingCapability {
     /// Whether this capability is supported by the model.
-    supported: bool,
+    pub supported: bool,
 
-    types: ThinkingTypes,
+    pub types: ThinkingTypes,
 }
 
 /// Supported thinking type configurations.
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ThinkingTypes {
     /// Whether the model supports thinking with type 'adaptive' (auto).
-    adaptive: CapabilitySupport,
+    pub adaptive: CapabilitySupport,
 
     /// Whether the model supports thinking with type 'enabled'.
-    enabled: CapabilitySupport,
+    pub enabled: CapabilitySupport,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct ErrorResponse {
-    error: Error,
+    pub error: Error,
 
-    request_id: Option<String>,
+    pub request_id: Option<String>,
 
     #[serde(rename = "type")]
-    error_response_type: ErrorResponseType,
+    pub error_response_type: ErrorResponseType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Error {
-    message: String,
+    pub message: String,
 
     #[serde(rename = "type")]
-    error_type: ErrorType,
+    pub error_type: ErrorType,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ErrorType {
     #[serde(rename = "api_error")]
@@ -2206,7 +2212,7 @@ pub enum ErrorType {
     TimeoutError,
 }
 
-#[derive(Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ErrorResponseType {
     Error,

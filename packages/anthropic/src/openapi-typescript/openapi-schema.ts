@@ -101,7 +101,7 @@ export interface components {
          * @enum {string}
          */
         AllowedCaller: "direct" | "code_execution_20250825" | "code_execution_20260120" | "code_execution_20260521";
-        AnthropicBeta: string | ("message-batches-2024-09-24" | "prompt-caching-2024-07-31" | "computer-use-2024-10-22" | "computer-use-2025-01-24" | "pdfs-2024-09-25" | "token-counting-2024-11-01" | "token-efficient-tools-2025-02-19" | "output-128k-2025-02-19" | "files-api-2025-04-14" | "mcp-client-2025-04-04" | "mcp-client-2025-11-20" | "dev-full-thinking-2025-05-14" | "interleaved-thinking-2025-05-14" | "code-execution-2025-05-22" | "extended-cache-ttl-2025-04-11" | "context-1m-2025-08-07" | "context-management-2025-06-27" | "model-context-window-exceeded-2025-08-26" | "skills-2025-10-02" | "fast-mode-2026-02-01" | "output-300k-2026-03-24" | "user-profiles-2026-03-24" | "advisor-tool-2026-03-01" | "managed-agents-2026-04-01" | "cache-diagnosis-2026-04-07" | "dreaming-2026-04-21" | "thinking-token-count-2026-05-13" | "server-side-fallback-2026-06-01" | "fallback-credit-2026-06-01" | "agent-memory-2026-07-22");
+        AnthropicBeta: string | ("message-batches-2024-09-24" | "prompt-caching-2024-07-31" | "computer-use-2024-10-22" | "computer-use-2025-01-24" | "pdfs-2024-09-25" | "token-counting-2024-11-01" | "token-efficient-tools-2025-02-19" | "output-128k-2025-02-19" | "files-api-2025-04-14" | "mcp-client-2025-04-04" | "mcp-client-2025-11-20" | "dev-full-thinking-2025-05-14" | "interleaved-thinking-2025-05-14" | "code-execution-2025-05-22" | "extended-cache-ttl-2025-04-11" | "context-1m-2025-08-07" | "context-management-2025-06-27" | "model-context-window-exceeded-2025-08-26" | "skills-2025-10-02" | "fast-mode-2026-02-01" | "output-300k-2026-03-24" | "user-profiles-2026-03-24" | "advisor-tool-2026-03-01" | "managed-agents-2026-04-01" | "cache-diagnosis-2026-04-07" | "dreaming-2026-04-21" | "thinking-token-count-2026-05-13" | "server-side-fallback-2026-06-01" | "server-side-fallback-2026-07-01" | "fallback-credit-2026-06-01" | "fallback-credit-2026-07-01" | "agent-memory-2026-07-22");
         /** AuthenticationError */
         AuthenticationError: {
             /**
@@ -977,6 +977,7 @@ export interface components {
              *     * `"tool_use"`: the model invoked one or more tools
              *     * `"pause_turn"`: we paused a long-running turn. You may provide the response back as-is in a subsequent request to let the model continue.
              *     * `"refusal"`: when streaming classifiers intervene to handle potential policy violations
+             *     * `"model_context_window_exceeded"`: we exceeded the model's context window
              *
              *     In non-streaming mode this value is always non-null. In streaming mode, it is null in the `message_start` event and non-null otherwise.
              */
@@ -1037,7 +1038,7 @@ export interface components {
          *
          *     See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
          */
-        Model: string | "claude-sonnet-5" | "claude-fable-5" | "claude-mythos-5" | "claude-opus-4-8" | "claude-opus-4-7" | "claude-mythos-preview" | "claude-opus-4-6" | "claude-sonnet-4-6" | "claude-haiku-4-5" | "claude-haiku-4-5-20251001" | "claude-opus-4-5" | "claude-opus-4-5-20251101" | "claude-sonnet-4-5" | "claude-sonnet-4-5-20250929" | "claude-opus-4-1" | "claude-opus-4-1-20250805";
+        Model: string | "claude-sonnet-5" | "claude-fable-5" | "claude-mythos-5" | "claude-opus-5" | "claude-opus-4-8" | "claude-opus-4-7" | "claude-mythos-preview" | "claude-opus-4-6" | "claude-sonnet-4-6" | "claude-haiku-4-5" | "claude-haiku-4-5-20251001" | "claude-opus-4-5" | "claude-opus-4-5-20251101" | "claude-sonnet-4-5" | "claude-sonnet-4-5-20250929" | "claude-opus-4-1" | "claude-opus-4-1-20250805";
         /**
          * ModelCapabilities
          * @description Model capability information.
@@ -1204,7 +1205,7 @@ export interface components {
          * @description The policy category that triggered a refusal.
          * @enum {string}
          */
-        RefusalCategory: "cyber" | "bio" | "frontier_llm" | "reasoning_extraction";
+        RefusalCategory: "cyber" | "bio" | "frontier_llm" | "reasoning_extraction" | "general_harms";
         /**
          * RefusalStopDetails
          * @description Structured information about a refusal.
@@ -2625,7 +2626,7 @@ export interface components {
             web_search_requests: number;
         };
         /** @enum {string} */
-        StopReason: "end_turn" | "max_tokens" | "stop_sequence" | "tool_use" | "pause_turn" | "refusal";
+        StopReason: "end_turn" | "max_tokens" | "stop_sequence" | "tool_use" | "pause_turn" | "refusal" | "model_context_window_exceeded";
         /**
          * TextEditorCodeExecutionToolResultErrorCode
          * @enum {string}

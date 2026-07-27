@@ -338,7 +338,9 @@
               "dreaming-2026-04-21",
               "thinking-token-count-2026-05-13",
               "server-side-fallback-2026-06-01",
+              "server-side-fallback-2026-07-01",
               "fallback-credit-2026-06-01",
+              "fallback-credit-2026-07-01",
               "agent-memory-2026-07-22"
             ],
             "x-stainless-nominal": false
@@ -1902,7 +1904,7 @@
                 "type": "null"
               }
             ],
-            "description": "The reason that we stopped.\n\nThis may be one the following values:\n* `\"end_turn\"`: the model reached a natural stopping point\n* `\"max_tokens\"`: we exceeded the requested `max_tokens` or the model's maximum\n* `\"stop_sequence\"`: one of your provided custom `stop_sequences` was generated\n* `\"tool_use\"`: the model invoked one or more tools\n* `\"pause_turn\"`: we paused a long-running turn. You may provide the response back as-is in a subsequent request to let the model continue.\n* `\"refusal\"`: when streaming classifiers intervene to handle potential policy violations\n\nIn non-streaming mode this value is always non-null. In streaming mode, it is null in the `message_start` event and non-null otherwise.",
+            "description": "The reason that we stopped.\n\nThis may be one the following values:\n* `\"end_turn\"`: the model reached a natural stopping point\n* `\"max_tokens\"`: we exceeded the requested `max_tokens` or the model's maximum\n* `\"stop_sequence\"`: one of your provided custom `stop_sequences` was generated\n* `\"tool_use\"`: the model invoked one or more tools\n* `\"pause_turn\"`: we paused a long-running turn. You may provide the response back as-is in a subsequent request to let the model continue.\n* `\"refusal\"`: when streaming classifiers intervene to handle potential policy violations\n* `\"model_context_window_exceeded\"`: we exceeded the model's context window\n\nIn non-streaming mode this value is always non-null. In streaming mode, it is null in the `message_start` event and non-null otherwise.",
             "title": "Stop Reason"
           },
           "stop_sequence": {
@@ -2017,13 +2019,18 @@
             "x-stainless-nominal": false
           },
           {
+            "const": "claude-opus-5",
+            "description": "Powerful intelligence for long-running agents and coding",
+            "x-stainless-nominal": false
+          },
+          {
             "const": "claude-opus-4-8",
-            "description": "Frontier intelligence for long-running agents and coding",
+            "description": "Powerful intelligence for long-running agents and coding",
             "x-stainless-nominal": false
           },
           {
             "const": "claude-opus-4-7",
-            "description": "Frontier intelligence for long-running agents and coding",
+            "description": "Powerful intelligence for long-running agents and coding",
             "x-stainless-nominal": false
           },
           {
@@ -2035,7 +2042,7 @@
           },
           {
             "const": "claude-opus-4-6",
-            "description": "Frontier intelligence for long-running agents and coding",
+            "description": "Powerful intelligence for long-running agents and coding",
             "x-stainless-nominal": false
           },
           {
@@ -2055,12 +2062,12 @@
           },
           {
             "const": "claude-opus-4-5",
-            "description": "Premium model combining maximum intelligence with practical performance",
+            "description": "Powerful intelligence for long-running agents and coding",
             "x-stainless-nominal": false
           },
           {
             "const": "claude-opus-4-5-20251101",
-            "description": "Premium model combining maximum intelligence with practical performance",
+            "description": "Powerful intelligence for long-running agents and coding",
             "x-stainless-nominal": false
           },
           {
@@ -2075,14 +2082,14 @@
           },
           {
             "const": "claude-opus-4-1",
-            "description": "Exceptional model for specialized complex tasks",
+            "description": "Powerful intelligence for long-running agents and coding",
             "x-stainless-nominal": false,
             "deprecated": true,
             "x-stainless-deprecation-message": "Will reach end-of-life on August 5, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
           },
           {
             "const": "claude-opus-4-1-20250805",
-            "description": "Exceptional model for specialized complex tasks",
+            "description": "Powerful intelligence for long-running agents and coding",
             "x-stainless-nominal": false,
             "deprecated": true,
             "x-stainless-deprecation-message": "Will reach end-of-life on August 5, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
@@ -2386,7 +2393,8 @@
           "cyber",
           "bio",
           "frontier_llm",
-          "reasoning_extraction"
+          "reasoning_extraction",
+          "general_harms"
         ],
         "title": "RefusalCategory",
         "type": "string",
@@ -2394,7 +2402,8 @@
           "The request could enable cyber harm, such as malware or exploit development. Benign cybersecurity work can also trigger this category.",
           "The request could enable biological harm, such as dangerous lab methods. Beneficial life sciences work can also trigger this category.",
           "The request could assist the development of competing AI models, which is restricted under [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms). Benign machine learning work can also trigger this category.",
-          "The request asks the model to reproduce its internal reasoning in the response text. To get reasoning in a structured form instead, use [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking)."
+          "The request asks the model to reproduce its internal reasoning in the response text. To get reasoning in a structured form instead, use [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking).",
+          "The request could be related to an area that was determined as harmful. Benign work might sometimes trigger this category."
         ]
       },
       "RefusalStopDetails": {
@@ -6014,7 +6023,8 @@
           "stop_sequence",
           "tool_use",
           "pause_turn",
-          "refusal"
+          "refusal",
+          "model_context_window_exceeded"
         ],
         "type": "string"
       },

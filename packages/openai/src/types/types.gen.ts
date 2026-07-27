@@ -3949,17 +3949,8 @@ export type ModelResponseProperties = {
      * @deprecated
      */
     user?: string;
-    /**
-     * A stable identifier used to help detect users of your application that may be violating OpenAI's usage policies.
-     * The IDs should be a string that uniquely identifies each user, with a maximum length of 64 characters. We recommend hashing their username or email address, in order to avoid sending us any identifying information. [Learn more](/docs/guides/safety-best-practices#safety-identifiers).
-     *
-     */
-    safety_identifier?: string;
-    /**
-     * Used by OpenAI to cache responses for similar requests to optimize your cache hit rates. Replaces the `user` field. [Learn more](/docs/guides/prompt-caching).
-     *
-     */
-    prompt_cache_key?: string;
+    safety_identifier?: string | null;
+    prompt_cache_key?: string | null;
     service_tier?: ServiceTier;
     /**
      * @deprecated
@@ -4985,7 +4976,7 @@ export type ResponseError = {
  * The error code for the response.
  *
  */
-export type ResponseErrorCode = 'server_error' | 'rate_limit_exceeded' | 'invalid_prompt' | 'bio_policy' | 'vector_store_timeout' | 'invalid_image' | 'invalid_image_format' | 'invalid_base64_image' | 'invalid_image_url' | 'image_too_large' | 'image_too_small' | 'image_parse_error' | 'image_content_policy_violation' | 'invalid_image_mode' | 'image_file_too_large' | 'unsupported_image_media_type' | 'empty_image_file' | 'failed_to_download_image' | 'image_file_not_found';
+export type ResponseErrorCode = 'server_error' | 'rate_limit_exceeded' | 'invalid_prompt' | 'data_residency_mismatch' | 'bio_policy' | 'vector_store_timeout' | 'invalid_image' | 'invalid_image_format' | 'invalid_base64_image' | 'invalid_image_url' | 'image_too_large' | 'image_too_small' | 'image_parse_error' | 'image_content_policy_violation' | 'invalid_image_mode' | 'image_file_too_large' | 'unsupported_image_media_type' | 'empty_image_file' | 'failed_to_download_image' | 'image_file_not_found';
 
 /**
  * Emitted when an error occurs.
