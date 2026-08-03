@@ -6430,7 +6430,7 @@ export type SearchContentType = 'text' | 'image';
 
 export type SearchContextSize = 'low' | 'medium' | 'high';
 
-export type ServiceTier = ('auto' | 'default' | 'flex' | 'scale' | 'priority') | null;
+export type ServiceTier = ('auto' | 'default' | 'flex' | 'scale' | 'priority' | 'fast') | null;
 
 export type SkillReferenceParam = {
     /**

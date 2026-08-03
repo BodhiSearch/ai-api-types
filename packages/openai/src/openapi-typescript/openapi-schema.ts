@@ -4867,7 +4867,7 @@ export interface components {
         SearchContentType: "text" | "image";
         /** @enum {string} */
         SearchContextSize: "low" | "medium" | "high";
-        ServiceTier: ("auto" | "default" | "flex" | "scale" | "priority") | null;
+        ServiceTier: ("auto" | "default" | "flex" | "scale" | "priority" | "fast") | null;
         SkillReferenceParam: {
             /**
              * @description References a skill created with the /v1/skills endpoint. (enum property replaced by openapi-typescript)
