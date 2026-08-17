@@ -2589,7 +2589,7 @@
           "document_title": {
             "anyOf": [
               {
-                "maxLength": 255,
+                "maxLength": 500,
                 "minLength": 1,
                 "type": "string"
               },
@@ -2833,7 +2833,7 @@
           "document_title": {
             "anyOf": [
               {
-                "maxLength": 255,
+                "maxLength": 500,
                 "minLength": 1,
                 "type": "string"
               },
@@ -3140,7 +3140,7 @@
           "document_title": {
             "anyOf": [
               {
-                "maxLength": 255,
+                "maxLength": 500,
                 "minLength": 1,
                 "type": "string"
               },
@@ -4300,7 +4300,6 @@
             "type": "string"
           },
           "url": {
-            "maxLength": 2048,
             "minLength": 1,
             "title": "Url",
             "type": "string"
