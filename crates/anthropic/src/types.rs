@@ -14,7 +14,7 @@ pub struct CreateMessageParams {
     pub cache_control: Option<CacheControlEphemeral>,
 
     /// Container identifier for reuse across requests.
-    pub container: Option<String>,
+    pub container: Option<Container>,
 
     /// Specifies the geographic region for inference processing. If not specified, the
     /// workspace's `default_inference_geo` is used.
@@ -284,6 +284,48 @@ pub enum Ttl {
     The5M,
 }
 
+/// Container identifier for reuse across requests.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(untagged)]
+pub enum Container {
+    ContainerParams(ContainerParams),
+
+    PurpleString(String),
+}
+
+/// Container parameters with skills to be loaded.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ContainerParams {
+    /// Container id
+    pub id: Option<String>,
+
+    /// List of skills to load in the container
+    pub skills: Option<Vec<SkillParams>>,
+}
+
+/// Specification for a skill to be loaded in a container (request model).
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct SkillParams {
+    /// Skill ID
+    pub skill_id: String,
+
+    /// Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined)
+    #[serde(rename = "type")]
+    pub skill_params_type: SkillType,
+
+    /// Skill version or 'latest' for most recent version
+    pub version: Option<String>,
+}
+
+/// Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined)
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum SkillType {
+    Anthropic,
+
+    Custom,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct InputMessage {
     pub content: MessageContent,
@@ -318,11 +360,6 @@ pub enum MessageContent {
 ///
 /// A content block that represents a file to be uploaded to the container
 /// Files uploaded via this block will be available in the container's input directory.
-///
-/// System instructions that appear mid-conversation.
-///
-/// Use this block to provide or update system-level instructions at a specific
-/// point in the conversation, rather than only via the top-level `system` parameter.
 #[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct InputContentBlock {
     /// Create a cache control breakpoint at this content block.
@@ -337,11 +374,16 @@ pub struct InputContentBlock {
 
     pub source: Option<SourceUnion>,
 
+    /// Configures the transformations the server applies to this image before the model observes
+    /// it. Each key names a condition the server transforms images for; its value selects the
+    /// transformation applied. Omitted keys keep their default behavior, and an empty object is
+    /// equivalent to omitting the field.
+    pub transformations: Option<RequestImageTransformations>,
+
     pub context: Option<String>,
 
     pub title: Option<String>,
 
-    /// System instruction text blocks.
     pub content: Option<Content>,
 
     /// The `signature` value of this thinking block, exactly as returned by the API in a
@@ -366,6 +408,11 @@ pub struct InputContentBlock {
     pub input: Option<HashMap<String, Option<serde_json::Value>>>,
 
     pub name: Option<String>,
+
+    /// For a toolset member tool_use, the toolset family this member belongs to.
+    ///
+    /// For a toolset member tool_result, the toolset family of the paired tool_use.
+    pub toolset_name: Option<String>,
 
     pub is_error: Option<bool>,
 
@@ -499,6 +546,14 @@ pub enum Content {
 /// via a URL.
 ///
 /// Tool reference block that can be included in tool_result content.
+///
+/// The caller's browser state after a browser toolset member call —
+/// the full inventory of open tabs, which tab is active, and any side
+/// effects (tabs opened, download state changes) the call produced.
+///
+/// At most one per `tool_result`, only on a non-error result answering a
+/// browser toolset member `tool_use`. The server renders the
+/// model-visible text from it; the model never sees the raw fields.
 #[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Block {
     /// Create a cache control breakpoint at this content block.
@@ -513,6 +568,12 @@ pub struct Block {
 
     pub source: Option<SourceUnion>,
 
+    /// Configures the transformations the server applies to this image before the model observes
+    /// it. Each key names a condition the server transforms images for; its value selects the
+    /// transformation applied. Omitted keys keep their default behavior, and an empty object is
+    /// equivalent to omitting the field.
+    pub transformations: Option<RequestImageTransformations>,
+
     pub content: Option<Vec<RequestTextBlock>>,
 
     pub title: Option<String>,
@@ -520,6 +581,14 @@ pub struct Block {
     pub context: Option<String>,
 
     pub tool_name: Option<String>,
+
+    /// Tabs opened and download state changes during this call. "Nothing to report" is expressed
+    /// by omitting the field, never by an empty list.
+    pub state_changes: Option<Vec<BrowserStateChange>>,
+
+    /// All tabs open in the browser after this call — the full inventory, not a delta. May be
+    /// empty. Whenever non-empty, exactly one entry carries `active: true`.
+    pub tabs: Option<Vec<BrowserStateTabEntry>>,
 
     pub encrypted_content: Option<String>,
 
@@ -531,6 +600,9 @@ pub struct Block {
 #[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum WebSearchToolResultBlockItemType {
+    #[serde(rename = "browser_state")]
+    BrowserState,
+
     Document,
 
     Image,
@@ -586,6 +658,8 @@ pub struct Source {
 
     pub url: Option<String>,
 
+    pub file_id: Option<String>,
+
     pub content: Option<Base64ImageSourceContent>,
 }
 
@@ -613,6 +687,12 @@ pub struct ContentBlockSourceContentItem {
     pub content_block_source_content_item_type: ContentBlockSourceContentItemType,
 
     pub source: Option<SourceSource>,
+
+    /// Configures the transformations the server applies to this image before the model observes
+    /// it. Each key names a condition the server transforms images for; its value selects the
+    /// transformation applied. Omitted keys keep their default behavior, and an empty object is
+    /// equivalent to omitting the field.
+    pub transformations: Option<RequestImageTransformations>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
@@ -633,6 +713,8 @@ pub struct SourceSource {
     pub source_type: PurpleType,
 
     pub url: Option<String>,
+
+    pub file_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
@@ -655,7 +737,36 @@ pub enum PurpleMediaType {
 pub enum PurpleType {
     Base64,
 
+    File,
+
     Url,
+}
+
+/// Configures the transformations the server applies to this image before the model observes
+/// it. Each key names a condition the server transforms images for; its value selects the
+/// transformation applied. Omitted keys keep their default behavior, and an empty object is
+/// equivalent to omitting the field.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct RequestImageTransformations {
+    /// What the server does when this image exceeds the model's maximum image size. `"downsize"`
+    /// (the default) scales the image down to fit, which changes the dimensions the model
+    /// observes without telling you. `"error"` instead rejects the request with a 400 error
+    /// naming the image's dimensions and the largest dimensions that fit, so you can scale the
+    /// image deliberately — your image is never silently scaled down.
+    pub oversized_image: Option<OversizedImage>,
+}
+
+/// What the server does when this image exceeds the model's maximum image size. `"downsize"`
+/// (the default) scales the image down to fit, which changes the dimensions the model
+/// observes without telling you. `"error"` instead rejects the request with a 400 error
+/// naming the image's dimensions and the largest dimensions that fit, so you can scale the
+/// image deliberately — your image is never silently scaled down.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum OversizedImage {
+    Downsize,
+
+    Error,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
@@ -686,9 +797,93 @@ pub enum Base64ImageSourceType {
 
     Content,
 
+    File,
+
     Text,
 
     Url,
+}
+
+/// A tab this call's execution opened that remains open at its end —
+/// the creation delta of the `tabs` inventory, not an event log.
+///
+/// Carries only the `tab_id`; the tab's `title` and `url` live on its
+/// `tabs` entry, which must include the same `tab_id`. A tab opened
+/// during a failed call gets no deferred `tab_opened`; it simply appears
+/// in the next result's `tabs` inventory.
+///
+/// A file download that started during this call.
+///
+/// A file download that finished during this call, reported with the
+/// same `download_id` as its `download_started` — or without a prior
+/// `download_started`, when the download finished during the call that
+/// started it (at most one state change per `download_id` per result).
+///
+/// A file download that failed — or was cancelled — during this call.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserStateChange {
+    /// The `tab_id` of the opened tab, present in `tabs`.
+    pub tab_id: Option<String>,
+
+    #[serde(rename = "type")]
+    pub browser_state_change_type: StateChangeType,
+
+    /// The caller-assigned identifier for this download, stable across the state changes
+    /// reporting it.
+    pub download_id: Option<String>,
+
+    /// The final post-redirect URL the download was served from.
+    pub url: Option<String>,
+
+    /// Where the executor saved the file, on the executor's filesystem. Only included when
+    /// another tool in the same environment can read the file at that path.
+    pub path: Option<String>,
+
+    /// The completed download's size.
+    pub size_bytes: Option<i64>,
+
+    /// The failure or cancellation detail, when known.
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum StateChangeType {
+    #[serde(rename = "download_completed")]
+    DownloadCompleted,
+
+    #[serde(rename = "download_failed")]
+    DownloadFailed,
+
+    #[serde(rename = "download_started")]
+    DownloadStarted,
+
+    #[serde(rename = "tab_opened")]
+    TabOpened,
+}
+
+/// One open browser tab reported in a `browser_state` block's `tabs`
+/// inventory.
+///
+/// `tab_id` is the caller-assigned identifier for the tab; `title` and
+/// `url` describe the page the tab is currently showing and may be empty
+/// strings (a blank tab legitimately has both empty). `active` marks the
+/// tab that is active after this call; whenever `tabs` is non-empty,
+/// exactly one entry is marked.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserStateTabEntry {
+    /// Whether this tab is the active tab after this call. Whenever `tabs` is non-empty, exactly
+    /// one entry is marked `active: true`.
+    pub active: Option<bool>,
+
+    /// The caller-assigned identifier for this tab, unique within the inventory.
+    pub tab_id: String,
+
+    /// The title of the page the tab is showing. May be empty.
+    pub title: String,
+
+    /// The URL of the page the tab is showing. May be empty.
+    pub url: String,
 }
 
 /// Code execution result with encrypted stdout for PFC + web_search results.
@@ -805,6 +1000,8 @@ pub struct RequestDocumentBlockSource {
     pub content: Option<Base64ImageSourceContent>,
 
     pub url: Option<String>,
+
+    pub file_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
@@ -951,9 +1148,6 @@ pub enum InputContentBlockType {
     Document,
 
     Image,
-
-    #[serde(rename = "mid_conv_system")]
-    MidConvSystem,
 
     #[serde(rename = "redacted_thinking")]
     RedactedThinking,
@@ -1175,6 +1369,20 @@ pub enum ToolChoiceType {
 ///
 /// Code execution tool with REPL state persistence.
 ///
+/// The browser toolset: a single ``tools[]`` entry (carrying no
+/// ``name``) that declares the browser tool family. The model is served
+/// the family's tool with any members disabled via ``configs`` removed
+/// from its schema.
+///
+/// The computer toolset: a single ``tools[]`` entry (carrying no
+/// ``name``) that declares the computer tool family. The model is
+/// served the family's tool with any members disabled via ``configs``
+/// removed from its schema. Every member is enabled by default, zoom
+/// included. The single-tool options ``display_number`` and
+/// ``enable_zoom`` are not fields of a toolset entry — it carries only
+/// ``type``, ``configs``, and ``cache_control``; zoom is controlled
+/// via ``configs.zoom.enabled``.
+///
 /// Web fetch tool with use_cache parameter for bypassing cached content.
 #[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Tool {
@@ -1214,13 +1422,17 @@ pub struct Tool {
     /// Name of the tool.
     ///
     /// This is how the tool will be called by the model and in `tool_use` blocks.
-    pub name: String,
+    pub name: Option<String>,
 
     /// When true, guarantees schema validation on tool names and inputs
     pub strict: Option<bool>,
 
     #[serde(rename = "type")]
     pub tool_type: Option<Type>,
+
+    /// Sparse per-member overrides, keyed by member name. Absent, null, and {} are equivalent; a
+    /// member's defaults apply wherever its key is absent.
+    pub configs: Option<ErToolsetConfigs>,
 
     /// Maximum number of characters to display when viewing a file. If not specified, defaults
     /// to displaying the full file.
@@ -1289,6 +1501,471 @@ pub enum AllowedCaller {
     Direct,
 }
 
+/// Per-member configuration for ``browser_toolset_20260801``: one
+/// optional field per member tool, keyed by the member name — the same
+/// name the member's ``tool_use`` blocks carry. Every member is an
+/// accepted key, and a member's defaults apply wherever its key is
+/// absent. Unknown keys are rejected: the field set is this toolset
+/// version's complete member set.
+///
+/// Per-member configuration for ``computer_toolset_20260801``: one
+/// optional field per member tool, keyed by the member name — the same
+/// name the member's ``tool_use`` blocks carry. Every member is an
+/// accepted key, and a member's defaults apply wherever its key is
+/// absent. Unknown keys are rejected: the field set is this toolset
+/// version's complete member set.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErToolsetConfigs {
+    pub close_tab: Option<BrowserCloseTabConfig>,
+
+    pub double_click: Option<ErDoubleClickConfig>,
+
+    pub file_upload: Option<BrowserFileUploadConfig>,
+
+    pub find: Option<BrowserFindConfig>,
+
+    pub form_input: Option<BrowserFormInputConfig>,
+
+    pub get_page_text: Option<BrowserGetPageTextConfig>,
+
+    pub hold_key: Option<ErHoldKeyConfig>,
+
+    pub hover: Option<BrowserHoverConfig>,
+
+    pub javascript_exec: Option<BrowserJavascriptExecConfig>,
+
+    pub key: Option<ErKeyConfig>,
+
+    pub left_click: Option<ErLeftClickConfig>,
+
+    pub left_click_drag: Option<ErLeftClickDragConfig>,
+
+    pub left_mouse_down: Option<ErLeftMouseDownConfig>,
+
+    pub left_mouse_up: Option<ErLeftMouseUpConfig>,
+
+    pub list_tabs: Option<BrowserListTabsConfig>,
+
+    pub middle_click: Option<ErMiddleClickConfig>,
+
+    pub mouse_move: Option<ErMouseMoveConfig>,
+
+    pub navigate: Option<BrowserNavigateConfig>,
+
+    pub new_tab: Option<BrowserNewTabConfig>,
+
+    pub read_console: Option<BrowserReadConsoleConfig>,
+
+    pub read_network: Option<BrowserReadNetworkConfig>,
+
+    pub read_page: Option<BrowserReadPageConfig>,
+
+    pub right_click: Option<ErRightClickConfig>,
+
+    pub screenshot: Option<ErScreenshotConfig>,
+
+    pub scroll: Option<ErScrollConfig>,
+
+    pub scroll_to: Option<BrowserScrollToConfig>,
+
+    pub switch_tab: Option<BrowserSwitchTabConfig>,
+
+    pub triple_click: Option<ErTripleClickConfig>,
+
+    #[serde(rename = "type")]
+    pub er_toolset_configs_type: Option<ErTypeConfig>,
+
+    pub wait: Option<ErWaitConfig>,
+
+    pub zoom: Option<ErZoomConfig>,
+
+    pub cursor_position: Option<ComputerCursorPositionConfig>,
+}
+
+/// ``close_tab``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserCloseTabConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``cursor_position``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ComputerCursorPositionConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``double_click``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErDoubleClickConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``type``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErTypeConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``file_upload``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserFileUploadConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``find``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserFindConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``form_input``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserFormInputConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``get_page_text``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserGetPageTextConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``hold_key``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErHoldKeyConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``hover``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserHoverConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``javascript_exec``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserJavascriptExecConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``key``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErKeyConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``left_click``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErLeftClickConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``left_click_drag``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErLeftClickDragConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``left_mouse_down``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErLeftMouseDownConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``left_mouse_up``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErLeftMouseUpConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``list_tabs``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserListTabsConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``middle_click``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErMiddleClickConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``mouse_move``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErMouseMoveConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``navigate``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserNavigateConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``new_tab``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserNewTabConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``read_console``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserReadConsoleConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``read_network``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserReadNetworkConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``read_page``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserReadPageConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``right_click``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErRightClickConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``screenshot``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErScreenshotConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``scroll``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErScrollConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``scroll_to``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserScrollToConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``switch_tab``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct BrowserSwitchTabConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``triple_click``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErTripleClickConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``wait``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErWaitConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
+/// ``zoom``'s config overrides.
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
+pub struct ErZoomConfig {
+    /// Defer loading for this member. Must resolve to the same value on every enabled member of
+    /// the toolset.
+    pub defer_loading: Option<bool>,
+
+    /// Whether this member is offered to the model. Default is per member, per the toolset's
+    /// documentation. A member whose enabled resolves false is withheld from the served schema.
+    pub enabled: Option<bool>,
+}
+
 /// [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
 ///
 /// This defines the shape of the `input` that your tool accepts and that the model will
@@ -1329,6 +2006,9 @@ pub enum Type {
     #[serde(rename = "bash_20250124")]
     Bash20250124,
 
+    #[serde(rename = "browser_toolset_20260801")]
+    BrowserToolset20260801,
+
     #[serde(rename = "code_execution_20250522")]
     CodeExecution20250522,
 
@@ -1340,6 +2020,9 @@ pub enum Type {
 
     #[serde(rename = "code_execution_20260521")]
     CodeExecution20260521,
+
+    #[serde(rename = "computer_toolset_20260801")]
+    ComputerToolset20260801,
 
     Custom,
 
@@ -1514,14 +2197,18 @@ pub struct Message {
     pub usage: Usage,
 }
 
-/// Information about the container used in the request (for the code execution tool)
+/// A skill that was loaded in a container (response model).
 #[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
-pub struct Container {
-    /// The time at which the container will expire.
-    pub expires_at: String,
+pub struct ContainerSkill {
+    /// Skill ID
+    pub skill_id: String,
 
-    /// Identifier for the container used in this request
-    pub id: String,
+    /// Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined)
+    #[serde(rename = "type")]
+    pub container_skill_type: SkillType,
+
+    /// The resolved version: a skill version ID for custom skills.
+    pub version: String,
 }
 
 /// Response model for a file uploaded to the container.
@@ -1574,6 +2261,9 @@ pub struct ContentBlock {
     pub input: Option<HashMap<String, Option<serde_json::Value>>>,
 
     pub name: Option<String>,
+
+    /// For a toolset member tool_use, the toolset family.
+    pub toolset_name: Option<String>,
 
     pub content: Option<Content>,
 

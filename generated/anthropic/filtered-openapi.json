@@ -332,6 +332,7 @@
               "fast-mode-2026-02-01",
               "output-300k-2026-03-24",
               "user-profiles-2026-03-24",
+              "user-profiles-2026-08-18",
               "advisor-tool-2026-03-01",
               "managed-agents-2026-04-01",
               "cache-diagnosis-2026-04-07",
@@ -529,6 +530,1582 @@
           "type"
         ],
         "title": "BillingError",
+        "type": "object"
+      },
+      "BrowserCloseTabConfig": {
+        "additionalProperties": false,
+        "description": "``close_tab``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserCloseTabConfig",
+        "type": "object"
+      },
+      "BrowserDoubleClickConfig": {
+        "additionalProperties": false,
+        "description": "``double_click``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserDoubleClickConfig",
+        "type": "object"
+      },
+      "BrowserFileUploadConfig": {
+        "additionalProperties": false,
+        "description": "``file_upload``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserFileUploadConfig",
+        "type": "object"
+      },
+      "BrowserFindConfig": {
+        "additionalProperties": false,
+        "description": "``find``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserFindConfig",
+        "type": "object"
+      },
+      "BrowserFormInputConfig": {
+        "additionalProperties": false,
+        "description": "``form_input``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserFormInputConfig",
+        "type": "object"
+      },
+      "BrowserGetPageTextConfig": {
+        "additionalProperties": false,
+        "description": "``get_page_text``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserGetPageTextConfig",
+        "type": "object"
+      },
+      "BrowserHoldKeyConfig": {
+        "additionalProperties": false,
+        "description": "``hold_key``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserHoldKeyConfig",
+        "type": "object"
+      },
+      "BrowserHoverConfig": {
+        "additionalProperties": false,
+        "description": "``hover``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserHoverConfig",
+        "type": "object"
+      },
+      "BrowserJavascriptExecConfig": {
+        "additionalProperties": false,
+        "description": "``javascript_exec``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserJavascriptExecConfig",
+        "type": "object"
+      },
+      "BrowserKeyConfig": {
+        "additionalProperties": false,
+        "description": "``key``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserKeyConfig",
+        "type": "object"
+      },
+      "BrowserLeftClickConfig": {
+        "additionalProperties": false,
+        "description": "``left_click``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserLeftClickConfig",
+        "type": "object"
+      },
+      "BrowserLeftClickDragConfig": {
+        "additionalProperties": false,
+        "description": "``left_click_drag``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserLeftClickDragConfig",
+        "type": "object"
+      },
+      "BrowserLeftMouseDownConfig": {
+        "additionalProperties": false,
+        "description": "``left_mouse_down``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserLeftMouseDownConfig",
+        "type": "object"
+      },
+      "BrowserLeftMouseUpConfig": {
+        "additionalProperties": false,
+        "description": "``left_mouse_up``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserLeftMouseUpConfig",
+        "type": "object"
+      },
+      "BrowserListTabsConfig": {
+        "additionalProperties": false,
+        "description": "``list_tabs``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserListTabsConfig",
+        "type": "object"
+      },
+      "BrowserMiddleClickConfig": {
+        "additionalProperties": false,
+        "description": "``middle_click``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserMiddleClickConfig",
+        "type": "object"
+      },
+      "BrowserMouseMoveConfig": {
+        "additionalProperties": false,
+        "description": "``mouse_move``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserMouseMoveConfig",
+        "type": "object"
+      },
+      "BrowserNavigateConfig": {
+        "additionalProperties": false,
+        "description": "``navigate``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserNavigateConfig",
+        "type": "object"
+      },
+      "BrowserNewTabConfig": {
+        "additionalProperties": false,
+        "description": "``new_tab``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserNewTabConfig",
+        "type": "object"
+      },
+      "BrowserReadConsoleConfig": {
+        "additionalProperties": false,
+        "description": "``read_console``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserReadConsoleConfig",
+        "type": "object"
+      },
+      "BrowserReadNetworkConfig": {
+        "additionalProperties": false,
+        "description": "``read_network``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserReadNetworkConfig",
+        "type": "object"
+      },
+      "BrowserReadPageConfig": {
+        "additionalProperties": false,
+        "description": "``read_page``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserReadPageConfig",
+        "type": "object"
+      },
+      "BrowserRightClickConfig": {
+        "additionalProperties": false,
+        "description": "``right_click``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserRightClickConfig",
+        "type": "object"
+      },
+      "BrowserScreenshotConfig": {
+        "additionalProperties": false,
+        "description": "``screenshot``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserScreenshotConfig",
+        "type": "object"
+      },
+      "BrowserScrollConfig": {
+        "additionalProperties": false,
+        "description": "``scroll``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserScrollConfig",
+        "type": "object"
+      },
+      "BrowserScrollToConfig": {
+        "additionalProperties": false,
+        "description": "``scroll_to``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserScrollToConfig",
+        "type": "object"
+      },
+      "BrowserStateChangeDownloadCompleted": {
+        "additionalProperties": false,
+        "description": "A file download that finished during this call, reported with the\nsame `download_id` as its `download_started` — or without a prior\n`download_started`, when the download finished during the call that\nstarted it (at most one state change per `download_id` per result).",
+        "properties": {
+          "download_id": {
+            "description": "The caller-assigned identifier for this download, stable across the state changes reporting it.",
+            "maxLength": 4096,
+            "minLength": 1,
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Download Id",
+            "type": "string"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "maxLength": 4096,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Where the executor saved the file, on the executor's filesystem. Only included when another tool in the same environment can read the file at that path.",
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Path"
+          },
+          "size_bytes": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The completed download's size.",
+            "title": "Size Bytes"
+          },
+          "type": {
+            "const": "download_completed",
+            "title": "Type",
+            "type": "string"
+          },
+          "url": {
+            "description": "The final post-redirect URL the download was served from.",
+            "maxLength": 4096,
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "download_id",
+          "type",
+          "url"
+        ],
+        "title": "BrowserStateChangeDownloadCompleted",
+        "type": "object"
+      },
+      "BrowserStateChangeDownloadFailed": {
+        "additionalProperties": false,
+        "description": "A file download that failed — or was cancelled — during this call.",
+        "properties": {
+          "download_id": {
+            "description": "The caller-assigned identifier for this download, stable across the state changes reporting it.",
+            "maxLength": 4096,
+            "minLength": 1,
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Download Id",
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "maxLength": 4096,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The failure or cancellation detail, when known.",
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Error"
+          },
+          "type": {
+            "const": "download_failed",
+            "title": "Type",
+            "type": "string"
+          },
+          "url": {
+            "description": "The final post-redirect URL the download was served from.",
+            "maxLength": 4096,
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "download_id",
+          "type",
+          "url"
+        ],
+        "title": "BrowserStateChangeDownloadFailed",
+        "type": "object"
+      },
+      "BrowserStateChangeDownloadStarted": {
+        "additionalProperties": false,
+        "description": "A file download that started during this call.",
+        "properties": {
+          "download_id": {
+            "description": "The caller-assigned identifier for this download, stable across the state changes reporting it.",
+            "maxLength": 4096,
+            "minLength": 1,
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Download Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "download_started",
+            "title": "Type",
+            "type": "string"
+          },
+          "url": {
+            "description": "The final post-redirect URL the download was served from.",
+            "maxLength": 4096,
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "download_id",
+          "type",
+          "url"
+        ],
+        "title": "BrowserStateChangeDownloadStarted",
+        "type": "object"
+      },
+      "BrowserStateChangeTabOpened": {
+        "additionalProperties": false,
+        "description": "A tab this call's execution opened that remains open at its end —\nthe creation delta of the `tabs` inventory, not an event log.\n\nCarries only the `tab_id`; the tab's `title` and `url` live on its\n`tabs` entry, which must include the same `tab_id`. A tab opened\nduring a failed call gets no deferred `tab_opened`; it simply appears\nin the next result's `tabs` inventory.",
+        "properties": {
+          "tab_id": {
+            "description": "The `tab_id` of the opened tab, present in `tabs`.",
+            "maxLength": 4096,
+            "minLength": 1,
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Tab Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "tab_opened",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tab_id",
+          "type"
+        ],
+        "title": "BrowserStateChangeTabOpened",
+        "type": "object"
+      },
+      "BrowserStateTabEntry": {
+        "additionalProperties": false,
+        "description": "One open browser tab reported in a `browser_state` block's `tabs`\ninventory.\n\n`tab_id` is the caller-assigned identifier for the tab; `title` and\n`url` describe the page the tab is currently showing and may be empty\nstrings (a blank tab legitimately has both empty). `active` marks the\ntab that is active after this call; whenever `tabs` is non-empty,\nexactly one entry is marked.",
+        "properties": {
+          "active": {
+            "description": "Whether this tab is the active tab after this call. Whenever `tabs` is non-empty, exactly one entry is marked `active: true`.",
+            "title": "Active",
+            "type": "boolean"
+          },
+          "tab_id": {
+            "description": "The caller-assigned identifier for this tab, unique within the inventory.",
+            "maxLength": 4096,
+            "minLength": 1,
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Tab Id",
+            "type": "string"
+          },
+          "title": {
+            "description": "The title of the page the tab is showing. May be empty.",
+            "maxLength": 4096,
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "description": "The URL of the page the tab is showing. May be empty.",
+            "maxLength": 4096,
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$",
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tab_id",
+          "title",
+          "url"
+        ],
+        "title": "BrowserStateTabEntry",
+        "type": "object"
+      },
+      "BrowserSwitchTabConfig": {
+        "additionalProperties": false,
+        "description": "``switch_tab``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserSwitchTabConfig",
+        "type": "object"
+      },
+      "BrowserToolsetConfigs": {
+        "additionalProperties": false,
+        "description": "Per-member configuration for ``browser_toolset_20260801``: one\noptional field per member tool, keyed by the member name — the same\nname the member's ``tool_use`` blocks carry. Every member is an\naccepted key, and a member's defaults apply wherever its key is\nabsent. Unknown keys are rejected: the field set is this toolset\nversion's complete member set.",
+        "properties": {
+          "close_tab": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserCloseTabConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "double_click": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserDoubleClickConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "file_upload": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserFileUploadConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "find": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserFindConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "form_input": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserFormInputConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "get_page_text": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserGetPageTextConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hold_key": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserHoldKeyConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hover": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserHoverConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "javascript_exec": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserJavascriptExecConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "key": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserKeyConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "left_click": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserLeftClickConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "left_click_drag": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserLeftClickDragConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "left_mouse_down": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserLeftMouseDownConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "left_mouse_up": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserLeftMouseUpConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "list_tabs": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserListTabsConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "middle_click": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserMiddleClickConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mouse_move": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserMouseMoveConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "navigate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserNavigateConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "new_tab": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserNewTabConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "read_console": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserReadConsoleConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "read_network": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserReadNetworkConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "read_page": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserReadPageConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "right_click": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserRightClickConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "screenshot": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserScreenshotConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scroll": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserScrollConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scroll_to": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserScrollToConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "switch_tab": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserSwitchTabConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "triple_click": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserTripleClickConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserTypeConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "wait": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserWaitConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "zoom": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserZoomConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "title": "BrowserToolsetConfigs",
+        "type": "object"
+      },
+      "BrowserToolset_20260801": {
+        "additionalProperties": false,
+        "description": "The browser toolset: a single ``tools[]`` entry (carrying no\n``name``) that declares the browser tool family. The model is served\nthe family's tool with any members disabled via ``configs`` removed\nfrom its schema.",
+        "properties": {
+          "allowed_callers": {
+            "items": {
+              "$ref": "#/components/schemas/AllowedCaller",
+              "x-stainless-naming": {
+                "csharp": {
+                  "type_name": "BrowserToolset20260801AllowedCaller"
+                }
+              }
+            },
+            "title": "Allowed Callers",
+            "type": "array"
+          },
+          "cache_control": {
+            "anyOf": [
+              {
+                "discriminator": {
+                  "mapping": {
+                    "ephemeral": "#/components/schemas/CacheControlEphemeral"
+                  },
+                  "propertyName": "type"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CacheControlEphemeral"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Create a cache control breakpoint at this content block.",
+            "title": "Cache Control"
+          },
+          "configs": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrowserToolsetConfigs"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Sparse per-member overrides, keyed by member name. Absent, null, and {} are equivalent; a member's defaults apply wherever its key is absent."
+          },
+          "type": {
+            "const": "browser_toolset_20260801",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "BrowserToolset_20260801",
+        "type": "object"
+      },
+      "BrowserTripleClickConfig": {
+        "additionalProperties": false,
+        "description": "``triple_click``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserTripleClickConfig",
+        "type": "object"
+      },
+      "BrowserTypeConfig": {
+        "additionalProperties": false,
+        "description": "``type``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserTypeConfig",
+        "type": "object"
+      },
+      "BrowserWaitConfig": {
+        "additionalProperties": false,
+        "description": "``wait``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserWaitConfig",
+        "type": "object"
+      },
+      "BrowserZoomConfig": {
+        "additionalProperties": false,
+        "description": "``zoom``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "BrowserZoomConfig",
         "type": "object"
       },
       "CacheControlEphemeral": {
@@ -855,6 +2432,789 @@
         "title": "CodeExecutionTool_20260521",
         "type": "object"
       },
+      "ComputerCursorPositionConfig": {
+        "additionalProperties": false,
+        "description": "``cursor_position``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerCursorPositionConfig",
+        "type": "object"
+      },
+      "ComputerDoubleClickConfig": {
+        "additionalProperties": false,
+        "description": "``double_click``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerDoubleClickConfig",
+        "type": "object"
+      },
+      "ComputerHoldKeyConfig": {
+        "additionalProperties": false,
+        "description": "``hold_key``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerHoldKeyConfig",
+        "type": "object"
+      },
+      "ComputerKeyConfig": {
+        "additionalProperties": false,
+        "description": "``key``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerKeyConfig",
+        "type": "object"
+      },
+      "ComputerLeftClickConfig": {
+        "additionalProperties": false,
+        "description": "``left_click``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerLeftClickConfig",
+        "type": "object"
+      },
+      "ComputerLeftClickDragConfig": {
+        "additionalProperties": false,
+        "description": "``left_click_drag``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerLeftClickDragConfig",
+        "type": "object"
+      },
+      "ComputerLeftMouseDownConfig": {
+        "additionalProperties": false,
+        "description": "``left_mouse_down``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerLeftMouseDownConfig",
+        "type": "object"
+      },
+      "ComputerLeftMouseUpConfig": {
+        "additionalProperties": false,
+        "description": "``left_mouse_up``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerLeftMouseUpConfig",
+        "type": "object"
+      },
+      "ComputerMiddleClickConfig": {
+        "additionalProperties": false,
+        "description": "``middle_click``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerMiddleClickConfig",
+        "type": "object"
+      },
+      "ComputerMouseMoveConfig": {
+        "additionalProperties": false,
+        "description": "``mouse_move``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerMouseMoveConfig",
+        "type": "object"
+      },
+      "ComputerRightClickConfig": {
+        "additionalProperties": false,
+        "description": "``right_click``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerRightClickConfig",
+        "type": "object"
+      },
+      "ComputerScreenshotConfig": {
+        "additionalProperties": false,
+        "description": "``screenshot``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerScreenshotConfig",
+        "type": "object"
+      },
+      "ComputerScrollConfig": {
+        "additionalProperties": false,
+        "description": "``scroll``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerScrollConfig",
+        "type": "object"
+      },
+      "ComputerToolsetConfigs": {
+        "additionalProperties": false,
+        "description": "Per-member configuration for ``computer_toolset_20260801``: one\noptional field per member tool, keyed by the member name — the same\nname the member's ``tool_use`` blocks carry. Every member is an\naccepted key, and a member's defaults apply wherever its key is\nabsent. Unknown keys are rejected: the field set is this toolset\nversion's complete member set.",
+        "properties": {
+          "cursor_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerCursorPositionConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "double_click": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerDoubleClickConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hold_key": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerHoldKeyConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "key": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerKeyConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "left_click": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerLeftClickConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "left_click_drag": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerLeftClickDragConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "left_mouse_down": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerLeftMouseDownConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "left_mouse_up": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerLeftMouseUpConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "middle_click": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerMiddleClickConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mouse_move": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerMouseMoveConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "right_click": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerRightClickConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "screenshot": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerScreenshotConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scroll": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerScrollConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "triple_click": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerTripleClickConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerTypeConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "wait": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerWaitConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "zoom": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerZoomConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "title": "ComputerToolsetConfigs",
+        "type": "object"
+      },
+      "ComputerToolset_20260801": {
+        "additionalProperties": false,
+        "description": "The computer toolset: a single ``tools[]`` entry (carrying no\n``name``) that declares the computer tool family. The model is\nserved the family's tool with any members disabled via ``configs``\nremoved from its schema. Every member is enabled by default, zoom\nincluded. The single-tool options ``display_number`` and\n``enable_zoom`` are not fields of a toolset entry — it carries only\n``type``, ``configs``, and ``cache_control``; zoom is controlled\nvia ``configs.zoom.enabled``.",
+        "properties": {
+          "allowed_callers": {
+            "items": {
+              "$ref": "#/components/schemas/AllowedCaller",
+              "x-stainless-naming": {
+                "csharp": {
+                  "type_name": "ComputerToolset20260801AllowedCaller"
+                }
+              }
+            },
+            "title": "Allowed Callers",
+            "type": "array"
+          },
+          "cache_control": {
+            "anyOf": [
+              {
+                "discriminator": {
+                  "mapping": {
+                    "ephemeral": "#/components/schemas/CacheControlEphemeral"
+                  },
+                  "propertyName": "type"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CacheControlEphemeral"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Create a cache control breakpoint at this content block.",
+            "title": "Cache Control"
+          },
+          "configs": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComputerToolsetConfigs"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Sparse per-member overrides, keyed by member name. Absent, null, and {} are equivalent; a member's defaults apply wherever its key is absent."
+          },
+          "type": {
+            "const": "computer_toolset_20260801",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "ComputerToolset_20260801",
+        "type": "object"
+      },
+      "ComputerTripleClickConfig": {
+        "additionalProperties": false,
+        "description": "``triple_click``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerTripleClickConfig",
+        "type": "object"
+      },
+      "ComputerTypeConfig": {
+        "additionalProperties": false,
+        "description": "``type``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerTypeConfig",
+        "type": "object"
+      },
+      "ComputerWaitConfig": {
+        "additionalProperties": false,
+        "description": "``wait``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerWaitConfig",
+        "type": "object"
+      },
+      "ComputerZoomConfig": {
+        "additionalProperties": false,
+        "description": "``zoom``'s config overrides.",
+        "properties": {
+          "defer_loading": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.",
+            "title": "Defer Loading"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.",
+            "title": "Enabled"
+          }
+        },
+        "title": "ComputerZoomConfig",
+        "type": "object"
+      },
       "Container": {
         "description": "Information about the container used in the request (for the code execution tool)",
         "properties": {
@@ -871,13 +3231,115 @@
             ],
             "title": "Id",
             "type": "string"
+          },
+          "skills": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ContainerSkill"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Skills loaded in the container",
+            "title": "Skills"
           }
         },
         "required": [
           "expires_at",
-          "id"
+          "id",
+          "skills"
         ],
         "title": "Container",
+        "type": "object"
+      },
+      "ContainerParams": {
+        "additionalProperties": false,
+        "description": "Container parameters with skills to be loaded.",
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Container id",
+            "title": "Id"
+          },
+          "skills": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/SkillParams"
+                },
+                "maxItems": 20,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "List of skills to load in the container",
+            "title": "Skills"
+          }
+        },
+        "title": "ContainerParams",
+        "type": "object"
+      },
+      "ContainerSkill": {
+        "description": "A skill that was loaded in a container (response model).",
+        "properties": {
+          "skill_id": {
+            "description": "Skill ID",
+            "examples": [
+              "pdf"
+            ],
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Skill Id",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined)",
+            "enum": [
+              "anthropic",
+              "custom"
+            ],
+            "examples": [
+              "anthropic"
+            ],
+            "title": "Type",
+            "type": "string",
+            "x-stainless-naming": {
+              "csharp": {
+                "type_name": "ContainerSkillType"
+              }
+            }
+          },
+          "version": {
+            "description": "The resolved version: a skill version ID for custom skills.",
+            "examples": [
+              "latest"
+            ],
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "skill_id",
+          "type",
+          "version"
+        ],
+        "title": "ContainerSkill",
         "type": "object"
       },
       "ContentBlock": {
@@ -1049,7 +3511,7 @@
               "role": "user"
             }
           ],
-          "model": "claude-opus-4-6"
+          "model": "claude-opus-5"
         },
         "properties": {
           "model": {
@@ -1087,6 +3549,9 @@
           },
           "container": {
             "anyOf": [
+              {
+                "$ref": "#/components/schemas/ContainerParams"
+              },
               {
                 "type": "string"
               },
@@ -1239,7 +3704,13 @@
                   "$ref": "#/components/schemas/CodeExecutionTool_20260521"
                 },
                 {
+                  "$ref": "#/components/schemas/BrowserToolset_20260801"
+                },
+                {
                   "$ref": "#/components/schemas/MemoryTool_20250818"
+                },
+                {
+                  "$ref": "#/components/schemas/ComputerToolset_20260801"
                 },
                 {
                   "$ref": "#/components/schemas/TextEditor_20250124"
@@ -1464,6 +3935,46 @@
         "title": "ErrorResponse",
         "type": "object"
       },
+      "FileDocumentSource": {
+        "additionalProperties": false,
+        "properties": {
+          "file_id": {
+            "title": "File Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "file",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file_id",
+          "type"
+        ],
+        "title": "FileDocumentSource",
+        "type": "object"
+      },
+      "FileImageSource": {
+        "additionalProperties": false,
+        "properties": {
+          "file_id": {
+            "title": "File Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "file",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file_id",
+          "type"
+        ],
+        "title": "FileImageSource",
+        "type": "object"
+      },
       "GatewayTimeoutError": {
         "properties": {
           "message": {
@@ -1493,7 +4004,6 @@
             "container_upload": "#/components/schemas/RequestContainerUploadBlock",
             "document": "#/components/schemas/RequestDocumentBlock",
             "image": "#/components/schemas/RequestImageBlock",
-            "mid_conv_system": "#/components/schemas/RequestMidConvSystemBlock",
             "redacted_thinking": "#/components/schemas/RequestRedactedThinkingBlock",
             "search_result": "#/components/schemas/RequestSearchResultBlock",
             "server_tool_use": "#/components/schemas/RequestServerToolUseBlock",
@@ -1564,9 +4074,6 @@
           },
           {
             "$ref": "#/components/schemas/RequestContainerUploadBlock"
-          },
-          {
-            "$ref": "#/components/schemas/RequestMidConvSystemBlock"
           }
         ],
         "x-stainless-python-extend-union": [
@@ -1841,7 +4348,7 @@
               }
             ],
             "id": "msg_013Zva2CMHLNnXjNJJKqJ2EF",
-            "model": "claude-opus-4-6",
+            "model": "claude-opus-5",
             "role": "assistant",
             "stop_details": null,
             "stop_reason": "end_turn",
@@ -2156,7 +4663,7 @@
             "title": "Created At",
             "description": "RFC 3339 datetime string representing the time at which the model was released. May be set to an epoch value if the release date is unknown.",
             "examples": [
-              "2026-02-04T00:00:00Z"
+              "2026-07-24T00:00:00Z"
             ]
           },
           "display_name": {
@@ -2164,7 +4671,7 @@
             "title": "Display Name",
             "description": "A human-readable name for the model.",
             "examples": [
-              "Claude Opus 4.6"
+              "Claude Opus 5"
             ]
           },
           "id": {
@@ -2172,7 +4679,7 @@
             "title": "Id",
             "description": "Unique model identifier.",
             "examples": [
-              "claude-opus-4-6"
+              "claude-opus-5"
             ]
           },
           "max_input_tokens": {
@@ -2252,7 +4759,8 @@
                 "type": "null"
               }
             ],
-            "description": "How much effort the model should put into its response. Higher effort levels may result in more thorough analysis but take longer.\n\nValid values are `low`, `medium`, `high`, `xhigh`, or `max`."
+            "description": "How much effort the model should put into its response. Higher effort levels may result in more thorough analysis but take longer.\n\nValid values are `low`, `medium`, `high`, `xhigh`, or `max`.",
+            "title": "Effort"
           },
           "format": {
             "anyOf": [
@@ -2569,6 +5077,93 @@
           "type"
         ],
         "title": "RequestBashCodeExecutionToolResultError",
+        "type": "object"
+      },
+      "RequestBrowserStateBlock": {
+        "additionalProperties": false,
+        "description": "The caller's browser state after a browser toolset member call —\nthe full inventory of open tabs, which tab is active, and any side\neffects (tabs opened, download state changes) the call produced.\n\nAt most one per `tool_result`, only on a non-error result answering a\nbrowser toolset member `tool_use`. The server renders the\nmodel-visible text from it; the model never sees the raw fields.",
+        "properties": {
+          "cache_control": {
+            "anyOf": [
+              {
+                "discriminator": {
+                  "mapping": {
+                    "ephemeral": "#/components/schemas/CacheControlEphemeral"
+                  },
+                  "propertyName": "type"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CacheControlEphemeral"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Create a cache control breakpoint at this content block.",
+            "title": "Cache Control"
+          },
+          "state_changes": {
+            "anyOf": [
+              {
+                "items": {
+                  "discriminator": {
+                    "mapping": {
+                      "download_completed": "#/components/schemas/BrowserStateChangeDownloadCompleted",
+                      "download_failed": "#/components/schemas/BrowserStateChangeDownloadFailed",
+                      "download_started": "#/components/schemas/BrowserStateChangeDownloadStarted",
+                      "tab_opened": "#/components/schemas/BrowserStateChangeTabOpened"
+                    },
+                    "propertyName": "type"
+                  },
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/BrowserStateChangeTabOpened"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BrowserStateChangeDownloadStarted"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BrowserStateChangeDownloadCompleted"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BrowserStateChangeDownloadFailed"
+                    }
+                  ]
+                },
+                "maxItems": 200,
+                "minItems": 1,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Tabs opened and download state changes during this call. \"Nothing to report\" is expressed by omitting the field, never by an empty list.",
+            "title": "State Changes"
+          },
+          "tabs": {
+            "description": "All tabs open in the browser after this call — the full inventory, not a delta. May be empty. Whenever non-empty, exactly one entry carries `active: true`.",
+            "items": {
+              "$ref": "#/components/schemas/BrowserStateTabEntry"
+            },
+            "maxItems": 100,
+            "title": "Tabs",
+            "type": "array"
+          },
+          "type": {
+            "const": "browser_state",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tabs",
+          "type"
+        ],
+        "title": "RequestBrowserStateBlock",
         "type": "object"
       },
       "RequestCharLocationCitation": {
@@ -2923,6 +5518,7 @@
               "mapping": {
                 "base64": "#/components/schemas/Base64PDFSource",
                 "content": "#/components/schemas/ContentBlockSource",
+                "file": "#/components/schemas/FileDocumentSource",
                 "text": "#/components/schemas/PlainTextSource",
                 "url": "#/components/schemas/URLPDFSource"
               },
@@ -2940,6 +5536,9 @@
               },
               {
                 "$ref": "#/components/schemas/URLPDFSource"
+              },
+              {
+                "$ref": "#/components/schemas/FileDocumentSource"
               }
             ],
             "title": "Source"
@@ -3038,6 +5637,7 @@
             "discriminator": {
               "mapping": {
                 "base64": "#/components/schemas/Base64ImageSource",
+                "file": "#/components/schemas/FileImageSource",
                 "url": "#/components/schemas/URLImageSource"
               },
               "propertyName": "type"
@@ -3048,9 +5648,23 @@
               },
               {
                 "$ref": "#/components/schemas/URLImageSource"
+              },
+              {
+                "$ref": "#/components/schemas/FileImageSource"
               }
             ],
             "title": "Source"
+          },
+          "transformations": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RequestImageTransformations"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Configures the transformations the server applies to this image before the model observes it. Each key names a condition the server transforms images for; its value selects the transformation applied. Omitted keys keep their default behavior, and an empty object is equivalent to omitting the field."
           },
           "type": {
             "const": "image",
@@ -3065,61 +5679,21 @@
         "title": "RequestImageBlock",
         "type": "object"
       },
-      "RequestMidConvSystemBlock": {
+      "RequestImageTransformations": {
         "additionalProperties": false,
-        "description": "System instructions that appear mid-conversation.\n\nUse this block to provide or update system-level instructions at a specific\npoint in the conversation, rather than only via the top-level `system` parameter.",
+        "description": "Configures the transformations the server applies to this image before the model observes it. Each key names a condition the server transforms images for; its value selects the transformation applied. Omitted keys keep their default behavior, and an empty object is equivalent to omitting the field.",
         "properties": {
-          "cache_control": {
-            "anyOf": [
-              {
-                "discriminator": {
-                  "mapping": {
-                    "ephemeral": "#/components/schemas/CacheControlEphemeral"
-                  },
-                  "propertyName": "type"
-                },
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/CacheControlEphemeral"
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
+          "oversized_image": {
+            "description": "What the server does when this image exceeds the model's maximum image size. `\"downsize\"` (the default) scales the image down to fit, which changes the dimensions the model observes without telling you. `\"error\"` instead rejects the request with a 400 error naming the image's dimensions and the largest dimensions that fit, so you can scale the image deliberately — your image is never silently scaled down.",
+            "enum": [
+              "downsize",
+              "error"
             ],
-            "description": "Create a cache control breakpoint at this content block.",
-            "title": "Cache Control"
-          },
-          "content": {
-            "description": "System instruction text blocks.",
-            "items": {
-              "discriminator": {
-                "mapping": {
-                  "text": "#/components/schemas/RequestTextBlock"
-                },
-                "propertyName": "type"
-              },
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/RequestTextBlock"
-                }
-              ]
-            },
-            "title": "Content",
-            "type": "array"
-          },
-          "type": {
-            "const": "mid_conv_system",
-            "title": "Type",
+            "title": "Oversized Image",
             "type": "string"
           }
         },
-        "required": [
-          "content",
-          "type"
-        ],
-        "title": "RequestMidConvSystemBlock",
+        "title": "RequestImageTransformations",
         "type": "object"
       },
       "RequestPageLocationCitation": {
@@ -3842,6 +6416,7 @@
                 "items": {
                   "discriminator": {
                     "mapping": {
+                      "browser_state": "#/components/schemas/RequestBrowserStateBlock",
                       "document": "#/components/schemas/RequestDocumentBlock",
                       "image": "#/components/schemas/RequestImageBlock",
                       "search_result": "#/components/schemas/RequestSearchResultBlock",
@@ -3865,6 +6440,9 @@
                     },
                     {
                       "$ref": "#/components/schemas/RequestToolReferenceBlock"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RequestBrowserStateBlock"
                     }
                   ],
                   "title": "Block"
@@ -3893,6 +6471,21 @@
             "pattern": "^[a-zA-Z0-9_-]+$",
             "title": "Tool Use Id",
             "type": "string"
+          },
+          "toolset_name": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9_-]+$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "For a toolset member tool_result, the toolset family of the paired tool_use.",
+            "title": "Toolset Name"
           },
           "type": {
             "const": "tool_result",
@@ -4077,6 +6670,21 @@
             "minLength": 1,
             "title": "Name",
             "type": "string"
+          },
+          "toolset_name": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9_-]+$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "For a toolset member tool_use, the toolset family this member belongs to.",
+            "title": "Toolset Name"
           },
           "type": {
             "const": "tool_use",
@@ -5631,6 +8239,22 @@
             "title": "Name",
             "type": "string"
           },
+          "toolset_name": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9_-]+$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "For a toolset member tool_use, the toolset family.",
+            "title": "Toolset Name"
+          },
           "type": {
             "const": "tool_use",
             "default": "tool_use",
@@ -6006,6 +8630,55 @@
           "web_search_requests"
         ],
         "title": "ServerToolUsage",
+        "type": "object"
+      },
+      "SkillParams": {
+        "additionalProperties": false,
+        "description": "Specification for a skill to be loaded in a container (request model).",
+        "properties": {
+          "skill_id": {
+            "description": "Skill ID",
+            "examples": [
+              "pdf"
+            ],
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Skill Id",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined)",
+            "enum": [
+              "anthropic",
+              "custom"
+            ],
+            "examples": [
+              "anthropic"
+            ],
+            "title": "Type",
+            "type": "string",
+            "x-stainless-naming": {
+              "csharp": {
+                "type_name": "SkillParamsType"
+              }
+            }
+          },
+          "version": {
+            "description": "Skill version or 'latest' for most recent version",
+            "examples": [
+              "latest"
+            ],
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "skill_id",
+          "type"
+        ],
+        "title": "SkillParams",
         "type": "object"
       },
       "StopReason": {

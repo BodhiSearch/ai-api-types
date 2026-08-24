@@ -101,7 +101,7 @@ export interface components {
          * @enum {string}
          */
         AllowedCaller: "direct" | "code_execution_20250825" | "code_execution_20260120" | "code_execution_20260521";
-        AnthropicBeta: string | ("message-batches-2024-09-24" | "prompt-caching-2024-07-31" | "computer-use-2024-10-22" | "computer-use-2025-01-24" | "pdfs-2024-09-25" | "token-counting-2024-11-01" | "token-efficient-tools-2025-02-19" | "output-128k-2025-02-19" | "files-api-2025-04-14" | "mcp-client-2025-04-04" | "mcp-client-2025-11-20" | "dev-full-thinking-2025-05-14" | "interleaved-thinking-2025-05-14" | "code-execution-2025-05-22" | "extended-cache-ttl-2025-04-11" | "context-1m-2025-08-07" | "context-management-2025-06-27" | "model-context-window-exceeded-2025-08-26" | "skills-2025-10-02" | "fast-mode-2026-02-01" | "output-300k-2026-03-24" | "user-profiles-2026-03-24" | "advisor-tool-2026-03-01" | "managed-agents-2026-04-01" | "cache-diagnosis-2026-04-07" | "dreaming-2026-04-21" | "thinking-token-count-2026-05-13" | "server-side-fallback-2026-06-01" | "server-side-fallback-2026-07-01" | "fallback-credit-2026-06-01" | "fallback-credit-2026-07-01" | "agent-memory-2026-07-22" | "mid-conversation-tool-changes-2026-07-01");
+        AnthropicBeta: string | ("message-batches-2024-09-24" | "prompt-caching-2024-07-31" | "computer-use-2024-10-22" | "computer-use-2025-01-24" | "pdfs-2024-09-25" | "token-counting-2024-11-01" | "token-efficient-tools-2025-02-19" | "output-128k-2025-02-19" | "files-api-2025-04-14" | "mcp-client-2025-04-04" | "mcp-client-2025-11-20" | "dev-full-thinking-2025-05-14" | "interleaved-thinking-2025-05-14" | "code-execution-2025-05-22" | "extended-cache-ttl-2025-04-11" | "context-1m-2025-08-07" | "context-management-2025-06-27" | "model-context-window-exceeded-2025-08-26" | "skills-2025-10-02" | "fast-mode-2026-02-01" | "output-300k-2026-03-24" | "user-profiles-2026-03-24" | "user-profiles-2026-08-18" | "advisor-tool-2026-03-01" | "managed-agents-2026-04-01" | "cache-diagnosis-2026-04-07" | "dreaming-2026-04-21" | "thinking-token-count-2026-05-13" | "server-side-fallback-2026-06-01" | "server-side-fallback-2026-07-01" | "fallback-credit-2026-06-01" | "fallback-credit-2026-07-01" | "agent-memory-2026-07-22" | "mid-conversation-tool-changes-2026-07-01");
         /** AuthenticationError */
         AuthenticationError: {
             /**
@@ -205,6 +205,703 @@ export interface components {
              * @enum {string}
              */
             type: "billing_error";
+        };
+        /**
+         * BrowserCloseTabConfig
+         * @description ``close_tab``'s config overrides.
+         */
+        BrowserCloseTabConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserDoubleClickConfig
+         * @description ``double_click``'s config overrides.
+         */
+        BrowserDoubleClickConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserFileUploadConfig
+         * @description ``file_upload``'s config overrides.
+         */
+        BrowserFileUploadConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserFindConfig
+         * @description ``find``'s config overrides.
+         */
+        BrowserFindConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserFormInputConfig
+         * @description ``form_input``'s config overrides.
+         */
+        BrowserFormInputConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserGetPageTextConfig
+         * @description ``get_page_text``'s config overrides.
+         */
+        BrowserGetPageTextConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserHoldKeyConfig
+         * @description ``hold_key``'s config overrides.
+         */
+        BrowserHoldKeyConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserHoverConfig
+         * @description ``hover``'s config overrides.
+         */
+        BrowserHoverConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserJavascriptExecConfig
+         * @description ``javascript_exec``'s config overrides.
+         */
+        BrowserJavascriptExecConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserKeyConfig
+         * @description ``key``'s config overrides.
+         */
+        BrowserKeyConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserLeftClickConfig
+         * @description ``left_click``'s config overrides.
+         */
+        BrowserLeftClickConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserLeftClickDragConfig
+         * @description ``left_click_drag``'s config overrides.
+         */
+        BrowserLeftClickDragConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserLeftMouseDownConfig
+         * @description ``left_mouse_down``'s config overrides.
+         */
+        BrowserLeftMouseDownConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserLeftMouseUpConfig
+         * @description ``left_mouse_up``'s config overrides.
+         */
+        BrowserLeftMouseUpConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserListTabsConfig
+         * @description ``list_tabs``'s config overrides.
+         */
+        BrowserListTabsConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserMiddleClickConfig
+         * @description ``middle_click``'s config overrides.
+         */
+        BrowserMiddleClickConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserMouseMoveConfig
+         * @description ``mouse_move``'s config overrides.
+         */
+        BrowserMouseMoveConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserNavigateConfig
+         * @description ``navigate``'s config overrides.
+         */
+        BrowserNavigateConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserNewTabConfig
+         * @description ``new_tab``'s config overrides.
+         */
+        BrowserNewTabConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserReadConsoleConfig
+         * @description ``read_console``'s config overrides.
+         */
+        BrowserReadConsoleConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserReadNetworkConfig
+         * @description ``read_network``'s config overrides.
+         */
+        BrowserReadNetworkConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserReadPageConfig
+         * @description ``read_page``'s config overrides.
+         */
+        BrowserReadPageConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserRightClickConfig
+         * @description ``right_click``'s config overrides.
+         */
+        BrowserRightClickConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserScreenshotConfig
+         * @description ``screenshot``'s config overrides.
+         */
+        BrowserScreenshotConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserScrollConfig
+         * @description ``scroll``'s config overrides.
+         */
+        BrowserScrollConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserScrollToConfig
+         * @description ``scroll_to``'s config overrides.
+         */
+        BrowserScrollToConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserStateChangeDownloadCompleted
+         * @description A file download that finished during this call, reported with the
+         *     same `download_id` as its `download_started` — or without a prior
+         *     `download_started`, when the download finished during the call that
+         *     started it (at most one state change per `download_id` per result).
+         */
+        BrowserStateChangeDownloadCompleted: {
+            /**
+             * Download Id
+             * @description The caller-assigned identifier for this download, stable across the state changes reporting it.
+             */
+            download_id: string;
+            /**
+             * Path
+             * @description Where the executor saved the file, on the executor's filesystem. Only included when another tool in the same environment can read the file at that path.
+             */
+            path?: string | null;
+            /**
+             * Size Bytes
+             * @description The completed download's size.
+             */
+            size_bytes?: number | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "download_completed";
+            /**
+             * Url
+             * @description The final post-redirect URL the download was served from.
+             */
+            url: string;
+        };
+        /**
+         * BrowserStateChangeDownloadFailed
+         * @description A file download that failed — or was cancelled — during this call.
+         */
+        BrowserStateChangeDownloadFailed: {
+            /**
+             * Download Id
+             * @description The caller-assigned identifier for this download, stable across the state changes reporting it.
+             */
+            download_id: string;
+            /**
+             * Error
+             * @description The failure or cancellation detail, when known.
+             */
+            error?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "download_failed";
+            /**
+             * Url
+             * @description The final post-redirect URL the download was served from.
+             */
+            url: string;
+        };
+        /**
+         * BrowserStateChangeDownloadStarted
+         * @description A file download that started during this call.
+         */
+        BrowserStateChangeDownloadStarted: {
+            /**
+             * Download Id
+             * @description The caller-assigned identifier for this download, stable across the state changes reporting it.
+             */
+            download_id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "download_started";
+            /**
+             * Url
+             * @description The final post-redirect URL the download was served from.
+             */
+            url: string;
+        };
+        /**
+         * BrowserStateChangeTabOpened
+         * @description A tab this call's execution opened that remains open at its end —
+         *     the creation delta of the `tabs` inventory, not an event log.
+         *
+         *     Carries only the `tab_id`; the tab's `title` and `url` live on its
+         *     `tabs` entry, which must include the same `tab_id`. A tab opened
+         *     during a failed call gets no deferred `tab_opened`; it simply appears
+         *     in the next result's `tabs` inventory.
+         */
+        BrowserStateChangeTabOpened: {
+            /**
+             * Tab Id
+             * @description The `tab_id` of the opened tab, present in `tabs`.
+             */
+            tab_id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "tab_opened";
+        };
+        /**
+         * BrowserStateTabEntry
+         * @description One open browser tab reported in a `browser_state` block's `tabs`
+         *     inventory.
+         *
+         *     `tab_id` is the caller-assigned identifier for the tab; `title` and
+         *     `url` describe the page the tab is currently showing and may be empty
+         *     strings (a blank tab legitimately has both empty). `active` marks the
+         *     tab that is active after this call; whenever `tabs` is non-empty,
+         *     exactly one entry is marked.
+         */
+        BrowserStateTabEntry: {
+            /**
+             * Active
+             * @description Whether this tab is the active tab after this call. Whenever `tabs` is non-empty, exactly one entry is marked `active: true`.
+             */
+            active?: boolean;
+            /**
+             * Tab Id
+             * @description The caller-assigned identifier for this tab, unique within the inventory.
+             */
+            tab_id: string;
+            /**
+             * Title
+             * @description The title of the page the tab is showing. May be empty.
+             */
+            title: string;
+            /**
+             * Url
+             * @description The URL of the page the tab is showing. May be empty.
+             */
+            url: string;
+        };
+        /**
+         * BrowserSwitchTabConfig
+         * @description ``switch_tab``'s config overrides.
+         */
+        BrowserSwitchTabConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserToolsetConfigs
+         * @description Per-member configuration for ``browser_toolset_20260801``: one
+         *     optional field per member tool, keyed by the member name — the same
+         *     name the member's ``tool_use`` blocks carry. Every member is an
+         *     accepted key, and a member's defaults apply wherever its key is
+         *     absent. Unknown keys are rejected: the field set is this toolset
+         *     version's complete member set.
+         */
+        BrowserToolsetConfigs: {
+            close_tab?: components["schemas"]["BrowserCloseTabConfig"] | null;
+            double_click?: components["schemas"]["BrowserDoubleClickConfig"] | null;
+            file_upload?: components["schemas"]["BrowserFileUploadConfig"] | null;
+            find?: components["schemas"]["BrowserFindConfig"] | null;
+            form_input?: components["schemas"]["BrowserFormInputConfig"] | null;
+            get_page_text?: components["schemas"]["BrowserGetPageTextConfig"] | null;
+            hold_key?: components["schemas"]["BrowserHoldKeyConfig"] | null;
+            hover?: components["schemas"]["BrowserHoverConfig"] | null;
+            javascript_exec?: components["schemas"]["BrowserJavascriptExecConfig"] | null;
+            key?: components["schemas"]["BrowserKeyConfig"] | null;
+            left_click?: components["schemas"]["BrowserLeftClickConfig"] | null;
+            left_click_drag?: components["schemas"]["BrowserLeftClickDragConfig"] | null;
+            left_mouse_down?: components["schemas"]["BrowserLeftMouseDownConfig"] | null;
+            left_mouse_up?: components["schemas"]["BrowserLeftMouseUpConfig"] | null;
+            list_tabs?: components["schemas"]["BrowserListTabsConfig"] | null;
+            middle_click?: components["schemas"]["BrowserMiddleClickConfig"] | null;
+            mouse_move?: components["schemas"]["BrowserMouseMoveConfig"] | null;
+            navigate?: components["schemas"]["BrowserNavigateConfig"] | null;
+            new_tab?: components["schemas"]["BrowserNewTabConfig"] | null;
+            read_console?: components["schemas"]["BrowserReadConsoleConfig"] | null;
+            read_network?: components["schemas"]["BrowserReadNetworkConfig"] | null;
+            read_page?: components["schemas"]["BrowserReadPageConfig"] | null;
+            right_click?: components["schemas"]["BrowserRightClickConfig"] | null;
+            screenshot?: components["schemas"]["BrowserScreenshotConfig"] | null;
+            scroll?: components["schemas"]["BrowserScrollConfig"] | null;
+            scroll_to?: components["schemas"]["BrowserScrollToConfig"] | null;
+            switch_tab?: components["schemas"]["BrowserSwitchTabConfig"] | null;
+            triple_click?: components["schemas"]["BrowserTripleClickConfig"] | null;
+            type?: components["schemas"]["BrowserTypeConfig"] | null;
+            wait?: components["schemas"]["BrowserWaitConfig"] | null;
+            zoom?: components["schemas"]["BrowserZoomConfig"] | null;
+        };
+        /**
+         * BrowserToolset_20260801
+         * @description The browser toolset: a single ``tools[]`` entry (carrying no
+         *     ``name``) that declares the browser tool family. The model is served
+         *     the family's tool with any members disabled via ``configs`` removed
+         *     from its schema.
+         */
+        BrowserToolset_20260801: {
+            /** Allowed Callers */
+            allowed_callers?: components["schemas"]["AllowedCaller"][];
+            /**
+             * Cache Control
+             * @description Create a cache control breakpoint at this content block.
+             */
+            cache_control?: components["schemas"]["CacheControlEphemeral"] | null;
+            /** @description Sparse per-member overrides, keyed by member name. Absent, null, and {} are equivalent; a member's defaults apply wherever its key is absent. */
+            configs?: components["schemas"]["BrowserToolsetConfigs"] | null;
+            /**
+             * Type
+             * @constant
+             */
+            type: "browser_toolset_20260801";
+        };
+        /**
+         * BrowserTripleClickConfig
+         * @description ``triple_click``'s config overrides.
+         */
+        BrowserTripleClickConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserTypeConfig
+         * @description ``type``'s config overrides.
+         */
+        BrowserTypeConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserWaitConfig
+         * @description ``wait``'s config overrides.
+         */
+        BrowserWaitConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * BrowserZoomConfig
+         * @description ``zoom``'s config overrides.
+         */
+        BrowserZoomConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
         };
         /** CacheControlEphemeral */
         CacheControlEphemeral: {
@@ -396,6 +1093,333 @@ export interface components {
             type: "code_execution_20260521";
         };
         /**
+         * ComputerCursorPositionConfig
+         * @description ``cursor_position``'s config overrides.
+         */
+        ComputerCursorPositionConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerDoubleClickConfig
+         * @description ``double_click``'s config overrides.
+         */
+        ComputerDoubleClickConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerHoldKeyConfig
+         * @description ``hold_key``'s config overrides.
+         */
+        ComputerHoldKeyConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerKeyConfig
+         * @description ``key``'s config overrides.
+         */
+        ComputerKeyConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerLeftClickConfig
+         * @description ``left_click``'s config overrides.
+         */
+        ComputerLeftClickConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerLeftClickDragConfig
+         * @description ``left_click_drag``'s config overrides.
+         */
+        ComputerLeftClickDragConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerLeftMouseDownConfig
+         * @description ``left_mouse_down``'s config overrides.
+         */
+        ComputerLeftMouseDownConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerLeftMouseUpConfig
+         * @description ``left_mouse_up``'s config overrides.
+         */
+        ComputerLeftMouseUpConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerMiddleClickConfig
+         * @description ``middle_click``'s config overrides.
+         */
+        ComputerMiddleClickConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerMouseMoveConfig
+         * @description ``mouse_move``'s config overrides.
+         */
+        ComputerMouseMoveConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerRightClickConfig
+         * @description ``right_click``'s config overrides.
+         */
+        ComputerRightClickConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerScreenshotConfig
+         * @description ``screenshot``'s config overrides.
+         */
+        ComputerScreenshotConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerScrollConfig
+         * @description ``scroll``'s config overrides.
+         */
+        ComputerScrollConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerToolsetConfigs
+         * @description Per-member configuration for ``computer_toolset_20260801``: one
+         *     optional field per member tool, keyed by the member name — the same
+         *     name the member's ``tool_use`` blocks carry. Every member is an
+         *     accepted key, and a member's defaults apply wherever its key is
+         *     absent. Unknown keys are rejected: the field set is this toolset
+         *     version's complete member set.
+         */
+        ComputerToolsetConfigs: {
+            cursor_position?: components["schemas"]["ComputerCursorPositionConfig"] | null;
+            double_click?: components["schemas"]["ComputerDoubleClickConfig"] | null;
+            hold_key?: components["schemas"]["ComputerHoldKeyConfig"] | null;
+            key?: components["schemas"]["ComputerKeyConfig"] | null;
+            left_click?: components["schemas"]["ComputerLeftClickConfig"] | null;
+            left_click_drag?: components["schemas"]["ComputerLeftClickDragConfig"] | null;
+            left_mouse_down?: components["schemas"]["ComputerLeftMouseDownConfig"] | null;
+            left_mouse_up?: components["schemas"]["ComputerLeftMouseUpConfig"] | null;
+            middle_click?: components["schemas"]["ComputerMiddleClickConfig"] | null;
+            mouse_move?: components["schemas"]["ComputerMouseMoveConfig"] | null;
+            right_click?: components["schemas"]["ComputerRightClickConfig"] | null;
+            screenshot?: components["schemas"]["ComputerScreenshotConfig"] | null;
+            scroll?: components["schemas"]["ComputerScrollConfig"] | null;
+            triple_click?: components["schemas"]["ComputerTripleClickConfig"] | null;
+            type?: components["schemas"]["ComputerTypeConfig"] | null;
+            wait?: components["schemas"]["ComputerWaitConfig"] | null;
+            zoom?: components["schemas"]["ComputerZoomConfig"] | null;
+        };
+        /**
+         * ComputerToolset_20260801
+         * @description The computer toolset: a single ``tools[]`` entry (carrying no
+         *     ``name``) that declares the computer tool family. The model is
+         *     served the family's tool with any members disabled via ``configs``
+         *     removed from its schema. Every member is enabled by default, zoom
+         *     included. The single-tool options ``display_number`` and
+         *     ``enable_zoom`` are not fields of a toolset entry — it carries only
+         *     ``type``, ``configs``, and ``cache_control``; zoom is controlled
+         *     via ``configs.zoom.enabled``.
+         */
+        ComputerToolset_20260801: {
+            /** Allowed Callers */
+            allowed_callers?: components["schemas"]["AllowedCaller"][];
+            /**
+             * Cache Control
+             * @description Create a cache control breakpoint at this content block.
+             */
+            cache_control?: components["schemas"]["CacheControlEphemeral"] | null;
+            /** @description Sparse per-member overrides, keyed by member name. Absent, null, and {} are equivalent; a member's defaults apply wherever its key is absent. */
+            configs?: components["schemas"]["ComputerToolsetConfigs"] | null;
+            /**
+             * Type
+             * @constant
+             */
+            type: "computer_toolset_20260801";
+        };
+        /**
+         * ComputerTripleClickConfig
+         * @description ``triple_click``'s config overrides.
+         */
+        ComputerTripleClickConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerTypeConfig
+         * @description ``type``'s config overrides.
+         */
+        ComputerTypeConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerWaitConfig
+         * @description ``wait``'s config overrides.
+         */
+        ComputerWaitConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
+         * ComputerZoomConfig
+         * @description ``zoom``'s config overrides.
+         */
+        ComputerZoomConfig: {
+            /**
+             * Defer Loading
+             * @description Defer loading for this member. Must resolve to the same value on every enabled member of the toolset.
+             */
+            defer_loading?: boolean | null;
+            /**
+             * Enabled
+             * @description Whether this member is offered to the model. Default is per member, per the toolset's documentation. A member whose enabled resolves false is withheld from the served schema.
+             */
+            enabled?: boolean | null;
+        };
+        /**
          * Container
          * @description Information about the container used in the request (for the code execution tool)
          */
@@ -412,6 +1436,53 @@ export interface components {
              * @example container_011CpZohnwH4vuy7gazohgSP
              */
             id: string;
+            /**
+             * Skills
+             * @description Skills loaded in the container
+             * @default null
+             */
+            skills: components["schemas"]["ContainerSkill"][] | null;
+        };
+        /**
+         * ContainerParams
+         * @description Container parameters with skills to be loaded.
+         */
+        ContainerParams: {
+            /**
+             * Id
+             * @description Container id
+             */
+            id?: string | null;
+            /**
+             * Skills
+             * @description List of skills to load in the container
+             */
+            skills?: components["schemas"]["SkillParams"][] | null;
+        };
+        /**
+         * ContainerSkill
+         * @description A skill that was loaded in a container (response model).
+         */
+        ContainerSkill: {
+            /**
+             * Skill Id
+             * @description Skill ID
+             * @example pdf
+             */
+            skill_id: string;
+            /**
+             * Type
+             * @description Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined)
+             * @example anthropic
+             * @enum {string}
+             */
+            type: "anthropic" | "custom";
+            /**
+             * Version
+             * @description The resolved version: a skill version ID for custom skills.
+             * @example latest
+             */
+            version: string;
         };
         ContentBlock: components["schemas"]["ResponseTextBlock"] | components["schemas"]["ResponseThinkingBlock"] | components["schemas"]["ResponseRedactedThinkingBlock"] | components["schemas"]["ResponseToolUseBlock"] | components["schemas"]["ResponseServerToolUseBlock"] | components["schemas"]["ResponseWebSearchToolResultBlock"] | components["schemas"]["ResponseWebFetchToolResultBlock"] | components["schemas"]["ResponseCodeExecutionToolResultBlock"] | components["schemas"]["ResponseBashCodeExecutionToolResultBlock"] | components["schemas"]["ResponseTextEditorCodeExecutionToolResultBlock"] | components["schemas"]["ResponseToolSearchToolResultBlock"] | components["schemas"]["ResponseContainerUploadBlock"];
         /** ContentBlockSource */
@@ -451,7 +1522,7 @@ export interface components {
          *           "role": "user"
          *         }
          *       ],
-         *       "model": "claude-opus-4-6"
+         *       "model": "claude-opus-5"
          *     }
          */
         CreateMessageParams: {
@@ -517,7 +1588,7 @@ export interface components {
              * Container
              * @description Container identifier for reuse across requests.
              */
-            container?: string | null;
+            container?: components["schemas"]["ContainerParams"] | string | null;
             /**
              * Inference Geo
              * @description Specifies the geographic region for inference processing. If not specified, the workspace's `default_inference_geo` is used.
@@ -675,7 +1746,7 @@ export interface components {
              *       "name": "get_weather"
              *     }
              */
-            tools?: (components["schemas"]["Tool"] | components["schemas"]["BashTool_20250124"] | components["schemas"]["CodeExecutionTool_20250522"] | components["schemas"]["CodeExecutionTool_20250825"] | components["schemas"]["CodeExecutionTool_20260120"] | components["schemas"]["CodeExecutionTool_20260521"] | components["schemas"]["MemoryTool_20250818"] | components["schemas"]["TextEditor_20250124"] | components["schemas"]["TextEditor_20250429"] | components["schemas"]["TextEditor_20250728"] | components["schemas"]["WebSearchTool_20250305"] | components["schemas"]["WebFetchTool_20250910"] | components["schemas"]["WebSearchTool_20260209"] | components["schemas"]["WebFetchTool_20260209"] | components["schemas"]["WebFetchTool_20260309"] | components["schemas"]["WebSearchTool_20260318"] | components["schemas"]["WebFetchTool_20260318"] | components["schemas"]["ToolSearchToolBM25_20251119"] | components["schemas"]["ToolSearchToolRegex_20251119"])[];
+            tools?: (components["schemas"]["Tool"] | components["schemas"]["BashTool_20250124"] | components["schemas"]["CodeExecutionTool_20250522"] | components["schemas"]["CodeExecutionTool_20250825"] | components["schemas"]["CodeExecutionTool_20260120"] | components["schemas"]["CodeExecutionTool_20260521"] | components["schemas"]["BrowserToolset_20260801"] | components["schemas"]["MemoryTool_20250818"] | components["schemas"]["ComputerToolset_20260801"] | components["schemas"]["TextEditor_20250124"] | components["schemas"]["TextEditor_20250429"] | components["schemas"]["TextEditor_20250728"] | components["schemas"]["WebSearchTool_20250305"] | components["schemas"]["WebFetchTool_20250910"] | components["schemas"]["WebSearchTool_20260209"] | components["schemas"]["WebFetchTool_20260209"] | components["schemas"]["WebFetchTool_20260309"] | components["schemas"]["WebSearchTool_20260318"] | components["schemas"]["WebFetchTool_20260318"] | components["schemas"]["ToolSearchToolBM25_20251119"] | components["schemas"]["ToolSearchToolRegex_20251119"])[];
             /**
              * Top K
              * @deprecated
@@ -753,6 +1824,26 @@ export interface components {
              */
             type: "error";
         };
+        /** FileDocumentSource */
+        FileDocumentSource: {
+            /** File Id */
+            file_id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "file";
+        };
+        /** FileImageSource */
+        FileImageSource: {
+            /** File Id */
+            file_id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "file";
+        };
         /** GatewayTimeoutError */
         GatewayTimeoutError: {
             /**
@@ -766,7 +1857,7 @@ export interface components {
              */
             type: "timeout_error";
         };
-        InputContentBlock: components["schemas"]["RequestTextBlock"] | components["schemas"]["RequestImageBlock"] | components["schemas"]["RequestDocumentBlock"] | components["schemas"]["RequestSearchResultBlock"] | components["schemas"]["RequestThinkingBlock"] | components["schemas"]["RequestRedactedThinkingBlock"] | components["schemas"]["RequestToolUseBlock"] | components["schemas"]["RequestToolResultBlock"] | components["schemas"]["RequestServerToolUseBlock"] | components["schemas"]["RequestWebSearchToolResultBlock"] | components["schemas"]["RequestWebFetchToolResultBlock"] | components["schemas"]["RequestCodeExecutionToolResultBlock"] | components["schemas"]["RequestBashCodeExecutionToolResultBlock"] | components["schemas"]["RequestTextEditorCodeExecutionToolResultBlock"] | components["schemas"]["RequestToolSearchToolResultBlock"] | components["schemas"]["RequestContainerUploadBlock"] | components["schemas"]["RequestMidConvSystemBlock"];
+        InputContentBlock: components["schemas"]["RequestTextBlock"] | components["schemas"]["RequestImageBlock"] | components["schemas"]["RequestDocumentBlock"] | components["schemas"]["RequestSearchResultBlock"] | components["schemas"]["RequestThinkingBlock"] | components["schemas"]["RequestRedactedThinkingBlock"] | components["schemas"]["RequestToolUseBlock"] | components["schemas"]["RequestToolResultBlock"] | components["schemas"]["RequestServerToolUseBlock"] | components["schemas"]["RequestWebSearchToolResultBlock"] | components["schemas"]["RequestWebFetchToolResultBlock"] | components["schemas"]["RequestCodeExecutionToolResultBlock"] | components["schemas"]["RequestBashCodeExecutionToolResultBlock"] | components["schemas"]["RequestTextEditorCodeExecutionToolResultBlock"] | components["schemas"]["RequestToolSearchToolResultBlock"] | components["schemas"]["RequestContainerUploadBlock"];
         /** InputMessage */
         InputMessage: {
             /** Content */
@@ -890,7 +1981,7 @@ export interface components {
          *         }
          *       ],
          *       "id": "msg_013Zva2CMHLNnXjNJJKqJ2EF",
-         *       "model": "claude-opus-4-6",
+         *       "model": "claude-opus-5",
          *       "role": "assistant",
          *       "stop_details": null,
          *       "stop_reason": "end_turn",
@@ -1071,19 +2162,19 @@ export interface components {
              * Created At
              * Format: date-time
              * @description RFC 3339 datetime string representing the time at which the model was released. May be set to an epoch value if the release date is unknown.
-             * @example 2026-02-04T00:00:00Z
+             * @example 2026-07-24T00:00:00Z
              */
             created_at: string;
             /**
              * Display Name
              * @description A human-readable name for the model.
-             * @example Claude Opus 4.6
+             * @example Claude Opus 5
              */
             display_name: string;
             /**
              * Id
              * @description Unique model identifier.
-             * @example claude-opus-4-6
+             * @example claude-opus-5
              */
             id: string;
             /**
@@ -1122,6 +2213,7 @@ export interface components {
         /** OutputConfig */
         OutputConfig: {
             /**
+             * Effort
              * @description How much effort the model should put into its response. Higher effort levels may result in more thorough analysis but take longer.
              *
              *     Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
@@ -1286,6 +2378,38 @@ export interface components {
              */
             type: "bash_code_execution_tool_result_error";
         };
+        /**
+         * RequestBrowserStateBlock
+         * @description The caller's browser state after a browser toolset member call —
+         *     the full inventory of open tabs, which tab is active, and any side
+         *     effects (tabs opened, download state changes) the call produced.
+         *
+         *     At most one per `tool_result`, only on a non-error result answering a
+         *     browser toolset member `tool_use`. The server renders the
+         *     model-visible text from it; the model never sees the raw fields.
+         */
+        RequestBrowserStateBlock: {
+            /**
+             * Cache Control
+             * @description Create a cache control breakpoint at this content block.
+             */
+            cache_control?: components["schemas"]["CacheControlEphemeral"] | null;
+            /**
+             * State Changes
+             * @description Tabs opened and download state changes during this call. "Nothing to report" is expressed by omitting the field, never by an empty list.
+             */
+            state_changes?: (components["schemas"]["BrowserStateChangeTabOpened"] | components["schemas"]["BrowserStateChangeDownloadStarted"] | components["schemas"]["BrowserStateChangeDownloadCompleted"] | components["schemas"]["BrowserStateChangeDownloadFailed"])[] | null;
+            /**
+             * Tabs
+             * @description All tabs open in the browser after this call — the full inventory, not a delta. May be empty. Whenever non-empty, exactly one entry carries `active: true`.
+             */
+            tabs: components["schemas"]["BrowserStateTabEntry"][];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "browser_state";
+        };
         /** RequestCharLocationCitation */
         RequestCharLocationCitation: {
             /**
@@ -1426,7 +2550,7 @@ export interface components {
             /** Context */
             context?: string | null;
             /** Source */
-            source: components["schemas"]["Base64PDFSource"] | components["schemas"]["PlainTextSource"] | components["schemas"]["ContentBlockSource"] | components["schemas"]["URLPDFSource"];
+            source: components["schemas"]["Base64PDFSource"] | components["schemas"]["PlainTextSource"] | components["schemas"]["ContentBlockSource"] | components["schemas"]["URLPDFSource"] | components["schemas"]["FileDocumentSource"];
             /** Title */
             title?: string | null;
             /**
@@ -1462,7 +2586,9 @@ export interface components {
              */
             cache_control?: components["schemas"]["CacheControlEphemeral"] | null;
             /** Source */
-            source: components["schemas"]["Base64ImageSource"] | components["schemas"]["URLImageSource"];
+            source: components["schemas"]["Base64ImageSource"] | components["schemas"]["URLImageSource"] | components["schemas"]["FileImageSource"];
+            /** @description Configures the transformations the server applies to this image before the model observes it. Each key names a condition the server transforms images for; its value selects the transformation applied. Omitted keys keep their default behavior, and an empty object is equivalent to omitting the field. */
+            transformations?: components["schemas"]["RequestImageTransformations"] | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1470,28 +2596,16 @@ export interface components {
             type: "image";
         };
         /**
-         * RequestMidConvSystemBlock
-         * @description System instructions that appear mid-conversation.
-         *
-         *     Use this block to provide or update system-level instructions at a specific
-         *     point in the conversation, rather than only via the top-level `system` parameter.
+         * RequestImageTransformations
+         * @description Configures the transformations the server applies to this image before the model observes it. Each key names a condition the server transforms images for; its value selects the transformation applied. Omitted keys keep their default behavior, and an empty object is equivalent to omitting the field.
          */
-        RequestMidConvSystemBlock: {
+        RequestImageTransformations: {
             /**
-             * Cache Control
-             * @description Create a cache control breakpoint at this content block.
-             */
-            cache_control?: components["schemas"]["CacheControlEphemeral"] | null;
-            /**
-             * Content
-             * @description System instruction text blocks.
-             */
-            content: components["schemas"]["RequestTextBlock"][];
-            /**
-             * @description discriminator enum property added by openapi-typescript
+             * Oversized Image
+             * @description What the server does when this image exceeds the model's maximum image size. `"downsize"` (the default) scales the image down to fit, which changes the dimensions the model observes without telling you. `"error"` instead rejects the request with a 400 error naming the image's dimensions and the largest dimensions that fit, so you can scale the image deliberately — your image is never silently scaled down.
              * @enum {string}
              */
-            type: "mid_conv_system";
+            oversized_image?: "downsize" | "error";
         };
         /** RequestPageLocationCitation */
         RequestPageLocationCitation: {
@@ -1752,11 +2866,16 @@ export interface components {
              */
             cache_control?: components["schemas"]["CacheControlEphemeral"] | null;
             /** Content */
-            content?: string | (components["schemas"]["RequestTextBlock"] | components["schemas"]["RequestImageBlock"] | components["schemas"]["RequestSearchResultBlock"] | components["schemas"]["RequestDocumentBlock"] | components["schemas"]["RequestToolReferenceBlock"])[];
+            content?: string | (components["schemas"]["RequestTextBlock"] | components["schemas"]["RequestImageBlock"] | components["schemas"]["RequestSearchResultBlock"] | components["schemas"]["RequestDocumentBlock"] | components["schemas"]["RequestToolReferenceBlock"] | components["schemas"]["RequestBrowserStateBlock"])[];
             /** Is Error */
             is_error?: boolean;
             /** Tool Use Id */
             tool_use_id: string;
+            /**
+             * Toolset Name
+             * @description For a toolset member tool_result, the toolset family of the paired tool_use.
+             */
+            toolset_name?: string | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1818,6 +2937,11 @@ export interface components {
             };
             /** Name */
             name: string;
+            /**
+             * Toolset Name
+             * @description For a toolset member tool_use, the toolset family this member belongs to.
+             */
+            toolset_name?: string | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -2490,6 +3614,12 @@ export interface components {
             /** Name */
             name: string;
             /**
+             * Toolset Name
+             * @description For a toolset member tool_use, the toolset family.
+             * @default null
+             */
+            toolset_name: string | null;
+            /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
@@ -2652,6 +3782,31 @@ export interface components {
              * @example 0
              */
             web_search_requests: number;
+        };
+        /**
+         * SkillParams
+         * @description Specification for a skill to be loaded in a container (request model).
+         */
+        SkillParams: {
+            /**
+             * Skill Id
+             * @description Skill ID
+             * @example pdf
+             */
+            skill_id: string;
+            /**
+             * Type
+             * @description Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined)
+             * @example anthropic
+             * @enum {string}
+             */
+            type: "anthropic" | "custom";
+            /**
+             * Version
+             * @description Skill version or 'latest' for most recent version
+             * @example latest
+             */
+            version?: string;
         };
         /** @enum {string} */
         StopReason: "end_turn" | "max_tokens" | "stop_sequence" | "tool_use" | "pause_turn" | "refusal" | "model_context_window_exceeded";
