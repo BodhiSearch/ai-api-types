@@ -343,7 +343,14 @@
               "fallback-credit-2026-06-01",
               "fallback-credit-2026-07-01",
               "agent-memory-2026-07-22",
-              "mid-conversation-tool-changes-2026-07-01"
+              "mid-conversation-tool-changes-2026-07-01",
+              "compact-2026-01-12",
+              "computer-use-2025-11-24",
+              "mcp-tunnels-2026-06-22",
+              "structured-outputs-2025-11-13",
+              "task-budgets-2026-03-13",
+              "thinking-display-updates-2026-08-18",
+              "ce-user-management-2026-07-13"
             ],
             "x-stainless-nominal": false
           }
@@ -3651,7 +3658,10 @@
             "minimum": 0,
             "title": "Temperature",
             "type": "number",
-            "x-stainless-deprecation-message": "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+            "x-stainless-deprecation-message": "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error.",
+            "x-stainless-skip": [
+              "python"
+            ]
           },
           "thinking": {
             "$ref": "#/components/schemas/ThinkingConfigParam"
@@ -3762,7 +3772,10 @@
             "minimum": 0,
             "title": "Top K",
             "type": "integer",
-            "x-stainless-deprecation-message": "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error."
+            "x-stainless-deprecation-message": "Deprecated. Models released after Claude Opus 4.6 do not accept top_k; any value will be rejected with a 400 error.",
+            "x-stainless-skip": [
+              "python"
+            ]
           },
           "top_p": {
             "deprecated": true,
@@ -3774,7 +3787,10 @@
             "minimum": 0,
             "title": "Top P",
             "type": "number",
-            "x-stainless-deprecation-message": "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+            "x-stainless-deprecation-message": "Deprecated. Models released after Claude Opus 4.6 do not support setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all other values will be rejected with a 400 error.",
+            "x-stainless-skip": [
+              "python"
+            ]
           }
         },
         "required": [
